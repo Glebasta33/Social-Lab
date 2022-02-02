@@ -1,8 +1,8 @@
 package com.trusov.sociallab.domain.model
 
 data class Research(
-    private val topic: String,
-    private val description: String,
-    private val questions: List<Question>,
-    private val respondents: List<Respondent>
+    val topic: String,
+    val description: String,
+    val questions: List<Question>,
+    val respondents: List<Respondent>
 )

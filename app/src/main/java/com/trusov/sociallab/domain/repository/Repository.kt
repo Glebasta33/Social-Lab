@@ -3,12 +3,13 @@ package com.trusov.sociallab.domain.repository
 import androidx.lifecycle.LiveData
 import com.trusov.sociallab.domain.model.Question
 import com.trusov.sociallab.domain.model.Research
+import com.trusov.sociallab.domain.model.Respondent
 import com.trusov.sociallab.domain.model.Statistics
 
 interface Repository {
     // enter
-    fun singUp(login: String, password: String)
-    fun logIn(login: String, password: String)
+    fun signUp(login: String, password: String)
+    fun logIn(login: String, password: String): Respondent
 
     // researches info
     fun getListOfResearches(): LiveData<List<Research>>

@@ -4,12 +4,12 @@ import com.trusov.sociallab.common.Constants.PASSWORD_ARE_NOT_SAME
 import com.trusov.sociallab.common.Constants.PASSWORD_ARE_SAME
 import com.trusov.sociallab.domain.repository.Repository
 
-class SingUpUseCase(private val repo: Repository) {
+class SignUpUseCase(private val repo: Repository) {
     operator fun invoke(login: String, password: String, passwordCheck: String): String {
         return if (password != passwordCheck) {
             PASSWORD_ARE_NOT_SAME
         } else {
-            repo.singUp(login, password)
+            repo.signUp(login, password)
             PASSWORD_ARE_SAME
         }
     }
