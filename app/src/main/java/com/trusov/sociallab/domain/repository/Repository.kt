@@ -1,10 +1,10 @@
 package com.trusov.sociallab.domain.repository
 
 import androidx.lifecycle.LiveData
-import com.trusov.sociallab.domain.model.Question
-import com.trusov.sociallab.domain.model.Research
-import com.trusov.sociallab.domain.model.Respondent
-import com.trusov.sociallab.domain.model.Statistics
+import com.trusov.sociallab.domain.entity.Question
+import com.trusov.sociallab.domain.entity.Research
+import com.trusov.sociallab.domain.entity.Respondent
+import com.trusov.sociallab.domain.entity.Statistics
 
 interface Repository {
     // enter
