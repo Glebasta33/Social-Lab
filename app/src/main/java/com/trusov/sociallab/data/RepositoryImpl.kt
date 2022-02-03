@@ -1,15 +1,12 @@
 package com.trusov.sociallab.data
 
-import android.app.Application
-import android.content.Context
 import androidx.lifecycle.LiveData
-import com.trusov.sociallab.data.database.AppDatabase
 import com.trusov.sociallab.data.database.EnterDao
 import com.trusov.sociallab.di.ApplicationScope
-import com.trusov.sociallab.domain.model.Question
-import com.trusov.sociallab.domain.model.Research
-import com.trusov.sociallab.domain.model.Respondent
-import com.trusov.sociallab.domain.model.Statistics
+import com.trusov.sociallab.domain.entity.Question
+import com.trusov.sociallab.domain.entity.Research
+import com.trusov.sociallab.domain.entity.Respondent
+import com.trusov.sociallab.domain.entity.Statistics
 import com.trusov.sociallab.domain.repository.Repository
 import javax.inject.Inject
 
@@ -19,13 +16,12 @@ class RepositoryImpl @Inject constructor(
 ) : Repository {
 
     override fun signUp(login: String, password: String) {
-        val respondent = Respondent(password, login)
+        val respondent = Respondent(password, login, id = System.currentTimeMillis())
         enterDao.registerNewRespondent(respondent)
     }
 
-    // нужно ли создать другую функцию для получения текущего респондента из базы
     override fun logIn(login: String, password: String): Respondent {
-        TODO("Not yet implemented")
+        return enterDao.getRespondent(login, password)
     }
 
     override fun getListOfResearches(): LiveData<List<Research>> {
