@@ -6,12 +6,7 @@ import com.trusov.sociallab.domain.repository.Repository
 import javax.inject.Inject
 
 class SignUpUseCase @Inject constructor(private val repo: Repository) {
-    operator fun invoke(login: String, password: String, passwordCheck: String): String {
-        return if (password != passwordCheck) {
-            PASSWORD_ARE_NOT_SAME
-        } else {
+    operator fun invoke(login: String, password: String) {
             repo.signUp(login, password)
-            PASSWORD_ARE_SAME
-        }
     }
 }

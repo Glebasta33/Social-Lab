@@ -10,10 +10,11 @@ import com.trusov.sociallab.domain.entity.Respondent
 import com.trusov.sociallab.presentation.fragment.log_in.LogInFragment
 import com.trusov.sociallab.presentation.fragment.researches.ResearchesFragment
 import com.trusov.sociallab.presentation.fragment.welcome.WelcomeFragment
+import com.trusov.sociallab.presentation.util.OnInputErrorListener
 import kotlinx.coroutines.delay
 import kotlinx.coroutines.launch
 
-class MainActivity : AppCompatActivity(), LogInFragment.OnErrorLoginListener {
+class MainActivity : AppCompatActivity(), OnInputErrorListener {
 
     private val binding by lazy {
         ActivityMainBinding.inflate(layoutInflater)
@@ -44,7 +45,7 @@ class MainActivity : AppCompatActivity(), LogInFragment.OnErrorLoginListener {
         delay(3000)
     }
 
-    override fun onErrorLogin(message: String) {
+    override fun onErrorInput(message: String) {
         Toast.makeText(this, message, Toast.LENGTH_SHORT).show()
     }
 

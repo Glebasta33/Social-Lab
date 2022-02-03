@@ -13,6 +13,7 @@ import com.trusov.sociallab.databinding.LogInFragmentBinding
 import com.trusov.sociallab.di.ViewModelFactory
 import com.trusov.sociallab.presentation.fragment.researches.ResearchesFragment
 import com.trusov.sociallab.presentation.fragment.sing_up.SignUpFragment
+import com.trusov.sociallab.presentation.util.OnInputErrorListener
 import javax.inject.Inject
 
 class LogInFragment : Fragment() {
@@ -20,7 +21,7 @@ class LogInFragment : Fragment() {
     @Inject
     lateinit var viewModelFactory: ViewModelFactory
     private lateinit var viewModel: LogInViewModel
-    private lateinit var onErrorLoginListener: OnErrorLoginListener
+    private lateinit var onInputErrorListener: OnInputErrorListener
 
     private var _binding: LogInFragmentBinding? = null
     private val binding: LogInFragmentBinding
@@ -29,8 +30,8 @@ class LogInFragment : Fragment() {
     override fun onAttach(context: Context) {
         (activity?.application as SocialLabApp).component.inject(this)
         super.onAttach(context)
-        if(context is OnErrorLoginListener) {
-            onErrorLoginListener = context
+        if(context is OnInputErrorListener) {
+            onInputErrorListener = context
         } else {
             throw RuntimeException("Activity $context must implement onErrorLoginListener")
         }
@@ -59,21 +60,16 @@ class LogInFragment : Fragment() {
                 viewModel.logIn(login, password)
             }
 
+            viewModel.message.observe(viewLifecycleOwner) {
+                onInputErrorListener.onErrorInput(it)
+            }
 
             viewModel.respondent.observe(viewLifecycleOwner) {
                 requireActivity().supportFragmentManager.beginTransaction()
                     .replace(R.id.main_container, ResearchesFragment.newInstance(it))
                     .commit()
             }
-
-            viewModel.message.observe(viewLifecycleOwner) {
-                onErrorLoginListener.onErrorLogin(it)
-            }
         }
-    }
-
-    interface OnErrorLoginListener {
-        fun onErrorLogin(message: String)
     }
 
     override fun onDestroyView() {
