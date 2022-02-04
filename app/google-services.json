@@ -1,0 +1,39 @@
+{
+  "project_info": {
+    "project_number": "1028953640969",
+    "project_id": "social-lab-1",
+    "storage_bucket": "social-lab-1.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:1028953640969:android:9740f6d0ee947a1f1268d8",
+        "android_client_info": {
+          "package_name": "com.trusov.sociallab"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "1028953640969-t19qkuuecv803ce9nhd25t61iriblmkd.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyByYFqBoiMzrsTB0krIjYVeuNL3gNxxrss"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": [
+            {
+              "client_id": "1028953640969-t19qkuuecv803ce9nhd25t61iriblmkd.apps.googleusercontent.com",
+              "client_type": 3
+            }
+          ]
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}
