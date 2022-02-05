@@ -1,7 +1,5 @@
-package com.trusov.sociallab.domain.use_case.enter
+package com.trusov.sociallab.domain.use_case.auth
 
-import com.trusov.sociallab.common.Constants.PASSWORD_ARE_NOT_SAME
-import com.trusov.sociallab.common.Constants.PASSWORD_ARE_SAME
 import com.trusov.sociallab.domain.repository.Repository
 import javax.inject.Inject
 

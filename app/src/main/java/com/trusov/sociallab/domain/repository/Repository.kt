@@ -9,7 +9,9 @@ import com.trusov.sociallab.domain.entity.Statistics
 interface Repository {
     // enter
     fun signUp(login: String, password: String)
-    fun logIn(login: String, password: String): Respondent
+    fun logIn(login: String, password: String)
+    suspend fun getCurrentRespondent(): Respondent?
+    fun signOut()
 
     // researches info
     fun getListOfResearches(): LiveData<List<Research>>

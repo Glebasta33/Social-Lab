@@ -7,13 +7,16 @@ import androidx.fragment.app.Fragment
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import androidx.core.view.isVisible
 import com.trusov.sociallab.R
 import com.trusov.sociallab.SocialLabApp
 import com.trusov.sociallab.databinding.LogInFragmentBinding
 import com.trusov.sociallab.di.ViewModelFactory
+import com.trusov.sociallab.domain.entity.Respondent
 import com.trusov.sociallab.presentation.fragment.researches.ResearchesFragment
 import com.trusov.sociallab.presentation.fragment.sing_up.SignUpFragment
 import com.trusov.sociallab.presentation.util.OnInputErrorListener
+import kotlinx.coroutines.*
 import javax.inject.Inject
 
 class LogInFragment : Fragment() {
@@ -58,18 +61,47 @@ class LogInFragment : Fragment() {
                 val login = etEmail.text.toString()
                 val password = etPassword.text.toString()
                 viewModel.logIn(login, password)
+                CoroutineScope(Dispatchers.IO).launch {
+                    withContext(Dispatchers.Main) {
+                        showProgressBar(1000L)
+                    }
+                    val respondent = checkAuthentication()
+                    withContext(Dispatchers.Main) {
+                        launchResearchFragmentOrShowToast(respondent)
+                        hideProgressBar()
+                    }
+                }
             }
 
             viewModel.message.observe(viewLifecycleOwner) {
                 onInputErrorListener.onErrorInput(it)
             }
-
-            viewModel.respondent.observe(viewLifecycleOwner) {
-                requireActivity().supportFragmentManager.beginTransaction()
-                    .replace(R.id.main_container, ResearchesFragment.newInstance(it))
-                    .commit()
-            }
         }
+    }
+
+    private suspend fun showProgressBar(timeMillis: Long) {
+        binding.progress.isVisible = true
+        delay(timeMillis)
+    }
+
+    private fun hideProgressBar() {
+        binding.progress.isVisible = false
+    }
+
+    private fun launchResearchFragmentOrShowToast(respondent: Respondent?) {
+        if (respondent == null) {
+            onInputErrorListener.onErrorInput("Неверный логин или пароль!!!")
+        } else {
+            requireActivity().supportFragmentManager.beginTransaction()
+                .replace(R.id.main_container, ResearchesFragment.newInstance(respondent))
+                .commit()
+        }
+    }
+
+
+
+    private suspend fun checkAuthentication(): Respondent? {
+        return viewModel.getCurrentRespondent()
     }
 
     override fun onDestroyView() {

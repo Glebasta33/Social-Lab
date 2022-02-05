@@ -5,15 +5,18 @@ import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import androidx.core.view.isVisible
 import androidx.fragment.app.Fragment
 import androidx.lifecycle.ViewModelProvider
 import com.trusov.sociallab.R
 import com.trusov.sociallab.SocialLabApp
 import com.trusov.sociallab.databinding.SingUpFragmentBinding
 import com.trusov.sociallab.di.ViewModelFactory
+import com.trusov.sociallab.domain.entity.Respondent
 import com.trusov.sociallab.presentation.fragment.log_in.LogInFragment
 import com.trusov.sociallab.presentation.fragment.researches.ResearchesFragment
 import com.trusov.sociallab.presentation.util.OnInputErrorListener
+import kotlinx.coroutines.*
 import javax.inject.Inject
 
 class SignUpFragment : Fragment() {
@@ -59,18 +62,47 @@ class SignUpFragment : Fragment() {
                 val password1 = etPassword.text.toString()
                 val password2 = etPassword2.text.toString()
                 viewModel.singUp(login, password1, password2, checkBox.isChecked)
+                viewModel.readyToClose.observe(viewLifecycleOwner) {
+                    CoroutineScope(Dispatchers.IO).launch {
+                        withContext(Dispatchers.Main) {
+                            showProgressBar(1000L)
+                        }
+                        val respondent = checkAuthentication()
+                        withContext(Dispatchers.Main) {
+                            launchResearchFragmentOrShowToast(respondent)
+                            hideProgressBar()
+                        }
+                    }
+                }
             }
         }
 
         viewModel.message.observe(viewLifecycleOwner) {
             onInputErrorListener.onErrorInput(it)
         }
+    }
 
-        viewModel.respondent.observe(viewLifecycleOwner) {
+    private fun launchResearchFragmentOrShowToast(respondent: Respondent?) {
+        if (respondent == null) {
+            onInputErrorListener.onErrorInput("Не удалось зарегистрироваться")
+        } else {
             requireActivity().supportFragmentManager.beginTransaction()
-                .replace(R.id.main_container, ResearchesFragment.newInstance(it))
+                .replace(R.id.main_container, ResearchesFragment.newInstance(respondent))
                 .commit()
         }
+    }
+
+    private suspend fun showProgressBar(timeMillis: Long) {
+        binding.progress.isVisible = true
+        delay(timeMillis)
+    }
+
+    private fun hideProgressBar() {
+        binding.progress.isVisible = false
+    }
+
+    private suspend fun checkAuthentication(): Respondent? {
+        return viewModel.getCurrentRespondent()
     }
 
     override fun onDestroyView() {

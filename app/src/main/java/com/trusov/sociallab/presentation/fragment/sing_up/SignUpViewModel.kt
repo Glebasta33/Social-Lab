@@ -4,21 +4,25 @@ import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
 import com.trusov.sociallab.domain.entity.Respondent
-import com.trusov.sociallab.domain.use_case.enter.LogInUseCase
-import com.trusov.sociallab.domain.use_case.enter.SignUpUseCase
+import com.trusov.sociallab.domain.use_case.auth.GetCurrentRespondentUseCase
+import com.trusov.sociallab.domain.use_case.auth.LogInUseCase
+import com.trusov.sociallab.domain.use_case.auth.SignUpUseCase
 import javax.inject.Inject
-import kotlin.math.log
 
 class SignUpViewModel @Inject constructor(
     private val singUpUseCase: SignUpUseCase,
-    private val logInUseCase: LogInUseCase
+    private val getCurrentRespondentUseCase: GetCurrentRespondentUseCase
 ) : ViewModel() {
-
-    private val _respondent = MutableLiveData<Respondent>()
-    val respondent: LiveData<Respondent> = _respondent
 
     private val _message = MutableLiveData<String>()
     val message: LiveData<String> = _message
+
+    private val _readyToClose = MutableLiveData<Boolean>()
+    val readyToClose: LiveData<Boolean> = _readyToClose
+
+    suspend fun getCurrentRespondent(): Respondent? {
+        return getCurrentRespondentUseCase()
+    }
 
     fun singUp(
         inputLogin: String?,
@@ -31,11 +35,6 @@ class SignUpViewModel @Inject constructor(
         val password2 = parseInput(inputPassword2)
         if (validateInput(login, password1, password2, agreeWithTheTerms)){
             singUpUseCase(login, password1)
-            _message.value = MESSAGE_SUCCESS
-            val respondent = logInUseCase(login, password1)
-            if (respondent != null) {
-                _respondent.value = respondent!!
-            }
         }
     }
 
@@ -57,10 +56,15 @@ class SignUpViewModel @Inject constructor(
             _message.value = MESSAGE_PASSWORDS_DIFFERS
             return false
         }
+        if (password1.length < 6) {
+            _message.value = MESSAGE_PASSWORDS_LENGTH
+            return false
+        }
         if (!agreeWithTheTerms) {
             _message.value = MESSAGE_CONFIRM
             return false
         }
+        _readyToClose.value = true
         return true
     }
 
@@ -68,6 +72,7 @@ class SignUpViewModel @Inject constructor(
         private const val MESSAGE_SUCCESS = "Регистрация прошла успешно"
         private const val MESSAGE_FILL_INPUTS = "Заполните все поля"
         private const val MESSAGE_PASSWORDS_DIFFERS = "Введённые пароли отличаются"
+        private const val MESSAGE_PASSWORDS_LENGTH = "Пароль должен быть не короче 6 символов"
         private const val MESSAGE_CONFIRM = "Подтвердите согласие с условиями использования"
     }
 }
