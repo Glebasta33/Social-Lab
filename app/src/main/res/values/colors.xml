@@ -10,4 +10,5 @@
     <color name="grey">#444444</color>
     <color name="light_grey">#888888</color>
     <color name="link">#4B60D1</color>
+    <color name="red">#F00</color>
 </resources>
