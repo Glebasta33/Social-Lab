@@ -2,9 +2,9 @@ package com.trusov.sociallab.di
 
 import android.app.Application
 import com.trusov.sociallab.presentation.activity.MainActivity
-import com.trusov.sociallab.presentation.fragment.log_in.LogInFragment
+import com.trusov.sociallab.presentation.fragment.auth.log_in.LogInFragment
 import com.trusov.sociallab.presentation.fragment.researches.ResearchesFragment
-import com.trusov.sociallab.presentation.fragment.sing_up.SignUpFragment
+import com.trusov.sociallab.presentation.fragment.auth.sing_up.SignUpFragment
 import dagger.BindsInstance
 import dagger.Component
 

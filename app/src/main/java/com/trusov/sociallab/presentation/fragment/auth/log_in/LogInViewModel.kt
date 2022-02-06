@@ -1,4 +1,4 @@
-package com.trusov.sociallab.presentation.fragment.log_in
+package com.trusov.sociallab.presentation.fragment.auth.log_in
 
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
@@ -6,9 +6,6 @@ import androidx.lifecycle.ViewModel
 import com.trusov.sociallab.domain.entity.Respondent
 import com.trusov.sociallab.domain.use_case.auth.GetCurrentRespondentUseCase
 import com.trusov.sociallab.domain.use_case.auth.LogInUseCase
-import kotlinx.coroutines.CoroutineScope
-import kotlinx.coroutines.Dispatchers
-import kotlinx.coroutines.launch
 import javax.inject.Inject
 
 class LogInViewModel @Inject constructor(

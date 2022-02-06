@@ -14,10 +14,10 @@ import com.trusov.sociallab.SocialLabApp
 import com.trusov.sociallab.databinding.ActivityMainBinding
 import com.trusov.sociallab.di.ViewModelFactory
 import com.trusov.sociallab.domain.entity.Respondent
-import com.trusov.sociallab.presentation.fragment.log_in.LogInFragment
+import com.trusov.sociallab.presentation.fragment.auth.log_in.LogInFragment
 import com.trusov.sociallab.presentation.fragment.researches.ResearchesFragment
-import com.trusov.sociallab.presentation.fragment.sing_up.SignUpFragment
-import com.trusov.sociallab.presentation.fragment.welcome.WelcomeFragment
+import com.trusov.sociallab.presentation.fragment.auth.sing_up.SignUpFragment
+import com.trusov.sociallab.presentation.fragment.auth.welcome.WelcomeFragment
 import com.trusov.sociallab.presentation.util.NavigationController
 import com.trusov.sociallab.presentation.util.OnInputErrorListener
 import kotlinx.coroutines.*

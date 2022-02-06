@@ -7,12 +7,10 @@ import android.view.View
 import android.view.ViewGroup
 import androidx.fragment.app.Fragment
 import androidx.lifecycle.ViewModelProvider
-import com.trusov.sociallab.R
 import com.trusov.sociallab.SocialLabApp
 import com.trusov.sociallab.databinding.ResearchesFragmentBinding
 import com.trusov.sociallab.di.ViewModelFactory
 import com.trusov.sociallab.domain.entity.Respondent
-import com.trusov.sociallab.presentation.fragment.log_in.LogInFragment
 import com.trusov.sociallab.presentation.util.NavigationController
 import javax.inject.Inject
 

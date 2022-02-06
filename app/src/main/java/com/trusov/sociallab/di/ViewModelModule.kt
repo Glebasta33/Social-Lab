@@ -2,9 +2,9 @@ package com.trusov.sociallab.di
 
 import androidx.lifecycle.ViewModel
 import com.trusov.sociallab.presentation.activity.MainActivityViewModel
-import com.trusov.sociallab.presentation.fragment.log_in.LogInViewModel
+import com.trusov.sociallab.presentation.fragment.auth.log_in.LogInViewModel
 import com.trusov.sociallab.presentation.fragment.researches.ResearchesViewModel
-import com.trusov.sociallab.presentation.fragment.sing_up.SignUpViewModel
+import com.trusov.sociallab.presentation.fragment.auth.sing_up.SignUpViewModel
 import dagger.Binds
 import dagger.Module
 import dagger.multibindings.IntoMap
