@@ -5,7 +5,6 @@ import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
 import com.trusov.sociallab.domain.entity.Respondent
 import com.trusov.sociallab.domain.use_case.auth.GetCurrentRespondentUseCase
-import com.trusov.sociallab.domain.use_case.auth.LogInUseCase
 import com.trusov.sociallab.domain.use_case.auth.SignUpUseCase
 import javax.inject.Inject
 
@@ -33,7 +32,7 @@ class SignUpViewModel @Inject constructor(
         val login = parseInput(inputLogin)
         val password1 = parseInput(inputPassword1)
         val password2 = parseInput(inputPassword2)
-        if (validateInput(login, password1, password2, agreeWithTheTerms)){
+        if (validateInput(login, password1, password2, agreeWithTheTerms)) {
             singUpUseCase(login, password1)
         }
     }
