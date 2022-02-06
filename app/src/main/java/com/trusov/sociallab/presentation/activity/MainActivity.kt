@@ -14,10 +14,13 @@ import com.trusov.sociallab.SocialLabApp
 import com.trusov.sociallab.databinding.ActivityMainBinding
 import com.trusov.sociallab.di.ViewModelFactory
 import com.trusov.sociallab.domain.entity.Respondent
+import com.trusov.sociallab.presentation.fragment.answers.AnswersFragment
 import com.trusov.sociallab.presentation.fragment.auth.log_in.LogInFragment
 import com.trusov.sociallab.presentation.fragment.researches.ResearchesFragment
 import com.trusov.sociallab.presentation.fragment.auth.sing_up.SignUpFragment
 import com.trusov.sociallab.presentation.fragment.auth.welcome.WelcomeFragment
+import com.trusov.sociallab.presentation.fragment.my_researches.MyResearchesFragment
+import com.trusov.sociallab.presentation.fragment.statistics.StatisticsFragment
 import com.trusov.sociallab.presentation.util.NavigationController
 import com.trusov.sociallab.presentation.util.OnInputErrorListener
 import kotlinx.coroutines.*
@@ -102,14 +105,17 @@ class MainActivity : AppCompatActivity(), OnInputErrorListener, NavigationContro
     }
 
     override fun launchMyResearchesFragment() {
+        replaceMainContainer(MyResearchesFragment.newInstance())
         changeToolbarContent(R.string.my_researches, R.drawable.ic_my_researches)
     }
 
     override fun launchAnswersFragment() {
+        replaceMainContainer(AnswersFragment.newInstance())
         changeToolbarContent(R.string.my_answers, R.drawable.ic_answers)
     }
 
     override fun launchStatisticsFragment() {
+        replaceMainContainer(StatisticsFragment.newInstance())
         changeToolbarContent(R.string.my_statistics, R.drawable.ic_statistics)
     }
 
