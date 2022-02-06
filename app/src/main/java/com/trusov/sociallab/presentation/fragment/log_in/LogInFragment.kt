@@ -8,13 +8,10 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import androidx.core.view.isVisible
-import com.trusov.sociallab.R
 import com.trusov.sociallab.SocialLabApp
 import com.trusov.sociallab.databinding.LogInFragmentBinding
 import com.trusov.sociallab.di.ViewModelFactory
-import com.trusov.sociallab.domain.entity.Respondent
-import com.trusov.sociallab.presentation.fragment.researches.ResearchesFragment
-import com.trusov.sociallab.presentation.fragment.sing_up.SignUpFragment
+import com.trusov.sociallab.presentation.util.NavigationController
 import com.trusov.sociallab.presentation.util.OnInputErrorListener
 import kotlinx.coroutines.*
 import javax.inject.Inject
@@ -25,6 +22,7 @@ class LogInFragment : Fragment() {
     lateinit var viewModelFactory: ViewModelFactory
     private lateinit var viewModel: LogInViewModel
     private lateinit var onInputErrorListener: OnInputErrorListener
+    private lateinit var navigationController: NavigationController
 
     private var _binding: LogInFragmentBinding? = null
     private val binding: LogInFragmentBinding
@@ -33,10 +31,11 @@ class LogInFragment : Fragment() {
     override fun onAttach(context: Context) {
         (activity?.application as SocialLabApp).component.inject(this)
         super.onAttach(context)
-        if(context is OnInputErrorListener) {
+        if (context is OnInputErrorListener) {
             onInputErrorListener = context
-        } else {
-            throw RuntimeException("Activity $context must implement onErrorLoginListener")
+        }
+        if (context is NavigationController) {
+            navigationController = context
         }
     }
 
@@ -51,65 +50,58 @@ class LogInFragment : Fragment() {
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
         viewModel = ViewModelProvider(this, viewModelFactory)[LogInViewModel::class.java]
-        with(binding){
+        with(binding) {
             tvToSingUp.setOnClickListener {
-                requireActivity().supportFragmentManager.beginTransaction()
-                    .replace(R.id.main_container, SignUpFragment.newInstance())
-                    .commit()
+                navigationController.launchSignUpFragment()
             }
             buttonLogIn.setOnClickListener {
-                val login = etEmail.text.toString()
-                val password = etPassword.text.toString()
-                viewModel.logIn(login, password)
-                CoroutineScope(Dispatchers.IO).launch {
-                    withContext(Dispatchers.Main) {
-                        showProgressBar(1000L)
-                    }
-                    val respondent = checkAuthentication()
-                    withContext(Dispatchers.Main) {
-                        launchResearchFragmentOrShowToast(respondent)
-                        hideProgressBar()
-                    }
-                }
+                login()
+                checkLogin()
             }
-
             viewModel.message.observe(viewLifecycleOwner) {
                 onInputErrorListener.onErrorInput(it)
             }
         }
     }
 
-    private suspend fun showProgressBar(timeMillis: Long) {
-        binding.progress.isVisible = true
-        delay(timeMillis)
+    private fun LogInFragmentBinding.login() {
+        val login = etEmail.text.toString()
+        val password = etPassword.text.toString()
+        viewModel.logIn(login, password)
     }
 
-    private fun hideProgressBar() {
-        binding.progress.isVisible = false
-    }
-
-    private fun launchResearchFragmentOrShowToast(respondent: Respondent?) {
-        if (respondent == null) {
-            onInputErrorListener.onErrorInput("Неверный логин или пароль!!!")
-        } else {
-            requireActivity().supportFragmentManager.beginTransaction()
-                .replace(R.id.main_container, ResearchesFragment.newInstance(respondent))
-                .commit()
+    private fun checkLogin() {
+        CoroutineScope(Dispatchers.IO).launch {
+            withContext(Dispatchers.Main) {
+                setProgressBarVisibility(VISIBLE)
+            }
+            val respondent = navigationController.checkAuth()
+            withContext(Dispatchers.Main) {
+                if (respondent != null) {
+                    navigationController.launchResearchesFragment()
+                } else {
+                    onInputErrorListener.onErrorInput("Неверный логин или пароль")
+                }
+                setProgressBarVisibility(INVISIBLE)
+            }
         }
     }
 
-
-
-    private suspend fun checkAuthentication(): Respondent? {
-        return viewModel.getCurrentRespondent()
-    }
-
-    override fun onDestroyView() {
-        super.onDestroyView()
-        _binding = null
+    private suspend fun setProgressBarVisibility(visibility: Int) {
+        when (visibility) {
+            VISIBLE -> {
+                binding.progress.isVisible = true
+                delay(2000L)
+            }
+            INVISIBLE -> {
+                binding.progress.isVisible = false
+            }
+        }
     }
 
     companion object {
+        private const val VISIBLE = 200
+        private const val INVISIBLE = 400
         fun newInstance() = LogInFragment()
     }
 

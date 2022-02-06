@@ -8,13 +8,10 @@ import android.view.ViewGroup
 import androidx.core.view.isVisible
 import androidx.fragment.app.Fragment
 import androidx.lifecycle.ViewModelProvider
-import com.trusov.sociallab.R
 import com.trusov.sociallab.SocialLabApp
 import com.trusov.sociallab.databinding.SingUpFragmentBinding
 import com.trusov.sociallab.di.ViewModelFactory
-import com.trusov.sociallab.domain.entity.Respondent
-import com.trusov.sociallab.presentation.fragment.log_in.LogInFragment
-import com.trusov.sociallab.presentation.fragment.researches.ResearchesFragment
+import com.trusov.sociallab.presentation.util.NavigationController
 import com.trusov.sociallab.presentation.util.OnInputErrorListener
 import kotlinx.coroutines.*
 import javax.inject.Inject
@@ -25,6 +22,7 @@ class SignUpFragment : Fragment() {
     lateinit var viewModelFactory: ViewModelFactory
     private lateinit var viewModel: SignUpViewModel
     private lateinit var onInputErrorListener: OnInputErrorListener
+    private lateinit var navigationController: NavigationController
 
     private var _binding: SingUpFragmentBinding? = null
     private val binding: SingUpFragmentBinding
@@ -35,8 +33,9 @@ class SignUpFragment : Fragment() {
         super.onAttach(context)
         if (context is OnInputErrorListener) {
             onInputErrorListener = context
-        } else {
-            throw RuntimeException("Activity $context must implement onErrorLoginListener")
+        }
+        if (context is NavigationController) {
+            navigationController = context
         }
     }
 
@@ -53,64 +52,59 @@ class SignUpFragment : Fragment() {
         viewModel = ViewModelProvider(this, viewModelFactory)[SignUpViewModel::class.java]
         with(binding) {
             tvToLogIn.setOnClickListener {
-                requireActivity().supportFragmentManager.beginTransaction()
-                    .replace(R.id.main_container, LogInFragment.newInstance())
-                    .commit()
+                navigationController.launchLoginFragment()
             }
             buttonSignUp.setOnClickListener {
-                val login = etEmail.text.toString()
-                val password1 = etPassword.text.toString()
-                val password2 = etPassword2.text.toString()
-                viewModel.singUp(login, password1, password2, checkBox.isChecked)
-                viewModel.readyToClose.observe(viewLifecycleOwner) {
-                    CoroutineScope(Dispatchers.IO).launch {
-                        withContext(Dispatchers.Main) {
-                            showProgressBar(1000L)
-                        }
-                        val respondent = checkAuthentication()
-                        withContext(Dispatchers.Main) {
-                            launchResearchFragmentOrShowToast(respondent)
-                            hideProgressBar()
-                        }
-                    }
-                }
+                signUp()
+                checkRegistration()
             }
         }
-
         viewModel.message.observe(viewLifecycleOwner) {
             onInputErrorListener.onErrorInput(it)
         }
     }
 
-    private fun launchResearchFragmentOrShowToast(respondent: Respondent?) {
-        if (respondent == null) {
-            onInputErrorListener.onErrorInput("Не удалось зарегистрироваться")
-        } else {
-            requireActivity().supportFragmentManager.beginTransaction()
-                .replace(R.id.main_container, ResearchesFragment.newInstance(respondent))
-                .commit()
+    private fun SingUpFragmentBinding.signUp() {
+        val login = etEmail.text.toString()
+        val password1 = etPassword.text.toString()
+        val password2 = etPassword2.text.toString()
+        viewModel.singUp(login, password1, password2, checkBox.isChecked)
+    }
+
+    private fun checkRegistration() {
+        viewModel.readyToClose.observe(viewLifecycleOwner) {
+            CoroutineScope(Dispatchers.IO).launch {
+                withContext(Dispatchers.Main) {
+                    setProgressBarVisibility(VISIBLE)
+                }
+                val respondent = navigationController.checkAuth()
+                withContext(Dispatchers.Main) {
+                    if (respondent != null) {
+                        navigationController.launchResearchesFragment()
+                    } else {
+                        onInputErrorListener.onErrorInput("Не удалось зарегистрироваться")
+                    }
+                    setProgressBarVisibility(INVISIBLE)
+                }
+            }
         }
     }
 
-    private suspend fun showProgressBar(timeMillis: Long) {
-        binding.progress.isVisible = true
-        delay(timeMillis)
-    }
-
-    private fun hideProgressBar() {
-        binding.progress.isVisible = false
-    }
-
-    private suspend fun checkAuthentication(): Respondent? {
-        return viewModel.getCurrentRespondent()
-    }
-
-    override fun onDestroyView() {
-        _binding = null
-        super.onDestroyView()
+    private suspend fun setProgressBarVisibility(visibility: Int) {
+        when (visibility) {
+            VISIBLE -> {
+                binding.progress.isVisible = true
+                delay(2000L)
+            }
+            INVISIBLE -> {
+                binding.progress.isVisible = false
+            }
+        }
     }
 
     companion object {
+        private const val VISIBLE = 200
+        private const val INVISIBLE = 400
         fun newInstance() = SignUpFragment()
     }
 
