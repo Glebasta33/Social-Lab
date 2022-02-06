@@ -8,5 +8,8 @@ interface NavigationController {
     fun launchLoginFragment()
     fun launchSignUpFragment()
     fun launchResearchesFragment()
+    fun launchMyResearchesFragment()
+    fun launchAnswersFragment()
+    fun launchStatisticsFragment()
     fun signOut()
 }

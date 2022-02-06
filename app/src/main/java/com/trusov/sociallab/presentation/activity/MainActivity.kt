@@ -7,7 +7,6 @@ import android.view.MenuItem
 import android.widget.Toast
 import androidx.core.content.ContextCompat
 import androidx.core.view.isGone
-import androidx.core.view.isVisible
 import androidx.fragment.app.Fragment
 import androidx.lifecycle.ViewModelProvider
 import com.trusov.sociallab.R
@@ -41,6 +40,11 @@ class MainActivity : AppCompatActivity(), OnInputErrorListener, NavigationContro
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(binding.root)
+        binding.toolbar.apply {
+            setSupportActionBar(this)
+            setTitleTextColor(ContextCompat.getColor(this@MainActivity, R.color.white))
+            setSubtitleTextColor(ContextCompat.getColor(this@MainActivity, R.color.white))
+        }
         launchWelcomeFragment()
         (application as SocialLabApp).component.inject(this)
         CoroutineScope(Dispatchers.IO).launch {
@@ -61,7 +65,11 @@ class MainActivity : AppCompatActivity(), OnInputErrorListener, NavigationContro
     }
 
     override fun onOptionsItemSelected(item: MenuItem): Boolean {
-        when(item.itemId) {
+        when (item.itemId) {
+            R.id.action_all_researches -> launchResearchesFragment()
+            R.id.action_my_researches -> launchMyResearchesFragment()
+            R.id.action_answers -> launchAnswersFragment()
+            R.id.action_statistics -> launchStatisticsFragment()
             R.id.action_sing_out -> {
                 signOut()
                 launchLoginFragment()
@@ -89,15 +97,26 @@ class MainActivity : AppCompatActivity(), OnInputErrorListener, NavigationContro
 
     override fun launchResearchesFragment() {
         replaceMainContainer(ResearchesFragment.newInstance(respondent))
+        changeToolbarContent(R.string.researches, R.drawable.ic_researches)
+        binding.toolbar.isGone = false
+    }
+
+    override fun launchMyResearchesFragment() {
+        changeToolbarContent(R.string.my_researches, R.drawable.ic_my_researches)
+    }
+
+    override fun launchAnswersFragment() {
+        changeToolbarContent(R.string.my_answers, R.drawable.ic_answers)
+    }
+
+    override fun launchStatisticsFragment() {
+        changeToolbarContent(R.string.my_statistics, R.drawable.ic_statistics)
+    }
+
+    private fun changeToolbarContent(titleContent: Int, iconId: Int) {
         binding.toolbar.apply {
-            setSupportActionBar(this)
-            title = "Исследования"
-            setTitleTextColor(ContextCompat.getColor(this@MainActivity, R.color.white))
-            isGone = false
-            navigationIcon = ContextCompat.getDrawable(
-                this@MainActivity,
-                R.drawable.ic_researches
-            )
+            title = resources.getString(titleContent)
+            navigationIcon = ContextCompat.getDrawable(this@MainActivity, iconId)
         }
     }
 
