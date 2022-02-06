@@ -3,5 +3,10 @@
     <string name="enter_title">Вход</string>
     <!-- TODO: Remove or change this placeholder text -->
     <string name="hello_blank_fragment">Hello blank fragment</string>
+    <string name="researches">Исследования</string>
+    <string name="my_researches">Мои исследования</string>
+    <string name="my_answers">Мои ответы</string>
+    <string name="my_statistics">Моя статистика</string>
+    <string name="sign_out">Выйти</string>
 
 </resources>
