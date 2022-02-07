@@ -2,17 +2,17 @@ package com.trusov.sociallab.presentation.fragment.researches
 
 import android.content.Context
 import android.os.Bundle
+import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import androidx.fragment.app.Fragment
 import androidx.lifecycle.ViewModelProvider
-import com.trusov.sociallab.R
+import androidx.recyclerview.widget.LinearLayoutManager
 import com.trusov.sociallab.SocialLabApp
 import com.trusov.sociallab.databinding.ResearchesFragmentBinding
 import com.trusov.sociallab.di.ViewModelFactory
 import com.trusov.sociallab.domain.entity.Respondent
-import com.trusov.sociallab.presentation.fragment.research_info.ResearchInfoFragment
 import com.trusov.sociallab.presentation.util.NavigationController
 import javax.inject.Inject
 
@@ -31,6 +31,7 @@ class ResearchesFragment : Fragment() {
 
     private lateinit var respondentArg: Respondent
     private lateinit var navigationController: NavigationController
+    private lateinit var researchesListAdapter: ResearchesListAdapter
 
     override fun onAttach(context: Context) {
         super.onAttach(context)
@@ -42,6 +43,7 @@ class ResearchesFragment : Fragment() {
     override fun onCreate(savedInstanceState: Bundle?) {
         (activity?.application as SocialLabApp).component.inject(this)
         super.onCreate(savedInstanceState)
+        researchesListAdapter = ResearchesListAdapter()
         parseArgs()
     }
 
@@ -62,16 +64,10 @@ class ResearchesFragment : Fragment() {
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
-        binding.tvTest.text = respondentArg.toString()
-        binding.tvTest.setOnClickListener {
-            viewModel.getListOfResearches()
-//            requireActivity().supportFragmentManager.beginTransaction()
-//                .replace(R.id.main_container, ResearchInfoFragment.newInstance(respondentArg))
-//                .addToBackStack(null)
-//                .commit()
-        }
+        binding.rvResearches.adapter = researchesListAdapter
         viewModel.getListOfResearches().observe(viewLifecycleOwner) {
-            binding.tvTest.text = it.toString()
+            Log.d("ResearchesFragment", "list: $it")
+            researchesListAdapter.submitList(it?.toMutableList())
         }
     }
 
