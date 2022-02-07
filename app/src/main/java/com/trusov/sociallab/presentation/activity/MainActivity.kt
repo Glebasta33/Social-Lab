@@ -132,6 +132,7 @@ class MainActivity : AppCompatActivity(), OnInputErrorListener, NavigationContro
     }
 
     private fun replaceMainContainer(fragment: Fragment) {
+        supportFragmentManager.popBackStack()
         supportFragmentManager.beginTransaction()
             .replace(R.id.main_container, fragment)
             .commit()
