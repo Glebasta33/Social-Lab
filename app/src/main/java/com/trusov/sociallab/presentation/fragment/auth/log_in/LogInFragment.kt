@@ -1,4 +1,4 @@
-package com.trusov.sociallab.presentation.fragment.log_in
+package com.trusov.sociallab.presentation.fragment.auth.log_in
 
 import android.content.Context
 import androidx.lifecycle.ViewModelProvider

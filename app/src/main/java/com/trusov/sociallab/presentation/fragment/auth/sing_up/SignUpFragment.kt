@@ -1,4 +1,4 @@
-package com.trusov.sociallab.presentation.fragment.sing_up
+package com.trusov.sociallab.presentation.fragment.auth.sing_up
 
 import android.content.Context
 import android.os.Bundle
