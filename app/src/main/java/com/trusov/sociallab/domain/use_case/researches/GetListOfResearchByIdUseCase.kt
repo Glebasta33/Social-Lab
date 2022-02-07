@@ -1,4 +1,4 @@
-package com.trusov.sociallab.domain.use_case.researches_info
+package com.trusov.sociallab.domain.use_case.researches
 
 import com.trusov.sociallab.domain.repository.Repository
 

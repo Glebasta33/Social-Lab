@@ -64,10 +64,14 @@ class ResearchesFragment : Fragment() {
         super.onViewCreated(view, savedInstanceState)
         binding.tvTest.text = respondentArg.toString()
         binding.tvTest.setOnClickListener {
-            requireActivity().supportFragmentManager.beginTransaction()
-                .replace(R.id.main_container, ResearchInfoFragment.newInstance(respondentArg))
-                .addToBackStack(null)
-                .commit()
+            viewModel.getListOfResearches()
+//            requireActivity().supportFragmentManager.beginTransaction()
+//                .replace(R.id.main_container, ResearchInfoFragment.newInstance(respondentArg))
+//                .addToBackStack(null)
+//                .commit()
+        }
+        viewModel.getListOfResearches().observe(viewLifecycleOwner) {
+            binding.tvTest.text = it.toString()
         }
     }
 

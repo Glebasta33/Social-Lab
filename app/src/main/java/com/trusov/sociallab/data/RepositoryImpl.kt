@@ -2,9 +2,9 @@ package com.trusov.sociallab.data
 
 import android.util.Log
 import androidx.lifecycle.LiveData
+import androidx.lifecycle.MutableLiveData
 import com.google.firebase.auth.FirebaseAuth
 import com.google.firebase.firestore.FirebaseFirestore
-import com.trusov.sociallab.data.database.EnterDao
 import com.trusov.sociallab.di.ApplicationScope
 import com.trusov.sociallab.domain.entity.Question
 import com.trusov.sociallab.domain.entity.Research
@@ -15,7 +15,6 @@ import javax.inject.Inject
 
 @ApplicationScope
 class RepositoryImpl @Inject constructor(
-    private val enterDao: EnterDao,
     private val firebase: FirebaseFirestore,
     private val auth: FirebaseAuth
 ) : Repository {
@@ -47,10 +46,8 @@ class RepositoryImpl @Inject constructor(
     override suspend fun getCurrentRespondent(): Respondent? {
         auth.currentUser?.let {
             val email = it.email ?: ""
-
             return Respondent("from", email, id = 3L)
         }
-        Log.d("LogcatDebug", "$this auth.currentUser: ${auth.currentUser}")
         return null
     }
 
@@ -59,7 +56,26 @@ class RepositoryImpl @Inject constructor(
     }
 
     override fun getListOfResearches(): LiveData<List<Research>> {
-        TODO("Not yet implemented")
+        val listOfResearches = ArrayList<Research>()
+        val liveData = MutableLiveData<List<Research>>()
+        firebase.collection("researches").addSnapshotListener { value, error ->
+            if (value != null) {
+                listOfResearches.clear()
+                for (data in value.documents) {
+                    val research = Research(
+                        topic = data["topic"].toString(),
+                        description = data["description"].toString()
+                    )
+                    listOfResearches.add(research)
+                }
+                Log.d("LogcatDebug", "value: ${listOfResearches.toString()}")
+                liveData.value = listOfResearches
+            }
+            if (error != null) {
+                Log.d("LogcatDebug", "error: ${error.message}")
+            }
+        }
+        return liveData
     }
 
     override fun getListOfResearchById(respondentId: Long): LiveData<List<Research>> {

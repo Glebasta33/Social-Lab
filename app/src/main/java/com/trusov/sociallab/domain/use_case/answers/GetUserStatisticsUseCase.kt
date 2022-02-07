@@ -1,4 +1,4 @@
-package com.trusov.sociallab.domain.use_case.respondent_info
+package com.trusov.sociallab.domain.use_case.answers
 
 import com.trusov.sociallab.domain.repository.Repository
 
