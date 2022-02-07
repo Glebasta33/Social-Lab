@@ -9,16 +9,14 @@ import com.trusov.sociallab.domain.use_case.auth.LogInUseCase
 import javax.inject.Inject
 
 class LogInViewModel @Inject constructor(
-    private val logInUseCase: LogInUseCase,
-    private val getCurrentRespondentUseCase: GetCurrentRespondentUseCase
+    private val logInUseCase: LogInUseCase
 ) : ViewModel() {
 
     private val _message = MutableLiveData<String>()
     val message: LiveData<String> = _message
 
-    suspend fun getCurrentRespondent(): Respondent? {
-        return getCurrentRespondentUseCase()
-    }
+    private val _readyToClose = MutableLiveData<Boolean>()
+    val readyToClose: LiveData<Boolean> = _readyToClose
 
     fun logIn(inputLogin: String?, inputPassword: String?) {
         val login = parseInput(inputLogin)
@@ -33,16 +31,19 @@ class LogInViewModel @Inject constructor(
     }
 
     private fun validateInput(login: String, password: String): Boolean {
-        var result = true
         if (login.isBlank() || password.isBlank()) {
             _message.value = MESSAGE_FILL_INPUTS
-            result = false
+            return false
         }
-        return result
+        _readyToClose.value = true
+        return true
+    }
+
+    fun showWrongInputsMessage() {
+        _message.value = MESSAGE_WRONG_INPUTS
     }
 
     companion object {
-        private const val MESSAGE_WELCOME = "Добро пожаловать"
         private const val MESSAGE_WRONG_INPUTS = "Неверный логин или пароль"
         private const val MESSAGE_FILL_INPUTS = "Заполните все поля"
     }

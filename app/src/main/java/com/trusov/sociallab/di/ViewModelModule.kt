@@ -1,7 +1,6 @@
 package com.trusov.sociallab.di
 
 import androidx.lifecycle.ViewModel
-import com.trusov.sociallab.domain.entity.Statistics
 import com.trusov.sociallab.presentation.activity.MainActivityViewModel
 import com.trusov.sociallab.presentation.fragment.answers.AnswersViewModel
 import com.trusov.sociallab.presentation.fragment.auth.log_in.LogInViewModel

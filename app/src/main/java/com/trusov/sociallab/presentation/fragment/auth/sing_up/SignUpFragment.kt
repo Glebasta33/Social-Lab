@@ -82,7 +82,7 @@ class SignUpFragment : Fragment() {
                     if (respondent != null) {
                         navigationController.launchResearchesFragment()
                     } else {
-                        onInputErrorListener.onErrorInput("Не удалось зарегистрироваться")
+                        viewModel.showSignUpFailedMessage()
                     }
                     setProgressBarVisibility(INVISIBLE)
                 }

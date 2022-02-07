@@ -71,20 +71,23 @@ class LogInFragment : Fragment() {
     }
 
     private fun checkLogin() {
-        CoroutineScope(Dispatchers.IO).launch {
-            withContext(Dispatchers.Main) {
-                setProgressBarVisibility(VISIBLE)
-            }
-            val respondent = navigationController.checkAuth()
-            withContext(Dispatchers.Main) {
-                if (respondent != null) {
-                    navigationController.launchResearchesFragment()
-                } else {
-                    onInputErrorListener.onErrorInput("Неверный логин или пароль")
+        viewModel.readyToClose.observe(viewLifecycleOwner) {
+            CoroutineScope(Dispatchers.IO).launch {
+                withContext(Dispatchers.Main) {
+                    setProgressBarVisibility(VISIBLE)
                 }
-                setProgressBarVisibility(INVISIBLE)
+                val respondent = navigationController.checkAuth()
+                withContext(Dispatchers.Main) {
+                    if (respondent != null) {
+                        navigationController.launchResearchesFragment()
+                    } else {
+                        viewModel.showWrongInputsMessage()
+                    }
+                    setProgressBarVisibility(INVISIBLE)
+                }
             }
         }
+
     }
 
     private suspend fun setProgressBarVisibility(visibility: Int) {

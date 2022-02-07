@@ -9,8 +9,7 @@ import com.trusov.sociallab.domain.use_case.auth.SignUpUseCase
 import javax.inject.Inject
 
 class SignUpViewModel @Inject constructor(
-    private val singUpUseCase: SignUpUseCase,
-    private val getCurrentRespondentUseCase: GetCurrentRespondentUseCase
+    private val singUpUseCase: SignUpUseCase
 ) : ViewModel() {
 
     private val _message = MutableLiveData<String>()
@@ -19,9 +18,6 @@ class SignUpViewModel @Inject constructor(
     private val _readyToClose = MutableLiveData<Boolean>()
     val readyToClose: LiveData<Boolean> = _readyToClose
 
-    suspend fun getCurrentRespondent(): Respondent? {
-        return getCurrentRespondentUseCase()
-    }
 
     fun singUp(
         inputLogin: String?,
@@ -67,8 +63,12 @@ class SignUpViewModel @Inject constructor(
         return true
     }
 
+    fun showSignUpFailedMessage() {
+        _message.value = MESSAGE_SIGN_UP_FAILED
+    }
+
     companion object {
-        private const val MESSAGE_SUCCESS = "Регистрация прошла успешно"
+        private const val MESSAGE_SIGN_UP_FAILED = "Не удалось зарегистрироваться"
         private const val MESSAGE_FILL_INPUTS = "Заполните все поля"
         private const val MESSAGE_PASSWORDS_DIFFERS = "Введённые пароли отличаются"
         private const val MESSAGE_PASSWORDS_LENGTH = "Пароль должен быть не короче 6 символов"
