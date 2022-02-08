@@ -9,10 +9,12 @@ import android.view.ViewGroup
 import androidx.fragment.app.Fragment
 import androidx.lifecycle.ViewModelProvider
 import androidx.recyclerview.widget.LinearLayoutManager
+import com.trusov.sociallab.R
 import com.trusov.sociallab.SocialLabApp
 import com.trusov.sociallab.databinding.ResearchesFragmentBinding
 import com.trusov.sociallab.di.ViewModelFactory
 import com.trusov.sociallab.domain.entity.Respondent
+import com.trusov.sociallab.presentation.fragment.research_info.ResearchInfoFragment
 import com.trusov.sociallab.presentation.util.NavigationController
 import javax.inject.Inject
 
@@ -66,8 +68,13 @@ class ResearchesFragment : Fragment() {
         super.onViewCreated(view, savedInstanceState)
         binding.rvResearches.adapter = researchesListAdapter
         viewModel.getListOfResearches().observe(viewLifecycleOwner) {
-            Log.d("ResearchesFragment", "list: $it")
             researchesListAdapter.submitList(it?.toMutableList())
+        }
+        researchesListAdapter.onResearchItemClickListener = { researchId ->
+            requireActivity().supportFragmentManager.beginTransaction()
+                .replace(R.id.main_container, ResearchInfoFragment.newInstance(researchId))
+                .addToBackStack(null)
+                .commit()
         }
     }
 

@@ -64,11 +64,11 @@ class RepositoryImpl @Inject constructor(
                 for (data in value.documents) {
                     val research = Research(
                         topic = data["topic"].toString(),
-                        description = data["description"].toString()
+                        description = data["description"].toString(),
+                        id = data.id
                     )
                     listOfResearches.add(research)
                 }
-                Log.d("LogcatDebug", "value: ${listOfResearches.toString()}")
                 liveData.value = listOfResearches
             }
             if (error != null) {
@@ -78,15 +78,32 @@ class RepositoryImpl @Inject constructor(
         return liveData
     }
 
-    override fun getListOfResearchById(respondentId: Long): LiveData<List<Research>> {
+    override fun getListOfResearchById(respondentId: String): LiveData<List<Research>> {
         TODO("Not yet implemented")
     }
 
-    override fun getResearchById(researchId: Long): LiveData<Research> {
-        TODO("Not yet implemented")
+    override fun getResearchById(researchId: String): LiveData<Research> {
+        val liveData = MutableLiveData<Research>()
+        firebase.collection("researches").addSnapshotListener { value, error ->
+            if (value != null) {
+                val data = value.documents.find { it.id == researchId }
+                data?.let {
+                    val research = Research(
+                        topic = data["topic"].toString(),
+                        description = data["description"].toString(),
+                        id = data.id
+                    )
+                    liveData.value = research
+                }
+            }
+            if (error != null) {
+                Log.d("LogcatDebug", "error: ${error.message}")
+            }
+        }
+        return liveData
     }
 
-    override fun registerToResearch(respondentId: Long, researchId: Long) {
+    override fun registerToResearch(respondentId: String, researchId: String) {
         TODO("Not yet implemented")
     }
 
@@ -98,11 +115,11 @@ class RepositoryImpl @Inject constructor(
         TODO("Not yet implemented")
     }
 
-    override fun getListOfAnsweredQuestions(respondentId: Long): LiveData<List<Question>> {
+    override fun getListOfAnsweredQuestions(respondentId: String): LiveData<List<Question>> {
         TODO("Not yet implemented")
     }
 
-    override fun getUserStatistics(respondentId: Long): Statistics {
+    override fun getUserStatistics(respondentId: String): Statistics {
         TODO("Not yet implemented")
     }
 }

@@ -7,6 +7,9 @@ import com.trusov.sociallab.R
 import com.trusov.sociallab.domain.entity.Research
 
 class ResearchesListAdapter : ListAdapter<Research, ResearchViewHolder>(ResearchesDiffUtils()) {
+
+    var onResearchItemClickListener: ((String) -> Unit)? = null
+
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): ResearchViewHolder {
         val view = LayoutInflater.from(parent.context).inflate(
             R.layout.research_rv_item_layout,
@@ -21,6 +24,9 @@ class ResearchesListAdapter : ListAdapter<Research, ResearchViewHolder>(Research
         with(holder.binding) {
             tvResearchTopic.text = research.topic
             tvResearchDescription.text = research.description
+            root.setOnClickListener {
+                onResearchItemClickListener?.invoke(research.id)
+            }
         }
     }
 }
