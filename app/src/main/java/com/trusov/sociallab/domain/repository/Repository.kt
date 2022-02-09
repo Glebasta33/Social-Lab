@@ -17,7 +17,8 @@ interface Repository {
     fun getListOfResearches(): LiveData<List<Research>>
     fun getListOfResearchById(respondentId: String): LiveData<List<Research>>
     fun getResearchById(researchId: String): LiveData<Research>
-    fun registerToResearch(respondentId: String, researchId: String)
+    fun registerToResearch(researchId: String)
+    fun unregisterFromResearch(researchId: String)
 
     // survey
     fun getQuestion(): Question

@@ -4,6 +4,7 @@ import android.util.Log
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import com.google.firebase.auth.FirebaseAuth
+import com.google.firebase.firestore.FieldValue
 import com.google.firebase.firestore.FirebaseFirestore
 import com.trusov.sociallab.di.ApplicationScope
 import com.trusov.sociallab.domain.entity.Question
@@ -65,7 +66,8 @@ class RepositoryImpl @Inject constructor(
                     val research = Research(
                         topic = data["topic"].toString(),
                         description = data["description"].toString(),
-                        id = data.id
+                        id = data.id,
+                        respondents = data["respondents"] as ArrayList<String>
                     )
                     listOfResearches.add(research)
                 }
@@ -91,7 +93,8 @@ class RepositoryImpl @Inject constructor(
                     val research = Research(
                         topic = data["topic"].toString(),
                         description = data["description"].toString(),
-                        id = data.id
+                        id = data.id,
+                        respondents = data["respondents"] as ArrayList<String>
                     )
                     liveData.value = research
                 }
@@ -103,8 +106,24 @@ class RepositoryImpl @Inject constructor(
         return liveData
     }
 
-    override fun registerToResearch(respondentId: String, researchId: String) {
-        TODO("Not yet implemented")
+    override fun registerToResearch(researchId: String) {
+        val userId = auth.currentUser?.uid
+        firebase.collection("researches").document(researchId)
+            .update("respondents", FieldValue.arrayUnion(userId))
+            .addOnSuccessListener { Log.d("LogcatDebug", "DocumentSnapshot successfully written!") }
+            .addOnFailureListener {
+                Log.d("LogcatDebug", "e: ${it.message}")
+            }
+    }
+
+    override fun unregisterFromResearch(researchId: String) {
+        val userId = auth.currentUser?.uid
+        firebase.collection("researches").document(researchId)
+            .update("respondents", FieldValue.arrayRemove(userId))
+            .addOnSuccessListener { Log.d("LogcatDebug", "DocumentSnapshot successfully written!") }
+            .addOnFailureListener {
+                Log.d("LogcatDebug", "e: ${it.message}")
+            }
     }
 
     override fun getQuestion(): Question {

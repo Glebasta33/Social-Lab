@@ -3,19 +3,36 @@ package com.trusov.sociallab.presentation.fragment.researches
 import android.view.LayoutInflater
 import android.view.ViewGroup
 import androidx.recyclerview.widget.ListAdapter
+import com.google.firebase.auth.FirebaseAuth
 import com.trusov.sociallab.R
 import com.trusov.sociallab.domain.entity.Research
+import com.trusov.sociallab.domain.entity.Respondent
+import javax.inject.Inject
 
-class ResearchesListAdapter : ListAdapter<Research, ResearchViewHolder>(ResearchesDiffUtils()) {
+class ResearchesListAdapter @Inject constructor(
+    private val auth: FirebaseAuth
+) : ListAdapter<Research, ResearchViewHolder>(ResearchesDiffUtils()) {
 
-    var onResearchItemClickListener: ((String) -> Unit)? = null
+    var onResearchItemClickListener: ((Research) -> Unit)? = null
+
+    override fun getItemViewType(position: Int): Int {
+        val currentRespondentIdInResearch = currentList[position].respondents.find {
+            it == auth.currentUser?.uid
+        }
+        return if (currentRespondentIdInResearch != null) {
+            RESEARCH_REGISTERED
+        } else {
+            RESEARCH_UNREGISTERED
+        }
+    }
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): ResearchViewHolder {
-        val view = LayoutInflater.from(parent.context).inflate(
-            R.layout.research_rv_item_layout,
-            parent,
-            false
-        )
+        val layout = when(viewType) {
+            RESEARCH_UNREGISTERED -> R.layout.research_rv_item_layout
+            RESEARCH_REGISTERED -> R.layout.research_rv_item_layout_registered
+            else -> throw RuntimeException("Unknown view type: $viewType")
+        }
+        val view = LayoutInflater.from(parent.context).inflate(layout, parent, false)
         return ResearchViewHolder(view)
     }
 
@@ -24,9 +41,16 @@ class ResearchesListAdapter : ListAdapter<Research, ResearchViewHolder>(Research
         with(holder.binding) {
             tvResearchTopic.text = research.topic
             tvResearchDescription.text = research.description
+            tvSelection.text = research.respondents.size.toString()
             root.setOnClickListener {
-                onResearchItemClickListener?.invoke(research.id)
+                onResearchItemClickListener?.invoke(research)
             }
         }
     }
+
+    companion object {
+        private const val RESEARCH_UNREGISTERED = 400
+        private const val RESEARCH_REGISTERED = 200
+    }
+
 }

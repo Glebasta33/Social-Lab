@@ -23,6 +23,8 @@ class ResearchesFragment : Fragment() {
 
     @Inject
     lateinit var viewModelFactory: ViewModelFactory
+    @Inject
+    lateinit var researchesListAdapter: ResearchesListAdapter
     private val viewModel by lazy {
         ViewModelProvider(this, viewModelFactory)[ResearchesViewModel::class.java]
     }
@@ -33,7 +35,6 @@ class ResearchesFragment : Fragment() {
 
     private lateinit var respondentArg: Respondent
     private lateinit var navigationController: NavigationController
-    private lateinit var researchesListAdapter: ResearchesListAdapter
 
     override fun onAttach(context: Context) {
         super.onAttach(context)
@@ -45,7 +46,7 @@ class ResearchesFragment : Fragment() {
     override fun onCreate(savedInstanceState: Bundle?) {
         (activity?.application as SocialLabApp).component.inject(this)
         super.onCreate(savedInstanceState)
-        researchesListAdapter = ResearchesListAdapter()
+
         parseArgs()
     }
 
@@ -70,9 +71,9 @@ class ResearchesFragment : Fragment() {
         viewModel.getListOfResearches().observe(viewLifecycleOwner) {
             researchesListAdapter.submitList(it?.toMutableList())
         }
-        researchesListAdapter.onResearchItemClickListener = { researchId ->
+        researchesListAdapter.onResearchItemClickListener = { research ->
             requireActivity().supportFragmentManager.beginTransaction()
-                .replace(R.id.main_container, ResearchInfoFragment.newInstance(researchId))
+                .replace(R.id.main_container, ResearchInfoFragment.newInstance(research))
                 .addToBackStack(null)
                 .commit()
         }

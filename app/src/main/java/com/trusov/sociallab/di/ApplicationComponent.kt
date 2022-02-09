@@ -8,6 +8,7 @@ import com.trusov.sociallab.presentation.fragment.researches.ResearchesFragment
 import com.trusov.sociallab.presentation.fragment.auth.sing_up.SignUpFragment
 import com.trusov.sociallab.presentation.fragment.my_researches.MyResearchesFragment
 import com.trusov.sociallab.presentation.fragment.research_info.ResearchInfoFragment
+import com.trusov.sociallab.presentation.fragment.researches.ResearchesListAdapter
 import com.trusov.sociallab.presentation.fragment.statistics.StatisticsFragment
 import dagger.BindsInstance
 import dagger.Component
@@ -24,6 +25,7 @@ interface ApplicationComponent {
     fun inject(instance: AnswersFragment)
     fun inject(instance: StatisticsFragment)
     fun inject(instance: ResearchInfoFragment)
+    fun inject(instance: ResearchesListAdapter)
 
     @Component.Factory
     interface Factory {
