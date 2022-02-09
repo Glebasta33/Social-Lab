@@ -99,7 +99,7 @@ class MainActivity : AppCompatActivity(), OnInputErrorListener, NavigationContro
     }
 
     override fun launchResearchesFragment() {
-        replaceMainContainer(ResearchesFragment.newInstance(respondent))
+        replaceMainContainer(ResearchesFragment.newInstance())
         changeToolbarContent(R.string.researches, R.drawable.ic_researches)
         binding.toolbar.isGone = false
     }
