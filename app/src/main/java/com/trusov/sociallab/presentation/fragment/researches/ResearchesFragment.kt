@@ -2,11 +2,13 @@ package com.trusov.sociallab.presentation.fragment.researches
 
 import android.content.Context
 import android.os.Bundle
+import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import androidx.fragment.app.Fragment
 import androidx.lifecycle.ViewModelProvider
+import androidx.recyclerview.widget.LinearLayoutManager
 import com.trusov.sociallab.R
 import com.trusov.sociallab.SocialLabApp
 import com.trusov.sociallab.databinding.ResearchesFragmentBinding
@@ -21,6 +23,8 @@ class ResearchesFragment : Fragment() {
 
     @Inject
     lateinit var viewModelFactory: ViewModelFactory
+    @Inject
+    lateinit var researchesListAdapter: ResearchesListAdapter
     private val viewModel by lazy {
         ViewModelProvider(this, viewModelFactory)[ResearchesViewModel::class.java]
     }
@@ -42,6 +46,7 @@ class ResearchesFragment : Fragment() {
     override fun onCreate(savedInstanceState: Bundle?) {
         (activity?.application as SocialLabApp).component.inject(this)
         super.onCreate(savedInstanceState)
+
         parseArgs()
     }
 
@@ -62,10 +67,13 @@ class ResearchesFragment : Fragment() {
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
-        binding.tvTest.text = respondentArg.toString()
-        binding.tvTest.setOnClickListener {
+        binding.rvResearches.adapter = researchesListAdapter
+        viewModel.getListOfResearches().observe(viewLifecycleOwner) {
+            researchesListAdapter.submitList(it?.toMutableList())
+        }
+        researchesListAdapter.onResearchItemClickListener = { research ->
             requireActivity().supportFragmentManager.beginTransaction()
-                .replace(R.id.main_container, ResearchInfoFragment.newInstance(respondentArg))
+                .replace(R.id.main_container, ResearchInfoFragment.newInstance(research))
                 .addToBackStack(null)
                 .commit()
         }

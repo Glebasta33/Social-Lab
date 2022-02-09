@@ -7,6 +7,7 @@ import com.trusov.sociallab.presentation.fragment.auth.log_in.LogInViewModel
 import com.trusov.sociallab.presentation.fragment.researches.ResearchesViewModel
 import com.trusov.sociallab.presentation.fragment.auth.sing_up.SignUpViewModel
 import com.trusov.sociallab.presentation.fragment.my_researches.MyResearchesViewModel
+import com.trusov.sociallab.presentation.fragment.research_info.ResearchInfoViewModel
 import com.trusov.sociallab.presentation.fragment.statistics.StatisticsViewModel
 import dagger.Binds
 import dagger.Module
@@ -48,4 +49,9 @@ interface ViewModelModule {
     @ViewModelKey(StatisticsViewModel::class)
     @Binds
     fun bindStatisticsViewModel(viewModel: StatisticsViewModel): ViewModel
+
+    @IntoMap
+    @ViewModelKey(ResearchInfoViewModel::class)
+    @Binds
+    fun bindResearchInfoViewModel(viewModel: ResearchInfoViewModel): ViewModel
 }

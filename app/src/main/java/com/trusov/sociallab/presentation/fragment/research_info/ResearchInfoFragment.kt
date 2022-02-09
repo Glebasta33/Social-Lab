@@ -1,33 +1,34 @@
 package com.trusov.sociallab.presentation.fragment.research_info
 
-import android.content.Context
 import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import androidx.fragment.app.Fragment
 import androidx.lifecycle.ViewModelProvider
+import com.google.firebase.auth.FirebaseAuth
+import com.trusov.sociallab.R
 import com.trusov.sociallab.SocialLabApp
 import com.trusov.sociallab.databinding.ResearchInfoFragmentBinding
 import com.trusov.sociallab.di.ViewModelFactory
-import com.trusov.sociallab.domain.entity.Respondent
-import com.trusov.sociallab.presentation.fragment.answers.AnswersViewModel
-import com.trusov.sociallab.presentation.fragment.researches.ResearchesFragment
+import com.trusov.sociallab.domain.entity.Research
 import javax.inject.Inject
 
 class ResearchInfoFragment : Fragment() {
 
     @Inject
     lateinit var viewModelFactory: ViewModelFactory
+    @Inject
+    lateinit var auth: FirebaseAuth
     private val viewModel by lazy {
-        ViewModelProvider(this, viewModelFactory)[AnswersViewModel::class.java]
+        ViewModelProvider(this, viewModelFactory)[ResearchInfoViewModel::class.java]
     }
 
     private var _binding: ResearchInfoFragmentBinding? = null
     private val binding: ResearchInfoFragmentBinding
         get() = _binding ?: throw RuntimeException("ResearchInfoFragmentBinding == null")
 
-    private lateinit var respondentArg: Respondent
+    private lateinit var research: Research
 
     override fun onCreate(savedInstanceState: Bundle?) {
         (activity?.application as SocialLabApp).component.inject(this)
@@ -37,8 +38,8 @@ class ResearchInfoFragment : Fragment() {
 
     private fun parseArgs() {
         arguments?.let {
-            respondentArg =
-                it.getParcelable(RESPONDENT_KEY) ?: throw RuntimeException("respondentArg == null")
+            research =
+                it.getParcelable(RESEARCH_KEY) ?: throw RuntimeException("research == null")
         }
     }
 
@@ -53,17 +54,44 @@ class ResearchInfoFragment : Fragment() {
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
-        with(binding) {
-            tvRespondent.text = respondentArg.login
+        viewModel.getResearchId(research.id).observeForever { research ->
+            with(binding) {
+                tvTitle.text = research.topic
+                tvDescription.text = research.description
+
+                setButtonView(research.respondents.contains(auth.uid))
+
+                buttonRegisterToResearch.setOnClickListener {
+                    if (!research.respondents.contains(auth.uid)) {
+                        viewModel.registerToResearch(this@ResearchInfoFragment.research.id)
+                    } else {
+                        viewModel.unregisterFromResearch(this@ResearchInfoFragment.research.id)
+                    }
+                    setButtonView(research.respondents.contains(auth.uid))
+                }
+            }
+        }
+    }
+
+    private fun ResearchInfoFragmentBinding.setButtonView(isRegistered: Boolean) {
+        buttonRegisterToResearch.apply {
+            if (isRegistered) {
+                text = "Отписаться"
+                buttonRegisterToResearch.setBackgroundColor(resources.getColor(R.color.red))
+            } else {
+                text = "Зарегистрироваться"
+                buttonRegisterToResearch.setBackgroundColor(resources.getColor(R.color.grey))
+            }
         }
     }
 
     companion object {
-        private const val RESPONDENT_KEY = "RESPONDENT_KEY"
-        fun newInstance(respondent: Respondent?): ResearchInfoFragment {
+        private const val RESEARCH_KEY = "RESEARCH_KEY"
+
+        fun newInstance(research: Research): ResearchInfoFragment {
             return ResearchInfoFragment().apply {
                 arguments = Bundle().apply {
-                    putParcelable(RESPONDENT_KEY, respondent)
+                    putParcelable(RESEARCH_KEY, research)
                 }
             }
         }

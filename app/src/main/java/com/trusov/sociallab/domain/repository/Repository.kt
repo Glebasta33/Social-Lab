@@ -15,15 +15,16 @@ interface Repository {
 
     // researches info
     fun getListOfResearches(): LiveData<List<Research>>
-    fun getListOfResearchById(respondentId: Long): LiveData<List<Research>>
-    fun getResearchById(researchId: Long): LiveData<Research>
-    fun registerToResearch(respondentId: Long, researchId: Long)
+    fun getListOfResearchById(respondentId: String): LiveData<List<Research>>
+    fun getResearchById(researchId: String): LiveData<Research>
+    fun registerToResearch(researchId: String)
+    fun unregisterFromResearch(researchId: String)
 
     // survey
     fun getQuestion(): Question
     fun answerQuestion(question: Question)
 
     // respondent info
-    fun getListOfAnsweredQuestions(respondentId: Long): LiveData<List<Question>>
-    fun getUserStatistics(respondentId: Long): Statistics
+    fun getListOfAnsweredQuestions(respondentId: String): LiveData<List<Question>>
+    fun getUserStatistics(respondentId: String): Statistics
 }
