@@ -3,12 +3,13 @@ package com.trusov.sociallab.presentation.fragment.auth.sing_up
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
-import com.trusov.sociallab.domain.entity.Respondent
-import com.trusov.sociallab.domain.use_case.auth.GetCurrentRespondentUseCase
+import com.google.firebase.auth.FirebaseUser
+import com.trusov.sociallab.domain.use_case.auth.GetCurrentUserUseCase
 import com.trusov.sociallab.domain.use_case.auth.SignUpUseCase
 import javax.inject.Inject
 
 class SignUpViewModel @Inject constructor(
+    private val getCurrentUserUseCase: GetCurrentUserUseCase,
     private val singUpUseCase: SignUpUseCase
 ) : ViewModel() {
 
@@ -18,6 +19,9 @@ class SignUpViewModel @Inject constructor(
     private val _readyToClose = MutableLiveData<Boolean>()
     val readyToClose: LiveData<Boolean> = _readyToClose
 
+    suspend fun getCurrentUser(): FirebaseUser? {
+        return getCurrentUserUseCase()
+    }
 
     fun singUp(
         inputLogin: String?,

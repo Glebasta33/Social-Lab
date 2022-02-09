@@ -13,7 +13,6 @@ import com.trusov.sociallab.R
 import com.trusov.sociallab.SocialLabApp
 import com.trusov.sociallab.databinding.ActivityMainBinding
 import com.trusov.sociallab.di.ViewModelFactory
-import com.trusov.sociallab.domain.entity.Respondent
 import com.trusov.sociallab.presentation.fragment.answers.AnswersFragment
 import com.trusov.sociallab.presentation.fragment.auth.log_in.LogInFragment
 import com.trusov.sociallab.presentation.fragment.researches.ResearchesFragment
@@ -32,8 +31,6 @@ class MainActivity : AppCompatActivity(), OnInputErrorListener, NavigationContro
         ActivityMainBinding.inflate(layoutInflater)
     }
 
-    var respondent: Respondent? = null
-
     @Inject
     lateinit var viewModelFactory: ViewModelFactory
     private val viewModel by lazy {
@@ -51,9 +48,9 @@ class MainActivity : AppCompatActivity(), OnInputErrorListener, NavigationContro
         launchWelcomeFragment()
         (application as SocialLabApp).component.inject(this)
         CoroutineScope(Dispatchers.IO).launch {
-            checkAuth()
+            val isAuthenticated = viewModel.getCurrentUser() != null
             withContext(Dispatchers.Main) {
-                if (respondent != null) {
+                if (isAuthenticated) {
                     launchResearchesFragment()
                 } else {
                     launchLoginFragment()
@@ -79,11 +76,6 @@ class MainActivity : AppCompatActivity(), OnInputErrorListener, NavigationContro
             }
         }
         return true
-    }
-
-    override suspend fun checkAuth(): Respondent? {
-        respondent = viewModel.getCurrentRespondent()
-        return respondent
     }
 
     override fun launchWelcomeFragment() {

@@ -4,6 +4,7 @@ import android.util.Log
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import com.google.firebase.auth.FirebaseAuth
+import com.google.firebase.auth.FirebaseUser
 import com.google.firebase.firestore.FieldValue
 import com.google.firebase.firestore.FirebaseFirestore
 import com.trusov.sociallab.di.ApplicationScope
@@ -25,9 +26,9 @@ class RepositoryImpl @Inject constructor(
             .addOnCompleteListener { task ->
                 if (task.isSuccessful) {
                     val respondent = auth.currentUser
-                    Log.d("LogcatDebug", "task.isSuccessful $this: $respondent")
+                    Log.d(TAG, "task.isSuccessful $this: $respondent")
                 } else {
-                    Log.d("LogcatDebug", "!task.isSuccessful $this: ${task.exception}")
+                    Log.d(TAG, "!task.isSuccessful $this: ${task.exception}")
                 }
             }
     }
@@ -37,17 +38,16 @@ class RepositoryImpl @Inject constructor(
             .addOnCompleteListener { task ->
                 if (task.isSuccessful) {
                     val respondent = auth.currentUser
-                    Log.d("LogcatDebug", "$this: $respondent")
+                    Log.d(TAG, "$this: $respondent")
                 } else {
-                    Log.d("LogcatDebug", "$this: ${task.exception}")
+                    Log.d(TAG, "$this: ${task.exception}")
                 }
             }
     }
 
-    override suspend fun getCurrentRespondent(): Respondent? {
+    override suspend fun getCurrentUser(): FirebaseUser? {
         auth.currentUser?.let {
-            val email = it.email ?: ""
-            return Respondent("from", email, id = 3L)
+            return it
         }
         return null
     }
@@ -74,7 +74,7 @@ class RepositoryImpl @Inject constructor(
                 liveData.value = listOfResearches
             }
             if (error != null) {
-                Log.d("LogcatDebug", "error: ${error.message}")
+                Log.d(TAG, "error: ${error.message}")
             }
         }
         return liveData
@@ -100,7 +100,7 @@ class RepositoryImpl @Inject constructor(
                 }
             }
             if (error != null) {
-                Log.d("LogcatDebug", "error: ${error.message}")
+                Log.d(TAG, "error: ${error.message}")
             }
         }
         return liveData
@@ -110,9 +110,8 @@ class RepositoryImpl @Inject constructor(
         val userId = auth.currentUser?.uid
         firebase.collection("researches").document(researchId)
             .update("respondents", FieldValue.arrayUnion(userId))
-            .addOnSuccessListener { Log.d("LogcatDebug", "DocumentSnapshot successfully written!") }
             .addOnFailureListener {
-                Log.d("LogcatDebug", "e: ${it.message}")
+                Log.d(TAG, "e: ${it.message}")
             }
     }
 
@@ -120,9 +119,8 @@ class RepositoryImpl @Inject constructor(
         val userId = auth.currentUser?.uid
         firebase.collection("researches").document(researchId)
             .update("respondents", FieldValue.arrayRemove(userId))
-            .addOnSuccessListener { Log.d("LogcatDebug", "DocumentSnapshot successfully written!") }
             .addOnFailureListener {
-                Log.d("LogcatDebug", "e: ${it.message}")
+                Log.d(TAG, "e: ${it.message}")
             }
     }
 
@@ -140,5 +138,9 @@ class RepositoryImpl @Inject constructor(
 
     override fun getUserStatistics(respondentId: String): Statistics {
         TODO("Not yet implemented")
+    }
+
+    companion object {
+        private const val TAG = "RepositoryImpl"
     }
 }

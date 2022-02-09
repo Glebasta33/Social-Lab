@@ -76,9 +76,9 @@ class LogInFragment : Fragment() {
                 withContext(Dispatchers.Main) {
                     setProgressBarVisibility(VISIBLE)
                 }
-                val respondent = navigationController.checkAuth()
+                val isAuthenticated = viewModel.getCurrentUser() != null
                 withContext(Dispatchers.Main) {
-                    if (respondent != null) {
+                    if (isAuthenticated) {
                         navigationController.launchResearchesFragment()
                     } else {
                         viewModel.showWrongInputsMessage()

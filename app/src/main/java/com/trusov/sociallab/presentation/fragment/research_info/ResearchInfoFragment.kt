@@ -12,14 +12,16 @@ import com.trusov.sociallab.SocialLabApp
 import com.trusov.sociallab.databinding.ResearchInfoFragmentBinding
 import com.trusov.sociallab.di.ViewModelFactory
 import com.trusov.sociallab.domain.entity.Research
+import kotlinx.coroutines.CoroutineScope
+import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.launch
+import kotlinx.coroutines.withContext
 import javax.inject.Inject
 
 class ResearchInfoFragment : Fragment() {
 
     @Inject
     lateinit var viewModelFactory: ViewModelFactory
-    @Inject
-    lateinit var auth: FirebaseAuth
     private val viewModel by lazy {
         ViewModelProvider(this, viewModelFactory)[ResearchInfoViewModel::class.java]
     }
@@ -58,16 +60,26 @@ class ResearchInfoFragment : Fragment() {
             with(binding) {
                 tvTitle.text = research.topic
                 tvDescription.text = research.description
-
-                setButtonView(research.respondents.contains(auth.uid))
+                CoroutineScope(Dispatchers.IO).launch {
+                    val currentUserId = viewModel.getCurrentUser()?.uid
+                    withContext(Dispatchers.Main) {
+                        setButtonView(research.respondents.contains(currentUserId))
+                    }
+                }
 
                 buttonRegisterToResearch.setOnClickListener {
-                    if (!research.respondents.contains(auth.uid)) {
-                        viewModel.registerToResearch(this@ResearchInfoFragment.research.id)
-                    } else {
-                        viewModel.unregisterFromResearch(this@ResearchInfoFragment.research.id)
+                    CoroutineScope(Dispatchers.IO).launch {
+                        val currentUserId = viewModel.getCurrentUser()?.uid
+                        withContext(Dispatchers.Main) {
+                            if (!research.respondents.contains(currentUserId)) {
+                                viewModel.registerToResearch(this@ResearchInfoFragment.research.id)
+                            } else {
+                                viewModel.unregisterFromResearch(this@ResearchInfoFragment.research.id)
+                            }
+                            setButtonView(research.respondents.contains(currentUserId))
+                        }
                     }
-                    setButtonView(research.respondents.contains(auth.uid))
+
                 }
             }
         }
