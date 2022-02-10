@@ -20,7 +20,6 @@ class ResearchesFragment : Fragment() {
 
     @Inject
     lateinit var viewModelFactory: ViewModelFactory
-
     @Inject
     lateinit var researchesListAdapter: ResearchesListAdapter
     private val viewModel by lazy {

@@ -24,24 +24,24 @@ class LogInViewModel @Inject constructor(
     }
 
     fun logIn(inputLogin: String?, inputPassword: String?) {
+        fun parseInput(input: String?): String {
+            return input?.trim() ?: ""
+        }
+
+        fun validateInput(login: String, password: String): Boolean {
+            if (login.isBlank() || password.isBlank()) {
+                _message.value = MESSAGE_FILL_INPUTS
+                return false
+            }
+            _readyToClose.value = true
+            return true
+        }
+
         val login = parseInput(inputLogin)
         val password = parseInput(inputPassword)
         if (validateInput(login, password)) {
             logInUseCase(login, password)
         }
-    }
-
-    private fun parseInput(input: String?): String {
-        return input?.trim() ?: ""
-    }
-
-    private fun validateInput(login: String, password: String): Boolean {
-        if (login.isBlank() || password.isBlank()) {
-            _message.value = MESSAGE_FILL_INPUTS
-            return false
-        }
-        _readyToClose.value = true
-        return true
     }
 
     fun showWrongInputsMessage() {

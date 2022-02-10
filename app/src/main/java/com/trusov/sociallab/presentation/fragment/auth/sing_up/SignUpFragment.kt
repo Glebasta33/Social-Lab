@@ -20,7 +20,9 @@ class SignUpFragment : Fragment() {
 
     @Inject
     lateinit var viewModelFactory: ViewModelFactory
-    private lateinit var viewModel: SignUpViewModel
+    private val viewModel by lazy {
+        ViewModelProvider(this, viewModelFactory)[SignUpViewModel::class.java]
+    }
     private lateinit var onInputErrorListener: OnInputErrorListener
     private lateinit var navigationController: NavigationController
 
@@ -49,7 +51,6 @@ class SignUpFragment : Fragment() {
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
-        viewModel = ViewModelProvider(this, viewModelFactory)[SignUpViewModel::class.java]
         with(binding) {
             tvToLogIn.setOnClickListener {
                 navigationController.launchLoginFragment()

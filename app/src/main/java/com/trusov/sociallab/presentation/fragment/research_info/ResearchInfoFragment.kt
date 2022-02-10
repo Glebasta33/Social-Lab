@@ -35,13 +35,8 @@ class ResearchInfoFragment : Fragment() {
     override fun onCreate(savedInstanceState: Bundle?) {
         (activity?.application as SocialLabApp).component.inject(this)
         super.onCreate(savedInstanceState)
-        parseArgs()
-    }
-
-    private fun parseArgs() {
         arguments?.let {
-            research =
-                it.getParcelable(RESEARCH_KEY) ?: throw RuntimeException("research == null")
+            research = it.getParcelable(RESEARCH_KEY) ?: throw RuntimeException("research == null")
         }
     }
 
@@ -53,20 +48,17 @@ class ResearchInfoFragment : Fragment() {
         return binding.root
     }
 
-
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
-        viewModel.getResearchId(research.id).observeForever { research ->
+        viewModel.getResearchId(research.id).observe(viewLifecycleOwner) { research ->
             with(binding) {
-                tvTitle.text = research.topic
-                tvDescription.text = research.description
+                setResearchViews(research)
                 CoroutineScope(Dispatchers.IO).launch {
                     val currentUserId = viewModel.getCurrentUser()?.uid
                     withContext(Dispatchers.Main) {
                         setButtonView(research.respondents.contains(currentUserId))
                     }
                 }
-
                 buttonRegisterToResearch.setOnClickListener {
                     CoroutineScope(Dispatchers.IO).launch {
                         val currentUserId = viewModel.getCurrentUser()?.uid
@@ -83,6 +75,11 @@ class ResearchInfoFragment : Fragment() {
                 }
             }
         }
+    }
+
+    private fun ResearchInfoFragmentBinding.setResearchViews(research: Research) {
+        tvTitle.text = research.topic
+        tvDescription.text = research.description
     }
 
     private fun ResearchInfoFragmentBinding.setButtonView(isRegistered: Boolean) {

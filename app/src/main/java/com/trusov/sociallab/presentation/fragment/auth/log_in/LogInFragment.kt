@@ -20,7 +20,9 @@ class LogInFragment : Fragment() {
 
     @Inject
     lateinit var viewModelFactory: ViewModelFactory
-    private lateinit var viewModel: LogInViewModel
+    private val viewModel by lazy {
+        ViewModelProvider(this, viewModelFactory)[LogInViewModel::class.java]
+    }
     private lateinit var onInputErrorListener: OnInputErrorListener
     private lateinit var navigationController: NavigationController
 
@@ -49,7 +51,6 @@ class LogInFragment : Fragment() {
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
-        viewModel = ViewModelProvider(this, viewModelFactory)[LogInViewModel::class.java]
         with(binding) {
             tvToSingUp.setOnClickListener {
                 navigationController.launchSignUpFragment()
@@ -58,9 +59,9 @@ class LogInFragment : Fragment() {
                 login()
                 checkLogin()
             }
-            viewModel.message.observe(viewLifecycleOwner) {
-                onInputErrorListener.onErrorInput(it)
-            }
+        }
+        viewModel.message.observe(viewLifecycleOwner) {
+            onInputErrorListener.onErrorInput(it)
         }
     }
 

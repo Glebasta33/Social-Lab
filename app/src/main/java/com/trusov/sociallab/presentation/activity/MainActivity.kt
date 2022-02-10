@@ -40,11 +40,7 @@ class MainActivity : AppCompatActivity(), OnInputErrorListener, NavigationContro
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(binding.root)
-        binding.toolbar.apply {
-            setSupportActionBar(this)
-            setTitleTextColor(ContextCompat.getColor(this@MainActivity, R.color.white))
-            setSubtitleTextColor(ContextCompat.getColor(this@MainActivity, R.color.white))
-        }
+        setActionBar()
         launchWelcomeFragment()
         (application as SocialLabApp).component.inject(this)
         CoroutineScope(Dispatchers.IO).launch {
@@ -56,6 +52,13 @@ class MainActivity : AppCompatActivity(), OnInputErrorListener, NavigationContro
                     launchLoginFragment()
                 }
             }
+        }
+    }
+
+    private fun setActionBar() {
+        binding.toolbar.apply {
+            setSupportActionBar(this)
+            setTitleTextColor(ContextCompat.getColor(this@MainActivity, R.color.white))
         }
     }
 
@@ -133,7 +136,6 @@ class MainActivity : AppCompatActivity(), OnInputErrorListener, NavigationContro
     override fun onErrorInput(message: String) {
         Toast.makeText(this, message, Toast.LENGTH_SHORT).show()
     }
-
 
 }
 
