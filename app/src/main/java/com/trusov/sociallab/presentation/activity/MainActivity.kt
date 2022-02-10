@@ -1,10 +1,14 @@
 package com.trusov.sociallab.presentation.activity
 
-import androidx.appcompat.app.AppCompatActivity
+import android.app.NotificationChannel
+import android.app.NotificationManager
+import android.os.Build
 import android.os.Bundle
 import android.view.Menu
 import android.view.MenuItem
 import android.widget.Toast
+import androidx.appcompat.app.AppCompatActivity
+import androidx.core.app.NotificationCompat
 import androidx.core.content.ContextCompat
 import androidx.core.view.isGone
 import androidx.fragment.app.Fragment
@@ -15,17 +19,19 @@ import com.trusov.sociallab.databinding.ActivityMainBinding
 import com.trusov.sociallab.di.ViewModelFactory
 import com.trusov.sociallab.presentation.fragment.answers.AnswersFragment
 import com.trusov.sociallab.presentation.fragment.auth.log_in.LogInFragment
-import com.trusov.sociallab.presentation.fragment.researches.ResearchesFragment
 import com.trusov.sociallab.presentation.fragment.auth.sing_up.SignUpFragment
 import com.trusov.sociallab.presentation.fragment.auth.welcome.WelcomeFragment
 import com.trusov.sociallab.presentation.fragment.my_researches.MyResearchesFragment
+import com.trusov.sociallab.presentation.fragment.researches.ResearchesFragment
 import com.trusov.sociallab.presentation.fragment.statistics.StatisticsFragment
 import com.trusov.sociallab.presentation.util.NavigationController
+import com.trusov.sociallab.presentation.util.NotificationController
 import com.trusov.sociallab.presentation.util.OnInputErrorListener
 import kotlinx.coroutines.*
 import javax.inject.Inject
 
-class MainActivity : AppCompatActivity(), OnInputErrorListener, NavigationController {
+class MainActivity : AppCompatActivity(), OnInputErrorListener, NavigationController,
+    NotificationController {
 
     private val binding by lazy {
         ActivityMainBinding.inflate(layoutInflater)
@@ -135,6 +141,25 @@ class MainActivity : AppCompatActivity(), OnInputErrorListener, NavigationContro
 
     override fun onErrorInput(message: String) {
         Toast.makeText(this, message, Toast.LENGTH_SHORT).show()
+    }
+
+    override fun showNotification() {
+        val notificationManager = getSystemService(NOTIFICATION_SERVICE) as NotificationManager
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
+            val notificationChannel = NotificationChannel(
+                "MY_CHANNEL_ID",
+                "MY_CHANNEL",
+                NotificationManager.IMPORTANCE_DEFAULT
+            )
+            notificationChannel.enableVibration(true)
+            notificationManager.createNotificationChannel(notificationChannel)
+        }
+        val notification = NotificationCompat.Builder(applicationContext, "MY_CHANNEL_ID")
+            .setContentTitle("Title")
+            .setContentText("Text")
+            .setSmallIcon(R.drawable.common_google_signin_btn_icon_dark)
+            .build()
+        notificationManager.notify(1,notification)
     }
 
 }
