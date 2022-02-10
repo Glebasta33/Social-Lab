@@ -12,14 +12,16 @@ import com.trusov.sociallab.SocialLabApp
 import com.trusov.sociallab.databinding.ResearchInfoFragmentBinding
 import com.trusov.sociallab.di.ViewModelFactory
 import com.trusov.sociallab.domain.entity.Research
+import kotlinx.coroutines.CoroutineScope
+import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.launch
+import kotlinx.coroutines.withContext
 import javax.inject.Inject
 
 class ResearchInfoFragment : Fragment() {
 
     @Inject
     lateinit var viewModelFactory: ViewModelFactory
-    @Inject
-    lateinit var auth: FirebaseAuth
     private val viewModel by lazy {
         ViewModelProvider(this, viewModelFactory)[ResearchInfoViewModel::class.java]
     }
@@ -33,13 +35,8 @@ class ResearchInfoFragment : Fragment() {
     override fun onCreate(savedInstanceState: Bundle?) {
         (activity?.application as SocialLabApp).component.inject(this)
         super.onCreate(savedInstanceState)
-        parseArgs()
-    }
-
-    private fun parseArgs() {
         arguments?.let {
-            research =
-                it.getParcelable(RESEARCH_KEY) ?: throw RuntimeException("research == null")
+            research = it.getParcelable(RESEARCH_KEY) ?: throw RuntimeException("research == null")
         }
     }
 
@@ -51,26 +48,38 @@ class ResearchInfoFragment : Fragment() {
         return binding.root
     }
 
-
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
-        viewModel.getResearchId(research.id).observeForever { research ->
+        viewModel.getResearchId(research.id).observe(viewLifecycleOwner) { research ->
             with(binding) {
-                tvTitle.text = research.topic
-                tvDescription.text = research.description
-
-                setButtonView(research.respondents.contains(auth.uid))
-
-                buttonRegisterToResearch.setOnClickListener {
-                    if (!research.respondents.contains(auth.uid)) {
-                        viewModel.registerToResearch(this@ResearchInfoFragment.research.id)
-                    } else {
-                        viewModel.unregisterFromResearch(this@ResearchInfoFragment.research.id)
+                setResearchViews(research)
+                CoroutineScope(Dispatchers.IO).launch {
+                    val currentUserId = viewModel.getCurrentUser()?.uid
+                    withContext(Dispatchers.Main) {
+                        setButtonView(research.respondents.contains(currentUserId))
                     }
-                    setButtonView(research.respondents.contains(auth.uid))
+                }
+                buttonRegisterToResearch.setOnClickListener {
+                    CoroutineScope(Dispatchers.IO).launch {
+                        val currentUserId = viewModel.getCurrentUser()?.uid
+                        withContext(Dispatchers.Main) {
+                            if (!research.respondents.contains(currentUserId)) {
+                                viewModel.registerToResearch(this@ResearchInfoFragment.research.id)
+                            } else {
+                                viewModel.unregisterFromResearch(this@ResearchInfoFragment.research.id)
+                            }
+                            setButtonView(research.respondents.contains(currentUserId))
+                        }
+                    }
+
                 }
             }
         }
+    }
+
+    private fun ResearchInfoFragmentBinding.setResearchViews(research: Research) {
+        tvTitle.text = research.topic
+        tvDescription.text = research.description
     }
 
     private fun ResearchInfoFragmentBinding.setButtonView(isRegistered: Boolean) {

@@ -16,10 +16,7 @@ class ResearchesListAdapter @Inject constructor(
     var onResearchItemClickListener: ((Research) -> Unit)? = null
 
     override fun getItemViewType(position: Int): Int {
-        val currentRespondentIdInResearch = currentList[position].respondents.find {
-            it == auth.currentUser?.uid
-        }
-        return if (currentRespondentIdInResearch != null) {
+        return if (currentList[position].respondents.contains(auth.currentUser?.uid)) {
             RESEARCH_REGISTERED
         } else {
             RESEARCH_UNREGISTERED

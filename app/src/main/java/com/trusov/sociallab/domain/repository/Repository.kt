@@ -1,16 +1,16 @@
 package com.trusov.sociallab.domain.repository
 
 import androidx.lifecycle.LiveData
+import com.google.firebase.auth.FirebaseUser
 import com.trusov.sociallab.domain.entity.Question
 import com.trusov.sociallab.domain.entity.Research
-import com.trusov.sociallab.domain.entity.Respondent
 import com.trusov.sociallab.domain.entity.Statistics
 
 interface Repository {
     // enter
     fun signUp(login: String, password: String)
     fun logIn(login: String, password: String)
-    suspend fun getCurrentRespondent(): Respondent?
+    suspend fun getCurrentUser(): FirebaseUser?
     fun signOut()
 
     // researches info

@@ -3,12 +3,13 @@ package com.trusov.sociallab.presentation.fragment.auth.log_in
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
-import com.trusov.sociallab.domain.entity.Respondent
-import com.trusov.sociallab.domain.use_case.auth.GetCurrentRespondentUseCase
+import com.google.firebase.auth.FirebaseUser
+import com.trusov.sociallab.domain.use_case.auth.GetCurrentUserUseCase
 import com.trusov.sociallab.domain.use_case.auth.LogInUseCase
 import javax.inject.Inject
 
 class LogInViewModel @Inject constructor(
+    private val getCurrentUserUseCase: GetCurrentUserUseCase,
     private val logInUseCase: LogInUseCase
 ) : ViewModel() {
 
@@ -18,25 +19,29 @@ class LogInViewModel @Inject constructor(
     private val _readyToClose = MutableLiveData<Boolean>()
     val readyToClose: LiveData<Boolean> = _readyToClose
 
+    suspend fun getCurrentUser(): FirebaseUser? {
+        return getCurrentUserUseCase()
+    }
+
     fun logIn(inputLogin: String?, inputPassword: String?) {
+        fun parseInput(input: String?): String {
+            return input?.trim() ?: ""
+        }
+
+        fun validateInput(login: String, password: String): Boolean {
+            if (login.isBlank() || password.isBlank()) {
+                _message.value = MESSAGE_FILL_INPUTS
+                return false
+            }
+            _readyToClose.value = true
+            return true
+        }
+
         val login = parseInput(inputLogin)
         val password = parseInput(inputPassword)
         if (validateInput(login, password)) {
             logInUseCase(login, password)
         }
-    }
-
-    private fun parseInput(input: String?): String {
-        return input?.trim() ?: ""
-    }
-
-    private fun validateInput(login: String, password: String): Boolean {
-        if (login.isBlank() || password.isBlank()) {
-            _message.value = MESSAGE_FILL_INPUTS
-            return false
-        }
-        _readyToClose.value = true
-        return true
     }
 
     fun showWrongInputsMessage() {

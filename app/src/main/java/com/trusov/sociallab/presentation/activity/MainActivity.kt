@@ -13,7 +13,6 @@ import com.trusov.sociallab.R
 import com.trusov.sociallab.SocialLabApp
 import com.trusov.sociallab.databinding.ActivityMainBinding
 import com.trusov.sociallab.di.ViewModelFactory
-import com.trusov.sociallab.domain.entity.Respondent
 import com.trusov.sociallab.presentation.fragment.answers.AnswersFragment
 import com.trusov.sociallab.presentation.fragment.auth.log_in.LogInFragment
 import com.trusov.sociallab.presentation.fragment.researches.ResearchesFragment
@@ -32,8 +31,6 @@ class MainActivity : AppCompatActivity(), OnInputErrorListener, NavigationContro
         ActivityMainBinding.inflate(layoutInflater)
     }
 
-    var respondent: Respondent? = null
-
     @Inject
     lateinit var viewModelFactory: ViewModelFactory
     private val viewModel by lazy {
@@ -43,22 +40,25 @@ class MainActivity : AppCompatActivity(), OnInputErrorListener, NavigationContro
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(binding.root)
-        binding.toolbar.apply {
-            setSupportActionBar(this)
-            setTitleTextColor(ContextCompat.getColor(this@MainActivity, R.color.white))
-            setSubtitleTextColor(ContextCompat.getColor(this@MainActivity, R.color.white))
-        }
+        setActionBar()
         launchWelcomeFragment()
         (application as SocialLabApp).component.inject(this)
         CoroutineScope(Dispatchers.IO).launch {
-            checkAuth()
+            val isAuthenticated = viewModel.getCurrentUser() != null
             withContext(Dispatchers.Main) {
-                if (respondent != null) {
+                if (isAuthenticated) {
                     launchResearchesFragment()
                 } else {
                     launchLoginFragment()
                 }
             }
+        }
+    }
+
+    private fun setActionBar() {
+        binding.toolbar.apply {
+            setSupportActionBar(this)
+            setTitleTextColor(ContextCompat.getColor(this@MainActivity, R.color.white))
         }
     }
 
@@ -81,11 +81,6 @@ class MainActivity : AppCompatActivity(), OnInputErrorListener, NavigationContro
         return true
     }
 
-    override suspend fun checkAuth(): Respondent? {
-        respondent = viewModel.getCurrentRespondent()
-        return respondent
-    }
-
     override fun launchWelcomeFragment() {
         replaceMainContainer(WelcomeFragment.newInstance())
     }
@@ -99,7 +94,7 @@ class MainActivity : AppCompatActivity(), OnInputErrorListener, NavigationContro
     }
 
     override fun launchResearchesFragment() {
-        replaceMainContainer(ResearchesFragment.newInstance(respondent))
+        replaceMainContainer(ResearchesFragment.newInstance())
         changeToolbarContent(R.string.researches, R.drawable.ic_researches)
         binding.toolbar.isGone = false
     }
@@ -141,7 +136,6 @@ class MainActivity : AppCompatActivity(), OnInputErrorListener, NavigationContro
     override fun onErrorInput(message: String) {
         Toast.makeText(this, message, Toast.LENGTH_SHORT).show()
     }
-
 
 }
 

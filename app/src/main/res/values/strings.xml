@@ -8,5 +8,7 @@
     <string name="my_answers">Мои ответы</string>
     <string name="my_statistics">Моя статистика</string>
     <string name="sign_out">Выйти</string>
+    <string name="appointment_icon_description">appointment_icon</string>
+    <string name="selection_icon_description">selection icon</string>
 
 </resources>
