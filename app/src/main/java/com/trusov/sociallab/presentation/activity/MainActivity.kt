@@ -1,11 +1,15 @@
 package com.trusov.sociallab.presentation.activity
 
+import android.annotation.SuppressLint
 import android.app.NotificationChannel
 import android.app.NotificationManager
+import android.app.PendingIntent
+import android.content.Intent
 import android.os.Build
 import android.os.Bundle
 import android.view.Menu
 import android.view.MenuItem
+import android.widget.RemoteViews
 import android.widget.Toast
 import androidx.appcompat.app.AppCompatActivity
 import androidx.core.app.NotificationCompat
@@ -15,6 +19,7 @@ import androidx.fragment.app.Fragment
 import androidx.lifecycle.ViewModelProvider
 import com.trusov.sociallab.R
 import com.trusov.sociallab.SocialLabApp
+import com.trusov.sociallab.data.receiver.NotificationReceiver
 import com.trusov.sociallab.databinding.ActivityMainBinding
 import com.trusov.sociallab.di.ViewModelFactory
 import com.trusov.sociallab.presentation.fragment.answers.AnswersFragment
@@ -144,6 +149,31 @@ class MainActivity : AppCompatActivity(), OnInputErrorListener, NavigationContro
     }
 
     override fun showNotification() {
+
+        fun createIntent(number: String): Intent {
+            return Intent(this, NotificationReceiver::class.java).apply {
+                putExtra("Notification", number)
+            }
+        }
+
+        fun createPendingIntent(number: String): PendingIntent {
+            return PendingIntent.getBroadcast(
+                this,
+                0,
+                createIntent(number),
+                PendingIntent.FLAG_UPDATE_CURRENT
+            )
+        }
+
+        val notificationView = RemoteViews(packageName, R.layout.custom_notification_layout)
+        notificationView.apply {
+            setOnClickPendingIntent(R.id.button_1, createPendingIntent("1"))
+            setOnClickPendingIntent(R.id.button_2, createPendingIntent("2"))
+            setOnClickPendingIntent(R.id.button_3, createPendingIntent("3"))
+            setOnClickPendingIntent(R.id.button_4, createPendingIntent("4"))
+            setOnClickPendingIntent(R.id.button_5, createPendingIntent("5"))
+        }
+
         val notificationManager = getSystemService(NOTIFICATION_SERVICE) as NotificationManager
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
             val notificationChannel = NotificationChannel(
@@ -158,8 +188,12 @@ class MainActivity : AppCompatActivity(), OnInputErrorListener, NavigationContro
             .setContentTitle("Title")
             .setContentText("Text")
             .setSmallIcon(R.drawable.common_google_signin_btn_icon_dark)
+            .setPriority(NotificationCompat.PRIORITY_HIGH)
+//            .addAction(R.mipmap.ic_launcher, "1", pendingSwitchIntent)
+            .setAutoCancel(true)
+            .setCustomContentView(notificationView)
             .build()
-        notificationManager.notify(1,notification)
+        notificationManager.notify(1, notification)
     }
 
 }
