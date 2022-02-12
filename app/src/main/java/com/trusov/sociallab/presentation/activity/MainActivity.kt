@@ -30,6 +30,7 @@ import com.trusov.sociallab.presentation.fragment.researches.ResearchesFragment
 import com.trusov.sociallab.presentation.fragment.statistics.StatisticsFragment
 import com.trusov.sociallab.presentation.util.NavigationController
 import com.trusov.sociallab.presentation.util.NotificationController
+import com.trusov.sociallab.presentation.util.NotificationHelper
 import com.trusov.sociallab.presentation.util.OnInputErrorListener
 import kotlinx.coroutines.*
 import javax.inject.Inject
@@ -148,51 +149,7 @@ class MainActivity : AppCompatActivity(), OnInputErrorListener, NavigationContro
     }
 
     override fun showNotification() {
-
-        fun createIntent(number: Int): Intent {
-            return Intent(this, NotificationReceiver::class.java).apply {
-                putExtra("Notification", number)
-            }
-        }
-
-        fun createPendingIntent(number: Int): PendingIntent {
-            return PendingIntent.getBroadcast(
-                this,
-                number,
-                createIntent(number),
-                PendingIntent.FLAG_UPDATE_CURRENT
-            )
-        }
-
-        val notificationView = RemoteViews(packageName, R.layout.custom_notification_layout)
-        notificationView.apply {
-            setOnClickPendingIntent(R.id.button_1, createPendingIntent(1))
-            setOnClickPendingIntent(R.id.button_2, createPendingIntent(2))
-            setOnClickPendingIntent(R.id.button_3, createPendingIntent(3))
-            setOnClickPendingIntent(R.id.button_4, createPendingIntent(4))
-            setOnClickPendingIntent(R.id.button_5, createPendingIntent(5))
-        }
-
-        val notificationManager = getSystemService(NOTIFICATION_SERVICE) as NotificationManager
-
-        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
-            val notificationChannel = NotificationChannel(
-                "MY_CHANNEL_ID",
-                "MY_CHANNEL",
-                NotificationManager.IMPORTANCE_DEFAULT
-            )
-            notificationChannel.enableVibration(true)
-            notificationManager.createNotificationChannel(notificationChannel)
-        }
-
-        val notification = NotificationCompat.Builder(applicationContext, "MY_CHANNEL_ID")
-            .setSmallIcon(R.drawable.ic_baseline_people_outline_24)
-            .setPriority(NotificationCompat.PRIORITY_HIGH)
-            .setAutoCancel(true)
-            .setCustomContentView(notificationView)
-            .build()
-
-        notificationManager.notify(1, notification)
+        NotificationHelper(this).showNotification()
     }
 
 }
