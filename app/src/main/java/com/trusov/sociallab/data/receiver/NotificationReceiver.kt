@@ -9,6 +9,7 @@ import android.widget.Toast
 class NotificationReceiver : BroadcastReceiver() {
 
     override fun onReceive(context: Context, intent: Intent) {
-        Log.d("NotificationReceiverTag", "${intent.getStringExtra("Notification")}")
+        Log.d("NotificationReceiverTag", "${intent.getIntExtra("Notification", -1)}")
+
     }
 }
