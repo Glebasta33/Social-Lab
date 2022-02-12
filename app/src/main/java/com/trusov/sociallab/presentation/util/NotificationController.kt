@@ -1,5 +1,5 @@
 package com.trusov.sociallab.presentation.util
 
 interface NotificationController {
-    fun showNotification()
+    fun showNotification(textOfQuestion: String)
 }

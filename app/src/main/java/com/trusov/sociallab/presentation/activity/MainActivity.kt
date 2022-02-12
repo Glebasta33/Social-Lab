@@ -148,8 +148,8 @@ class MainActivity : AppCompatActivity(), OnInputErrorListener, NavigationContro
         Toast.makeText(this, message, Toast.LENGTH_SHORT).show()
     }
 
-    override fun showNotification() {
-        NotificationHelper(this).showNotification()
+    override fun showNotification(textOfQuestion: String) {
+        NotificationHelper(this).showNotification(textOfQuestion)
     }
 
 }

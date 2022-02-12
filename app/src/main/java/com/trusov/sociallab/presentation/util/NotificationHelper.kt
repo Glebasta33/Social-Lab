@@ -12,8 +12,9 @@ import android.widget.RemoteViews
 import androidx.core.app.NotificationCompat
 import com.trusov.sociallab.R
 import com.trusov.sociallab.data.receiver.NotificationReceiver
+import javax.inject.Inject
 
-class NotificationHelper(
+class NotificationHelper @Inject constructor(
     private val context: Context
 ) : ContextWrapper(context) {
 
@@ -33,7 +34,7 @@ class NotificationHelper(
     }
 
 
-    private fun createNotificationView() {
+    private fun createNotificationView(textOfQuestion: String) {
 
         fun createIntent(number: Int): Intent {
             return Intent(context, NotificationReceiver::class.java).apply {
@@ -52,6 +53,7 @@ class NotificationHelper(
 
         notificationView = RemoteViews(packageName, R.layout.custom_notification_layout)
         notificationView.apply {
+            setTextViewText(R.id.tv_question_text, textOfQuestion)
             setOnClickPendingIntent(R.id.button_1, createPendingIntent(1))
             setOnClickPendingIntent(R.id.button_2, createPendingIntent(2))
             setOnClickPendingIntent(R.id.button_3, createPendingIntent(3))
@@ -70,9 +72,9 @@ class NotificationHelper(
             .build()
     }
 
-    fun showNotification() {
+    fun showNotification(textOfQuestion: String) {
         createNotificationChannel()
-        createNotificationView()
+        createNotificationView(textOfQuestion)
         notificationManager.notify(NOTIFICATION_ID, createNotification())
     }
 

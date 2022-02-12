@@ -21,7 +21,7 @@ interface Repository {
     fun unregisterFromResearch(researchId: String)
 
     // survey
-    fun getQuestion(): Question
+    fun getQuestion()
     fun answerQuestion(question: Question)
 
     // respondent info

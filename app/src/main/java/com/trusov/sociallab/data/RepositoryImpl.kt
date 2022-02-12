@@ -1,16 +1,19 @@
 package com.trusov.sociallab.data
 
+import android.app.Application
 import android.util.Log
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
+import androidx.work.ExistingWorkPolicy
+import androidx.work.WorkManager
 import com.google.firebase.auth.FirebaseAuth
 import com.google.firebase.auth.FirebaseUser
 import com.google.firebase.firestore.FieldValue
 import com.google.firebase.firestore.FirebaseFirestore
+import com.trusov.sociallab.data.worker.QuestionsWorker
 import com.trusov.sociallab.di.ApplicationScope
 import com.trusov.sociallab.domain.entity.Question
 import com.trusov.sociallab.domain.entity.Research
-import com.trusov.sociallab.domain.entity.Respondent
 import com.trusov.sociallab.domain.entity.Statistics
 import com.trusov.sociallab.domain.repository.Repository
 import javax.inject.Inject
@@ -18,7 +21,8 @@ import javax.inject.Inject
 @ApplicationScope
 class RepositoryImpl @Inject constructor(
     private val firebase: FirebaseFirestore,
-    private val auth: FirebaseAuth
+    private val auth: FirebaseAuth,
+    private val application: Application
 ) : Repository {
 
     override fun signUp(login: String, password: String) {
@@ -124,8 +128,13 @@ class RepositoryImpl @Inject constructor(
             }
     }
 
-    override fun getQuestion(): Question {
-        TODO("Not yet implemented")
+    override fun getQuestion() {
+        val workerManager = WorkManager.getInstance(application)
+        workerManager.enqueueUniqueWork(
+            QuestionsWorker.NAME,
+            ExistingWorkPolicy.REPLACE,
+            QuestionsWorker.makeRequest()
+        )
     }
 
     override fun answerQuestion(question: Question) {

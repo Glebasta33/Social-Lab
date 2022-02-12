@@ -4,6 +4,7 @@ import android.app.NotificationManager
 import android.content.Context
 import android.content.Context.NOTIFICATION_SERVICE
 import android.os.Bundle
+import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
@@ -51,7 +52,7 @@ class AnswersFragment : Fragment() {
         super.onViewCreated(view, savedInstanceState)
         with(binding) {
             buttonShowNotification.setOnClickListener {
-                notificationController.showNotification()
+                viewModel.loadQuestion()
             }
         }
     }
