@@ -1,6 +1,7 @@
 package com.trusov.sociallab.di
 
 import android.app.Application
+import com.trusov.sociallab.SocialLabApp
 import com.trusov.sociallab.presentation.activity.MainActivity
 import com.trusov.sociallab.presentation.fragment.answers.AnswersFragment
 import com.trusov.sociallab.presentation.fragment.auth.log_in.LogInFragment
@@ -26,6 +27,7 @@ interface ApplicationComponent {
     fun inject(instance: StatisticsFragment)
     fun inject(instance: ResearchInfoFragment)
     fun inject(instance: ResearchesListAdapter)
+    fun inject(instance: SocialLabApp)
 
     @Component.Factory
     interface Factory {

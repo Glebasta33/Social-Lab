@@ -1,10 +1,6 @@
 package com.trusov.sociallab.presentation.util
 
-import android.app.Notification
-import android.app.NotificationChannel
-import android.app.NotificationManager
-import android.app.PendingIntent
-import android.content.Context
+import android.app.*
 import android.content.ContextWrapper
 import android.content.Intent
 import android.os.Build
@@ -15,8 +11,8 @@ import com.trusov.sociallab.data.receiver.NotificationReceiver
 import javax.inject.Inject
 
 class NotificationHelper @Inject constructor(
-    private val context: Context
-) : ContextWrapper(context) {
+    private val application: Application
+) : ContextWrapper(application) {
 
     private val notificationManager = getSystemService(NOTIFICATION_SERVICE) as NotificationManager
     private lateinit var notificationView: RemoteViews
@@ -37,14 +33,14 @@ class NotificationHelper @Inject constructor(
     private fun createNotificationView(textOfQuestion: String) {
 
         fun createIntent(number: Int): Intent {
-            return Intent(context, NotificationReceiver::class.java).apply {
+            return Intent(application, NotificationReceiver::class.java).apply {
                 putExtra(NOTIFICATION_EXTRA_KEY, number)
             }
         }
 
         fun createPendingIntent(number: Int): PendingIntent {
             return PendingIntent.getBroadcast(
-                context,
+                application,
                 number,
                 createIntent(number),
                 PendingIntent.FLAG_UPDATE_CURRENT

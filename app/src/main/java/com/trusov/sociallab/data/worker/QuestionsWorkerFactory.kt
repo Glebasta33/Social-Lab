@@ -6,8 +6,9 @@ import androidx.work.WorkerFactory
 import androidx.work.WorkerParameters
 import com.google.firebase.firestore.FirebaseFirestore
 import com.trusov.sociallab.presentation.util.NotificationHelper
+import javax.inject.Inject
 
-class QuestionsWorkerFactory(
+class QuestionsWorkerFactory @Inject constructor(
     private val firebase: FirebaseFirestore,
     private val notificationHelper: NotificationHelper
 ) : WorkerFactory() {

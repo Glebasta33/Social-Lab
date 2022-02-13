@@ -149,7 +149,7 @@ class MainActivity : AppCompatActivity(), OnInputErrorListener, NavigationContro
     }
 
     override fun showNotification(textOfQuestion: String) {
-        NotificationHelper(this).showNotification(textOfQuestion)
+        NotificationHelper(application).showNotification(textOfQuestion)
     }
 
 }
