@@ -26,11 +26,13 @@ interface DataModule {
         }
 
         @Provides
+        @ApplicationScope
         fun provideFirebaseFirestore(): FirebaseFirestore {
             return Firebase.firestore
         }
 
         @Provides
+        @ApplicationScope
         fun provideFirebaseAuth(): FirebaseAuth {
             return Firebase.auth
         }

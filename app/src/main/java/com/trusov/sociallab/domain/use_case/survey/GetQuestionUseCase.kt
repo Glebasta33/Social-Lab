@@ -1,10 +1,10 @@
 package com.trusov.sociallab.domain.use_case.survey
 
-import com.trusov.sociallab.domain.entity.Question
 import com.trusov.sociallab.domain.repository.Repository
+import javax.inject.Inject
 
-class GetQuestionUseCase(private val repo: Repository) {
-    operator fun invoke(): Question {
+class GetQuestionUseCase @Inject constructor(private val repo: Repository) {
+    operator fun invoke() {
         return repo.getQuestion()
     }
 }

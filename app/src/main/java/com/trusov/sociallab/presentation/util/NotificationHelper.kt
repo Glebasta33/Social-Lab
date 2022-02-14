@@ -1,10 +1,6 @@
 package com.trusov.sociallab.presentation.util
 
-import android.app.Notification
-import android.app.NotificationChannel
-import android.app.NotificationManager
-import android.app.PendingIntent
-import android.content.Context
+import android.app.*
 import android.content.ContextWrapper
 import android.content.Intent
 import android.os.Build
@@ -12,10 +8,11 @@ import android.widget.RemoteViews
 import androidx.core.app.NotificationCompat
 import com.trusov.sociallab.R
 import com.trusov.sociallab.data.receiver.NotificationReceiver
+import javax.inject.Inject
 
-class NotificationHelper(
-    private val context: Context
-) : ContextWrapper(context) {
+class NotificationHelper @Inject constructor(
+    private val application: Application
+) : ContextWrapper(application) {
 
     private val notificationManager = getSystemService(NOTIFICATION_SERVICE) as NotificationManager
     private lateinit var notificationView: RemoteViews
@@ -33,17 +30,18 @@ class NotificationHelper(
     }
 
 
-    private fun createNotificationView() {
+    private fun createNotificationView(textOfQuestion: String, questionId: String) {
 
         fun createIntent(number: Int): Intent {
-            return Intent(context, NotificationReceiver::class.java).apply {
-                putExtra(NOTIFICATION_EXTRA_KEY, number)
+            return Intent(application, NotificationReceiver::class.java).apply {
+                putExtra(NUMBER_OF_ANSWER, number)
+                putExtra(QUESTION_ID, questionId)
             }
         }
 
         fun createPendingIntent(number: Int): PendingIntent {
             return PendingIntent.getBroadcast(
-                context,
+                application,
                 number,
                 createIntent(number),
                 PendingIntent.FLAG_UPDATE_CURRENT
@@ -52,6 +50,7 @@ class NotificationHelper(
 
         notificationView = RemoteViews(packageName, R.layout.custom_notification_layout)
         notificationView.apply {
+            setTextViewText(R.id.tv_question_text, textOfQuestion)
             setOnClickPendingIntent(R.id.button_1, createPendingIntent(1))
             setOnClickPendingIntent(R.id.button_2, createPendingIntent(2))
             setOnClickPendingIntent(R.id.button_3, createPendingIntent(3))
@@ -70,16 +69,17 @@ class NotificationHelper(
             .build()
     }
 
-    fun showNotification() {
+    fun showNotification(textOfQuestion: String, questionId: String) {
         createNotificationChannel()
-        createNotificationView()
+        createNotificationView(textOfQuestion, questionId)
         notificationManager.notify(NOTIFICATION_ID, createNotification())
     }
 
     companion object {
         private const val CHANNEL_ID = "QUESTION_CHANNEL_ID"
         private const val CHANNEL_NAME = "Question notification channel"
-        private const val NOTIFICATION_EXTRA_KEY = "NOTIFICATION_EXTRA_KEY"
+        private const val NUMBER_OF_ANSWER = "NUMBER_OF_ANSWER"
+        private const val QUESTION_ID = "QUESTION_ID"
         private const val NOTIFICATION_ID = 1
     }
 }
