@@ -23,16 +23,18 @@ class QuestionsWorker(
 
 
     override suspend fun doWork(): Result {
+        var index = 0
         while (true) {
             var question: Question? = null
             firebase.collection("questions").addSnapshotListener { value, error ->
-                if (value != null) {
-                    val data = value.documents.find {it["researchId"] == "test"}
+                if (value != null && value.documents.size > index) {
+                    val data = value.documents[index++]
                     Log.d("QuestionsWorker", "value: ${data.toString()}")
                     data?.let {
                         question = Question(
                             text = data["text"].toString(),
-                            id = data["researchId"].toString()
+                            researchId = data["researchId"].toString(),
+                            id = data.id
                         )
                     }
                 }
@@ -42,7 +44,7 @@ class QuestionsWorker(
             }
             delay(10_000)
             question?.let {
-                notificationHelper.showNotification(it.text)
+                notificationHelper.showNotification(it.text, it.id)
             }
 
         }

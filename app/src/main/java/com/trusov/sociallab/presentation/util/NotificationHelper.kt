@@ -30,11 +30,12 @@ class NotificationHelper @Inject constructor(
     }
 
 
-    private fun createNotificationView(textOfQuestion: String) {
+    private fun createNotificationView(textOfQuestion: String, questionId: String) {
 
         fun createIntent(number: Int): Intent {
             return Intent(application, NotificationReceiver::class.java).apply {
-                putExtra(NOTIFICATION_EXTRA_KEY, number)
+                putExtra(NUMBER_OF_ANSWER, number)
+                putExtra(QUESTION_ID, questionId)
             }
         }
 
@@ -68,16 +69,17 @@ class NotificationHelper @Inject constructor(
             .build()
     }
 
-    fun showNotification(textOfQuestion: String) {
+    fun showNotification(textOfQuestion: String, questionId: String) {
         createNotificationChannel()
-        createNotificationView(textOfQuestion)
+        createNotificationView(textOfQuestion, questionId)
         notificationManager.notify(NOTIFICATION_ID, createNotification())
     }
 
     companion object {
         private const val CHANNEL_ID = "QUESTION_CHANNEL_ID"
         private const val CHANNEL_NAME = "Question notification channel"
-        private const val NOTIFICATION_EXTRA_KEY = "NOTIFICATION_EXTRA_KEY"
+        private const val NUMBER_OF_ANSWER = "NUMBER_OF_ANSWER"
+        private const val QUESTION_ID = "QUESTION_ID"
         private const val NOTIFICATION_ID = 1
     }
 }

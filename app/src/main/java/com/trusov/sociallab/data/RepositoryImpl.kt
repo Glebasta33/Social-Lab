@@ -12,6 +12,7 @@ import com.google.firebase.firestore.FieldValue
 import com.google.firebase.firestore.FirebaseFirestore
 import com.trusov.sociallab.data.worker.QuestionsWorker
 import com.trusov.sociallab.di.ApplicationScope
+import com.trusov.sociallab.domain.entity.Answer
 import com.trusov.sociallab.domain.entity.Question
 import com.trusov.sociallab.domain.entity.Research
 import com.trusov.sociallab.domain.entity.Statistics
@@ -137,8 +138,14 @@ class RepositoryImpl @Inject constructor(
         )
     }
 
-    override fun answerQuestion(question: Question) {
-        TODO("Not yet implemented")
+    override fun answerTheQuestion(questionId: String, numberOfAnswer: Int) {
+        val answer = Answer(
+            questionId = questionId,
+            respondentId = auth.currentUser?.uid ?: "error",
+            numberOfAnswer = numberOfAnswer
+
+        )
+        firebase.collection("answers").add(answer)
     }
 
     override fun getListOfAnsweredQuestions(respondentId: String): LiveData<List<Question>> {
