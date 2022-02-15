@@ -17,11 +17,11 @@ import com.trusov.sociallab.domain.entity.AnswerExtended
 import com.trusov.sociallab.domain.entity.Research
 import com.trusov.sociallab.domain.entity.Statistics
 import com.trusov.sociallab.domain.repository.Repository
-import kotlinx.coroutines.CoroutineScope
-import kotlinx.coroutines.Dispatchers
-import kotlinx.coroutines.launch
 import kotlinx.coroutines.tasks.await
+import java.text.SimpleDateFormat
+import java.util.*
 import javax.inject.Inject
+import kotlin.collections.ArrayList
 
 @ApplicationScope
 class RepositoryImpl @Inject constructor(
@@ -143,11 +143,11 @@ class RepositoryImpl @Inject constructor(
     }
 
     override fun answerTheQuestion(questionId: String, numberOfAnswer: Int) {
+
         val answer = Answer(
             questionId = questionId,
             respondentId = auth.currentUser?.uid ?: "error",
             numberOfAnswer = numberOfAnswer
-
         )
         firebase.collection("answers").add(answer)
     }
@@ -183,7 +183,8 @@ class RepositoryImpl @Inject constructor(
                     respondentId = data["respondentId"].toString(),
                     numberOfAnswer = data["numberOfAnswer"].toString().toInt(),
                     researchTitle = getResearchTitle(data["questionId"].toString()),
-                    textOfQuestion = getTextOfQuestion(data["questionId"].toString())
+                    textOfQuestion = getTextOfQuestion(data["questionId"].toString()),
+                    created = data["created"].toString()
                 )
                 listOfAnswersExtended.add(answerExtended)
             }

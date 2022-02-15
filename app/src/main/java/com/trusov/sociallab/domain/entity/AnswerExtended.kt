@@ -6,5 +6,5 @@ data class AnswerExtended(
     val numberOfAnswer: Int,
     val researchTitle: String,
     val textOfQuestion: String,
-    val time: String = "17:03 - 12.04.2022"
+    val created: String = "hh:mm - dd:MM:yy"
 )

@@ -3,9 +3,8 @@ package com.trusov.sociallab.domain.entity
 import android.os.Parcelable
 import androidx.room.Entity
 import androidx.room.PrimaryKey
-import com.trusov.sociallab.common.Constants.Gender
-import com.trusov.sociallab.common.Constants.UNKNOWN_DATE
-import com.trusov.sociallab.common.Constants.UNKNOWN_ID
+import com.trusov.sociallab.utils.Constants.Gender
+import com.trusov.sociallab.utils.Constants.UNKNOWN_DATE
 import kotlinx.parcelize.Parcelize
 
 @Parcelize
