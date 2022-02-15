@@ -2,8 +2,7 @@ package com.trusov.sociallab.domain.repository
 
 import androidx.lifecycle.LiveData
 import com.google.firebase.auth.FirebaseUser
-import com.trusov.sociallab.domain.entity.Answer
-import com.trusov.sociallab.domain.entity.Question
+import com.trusov.sociallab.domain.entity.AnswerExtended
 import com.trusov.sociallab.domain.entity.Research
 import com.trusov.sociallab.domain.entity.Statistics
 
@@ -26,6 +25,6 @@ interface Repository {
     fun answerTheQuestion(questionId: String, numberOfAnswer: Int)
 
     // respondent info
-    fun getListOfAnsweredQuestions(respondentId: String): LiveData<List<Question>>
+    suspend fun getListOfAnsweredQuestions(): List<AnswerExtended>
     fun getUserStatistics(respondentId: String): Statistics
 }

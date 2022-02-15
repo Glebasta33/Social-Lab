@@ -6,14 +6,11 @@
     android:layout_height="match_parent"
     tools:context=".presentation.fragment.answers.AnswersFragment">
 
-    <Button
-        android:id="@+id/button_show_notification"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:text="Show"
-        app:layout_constraintBottom_toBottomOf="parent"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toTopOf="parent" />
+    <androidx.recyclerview.widget.RecyclerView
+        android:id="@+id/rv_answers"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        app:layoutManager="androidx.recyclerview.widget.LinearLayoutManager"
+        tools:listitem="@layout/answer_rv_item_layout"/>
 
 </androidx.constraintlayout.widget.ConstraintLayout>

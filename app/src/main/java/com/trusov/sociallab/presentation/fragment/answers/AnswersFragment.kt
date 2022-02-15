@@ -10,9 +10,16 @@ import androidx.lifecycle.ViewModelProvider
 import com.trusov.sociallab.SocialLabApp
 import com.trusov.sociallab.databinding.AnswersFragmentBinding
 import com.trusov.sociallab.di.ViewModelFactory
+import com.trusov.sociallab.domain.entity.AnswerExtended
+import kotlinx.coroutines.CoroutineScope
+import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.launch
 import javax.inject.Inject
 
 class AnswersFragment : Fragment() {
+
+    @Inject
+    lateinit var answersAdapter: AnswersListAdapter
 
     @Inject
     lateinit var viewModelFactory: ViewModelFactory
@@ -38,13 +45,11 @@ class AnswersFragment : Fragment() {
         return binding.root
     }
 
-
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
-        with(binding) {
-            buttonShowNotification.setOnClickListener {
-                viewModel.loadQuestion()
-            }
+        binding.rvAnswers.adapter = answersAdapter
+        viewModel.answers.observe(viewLifecycleOwner) {
+            answersAdapter.submitList(it?.toMutableList() ?: listOf(AnswerExtended("id", "id", 4, "Title", "Text of question")))
         }
     }
 
