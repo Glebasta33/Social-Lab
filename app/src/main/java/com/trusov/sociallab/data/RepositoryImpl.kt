@@ -13,11 +13,15 @@ import com.google.firebase.firestore.FirebaseFirestore
 import com.trusov.sociallab.data.worker.QuestionsWorker
 import com.trusov.sociallab.di.ApplicationScope
 import com.trusov.sociallab.domain.entity.Answer
-import com.trusov.sociallab.domain.entity.Question
+import com.trusov.sociallab.domain.entity.AnswerExtended
 import com.trusov.sociallab.domain.entity.Research
 import com.trusov.sociallab.domain.entity.Statistics
 import com.trusov.sociallab.domain.repository.Repository
+import kotlinx.coroutines.tasks.await
+import java.text.SimpleDateFormat
+import java.util.*
 import javax.inject.Inject
+import kotlin.collections.ArrayList
 
 @ApplicationScope
 class RepositoryImpl @Inject constructor(
@@ -139,17 +143,55 @@ class RepositoryImpl @Inject constructor(
     }
 
     override fun answerTheQuestion(questionId: String, numberOfAnswer: Int) {
+
         val answer = Answer(
             questionId = questionId,
             respondentId = auth.currentUser?.uid ?: "error",
             numberOfAnswer = numberOfAnswer
-
         )
         firebase.collection("answers").add(answer)
     }
 
-    override fun getListOfAnsweredQuestions(respondentId: String): LiveData<List<Question>> {
-        TODO("Not yet implemented")
+    override suspend fun getListOfAnsweredQuestions(): List<AnswerExtended> {
+
+        val listOfAnswersExtended = ArrayList<AnswerExtended>()
+
+        suspend fun getTextOfQuestion(questionId: String): String {
+            val questions = firebase.collection("questions").get().await()
+            val questionData = questions.documents.find { it.id == questionId }
+            return questionData?.get("text").toString()
+        }
+
+        suspend fun getResearchTitle(questionId: String): String {
+            val questions = firebase.collection("questions").get().await()
+            val questionData = questions.documents.find { it.id == questionId }
+            val researchId = questionData?.get("researchId").toString()
+
+            val researches = firebase.collection("researches").get().await()
+            val researchData = researches.documents.find { it.id == researchId }
+            return researchData?.get("topic").toString()
+        }
+
+        val answers = firebase.collection("answers")
+            .whereEqualTo("respondentId", auth.currentUser?.uid)
+            .get()
+            .await()
+        if (answers != null) {
+            for (data in answers.documents) {
+                val answerExtended = AnswerExtended(
+                    questionId = data["questionId"].toString(),
+                    respondentId = data["respondentId"].toString(),
+                    numberOfAnswer = data["numberOfAnswer"].toString().toInt(),
+                    researchTitle = getResearchTitle(data["questionId"].toString()),
+                    textOfQuestion = getTextOfQuestion(data["questionId"].toString()),
+                    createdTime = data["createdTime"].toString(),
+                    createdDate = data["createdDate"].toString()
+                )
+                listOfAnswersExtended.add(answerExtended)
+            }
+        }
+
+        return listOfAnswersExtended
     }
 
     override fun getUserStatistics(respondentId: String): Statistics {
@@ -157,6 +199,6 @@ class RepositoryImpl @Inject constructor(
     }
 
     companion object {
-        private const val TAG = "RepositoryImpl"
+        private const val TAG = "RepositoryImplTag"
     }
 }

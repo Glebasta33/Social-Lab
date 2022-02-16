@@ -1,4 +1,4 @@
-package com.trusov.sociallab.common
+package com.trusov.sociallab.utils
 
 object Constants {
 
