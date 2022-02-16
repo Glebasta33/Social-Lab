@@ -7,12 +7,19 @@ data class Answer(
     val questionId: String,
     val respondentId: String,
     val numberOfAnswer: Int,
-    val created: String = getCurrentTime()
+    val createdTime: String = getCurrentTime(),
+    val createdDate: String = getCurrentDate()
 ) {
     companion object {
         fun getCurrentTime(): String {
             val cal = Calendar.getInstance()
-            val format = SimpleDateFormat("hh:mm:ss - dd.MM.yy")
+            val format = SimpleDateFormat("HH:mm:ss")
+            return format.format(cal.time)
+        }
+
+        fun getCurrentDate(): String {
+            val cal = Calendar.getInstance()
+            val format = SimpleDateFormat("dd.MM.yy")
             return format.format(cal.time)
         }
     }

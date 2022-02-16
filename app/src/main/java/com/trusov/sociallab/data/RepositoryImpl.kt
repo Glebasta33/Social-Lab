@@ -184,7 +184,8 @@ class RepositoryImpl @Inject constructor(
                     numberOfAnswer = data["numberOfAnswer"].toString().toInt(),
                     researchTitle = getResearchTitle(data["questionId"].toString()),
                     textOfQuestion = getTextOfQuestion(data["questionId"].toString()),
-                    created = data["created"].toString()
+                    createdTime = data["createdTime"].toString(),
+                    createdDate = data["createdDate"].toString()
                 )
                 listOfAnswersExtended.add(answerExtended)
             }

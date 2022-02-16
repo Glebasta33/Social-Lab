@@ -28,8 +28,10 @@ class AnswersViewModel @Inject constructor(
     private fun getAnswers() {
         CoroutineScope(Dispatchers.IO).launch {
             val list = getListOfAnsweredQuestionsUseCase()
+            val sortedList = list
+                .sortedWith(compareBy({it.createdDate}, {it.createdTime})).reversed()
             withContext(Dispatchers.Main) {
-                _answers.value = list
+                _answers.value = sortedList
             }
         }
 
