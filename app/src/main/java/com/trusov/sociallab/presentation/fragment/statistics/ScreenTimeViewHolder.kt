@@ -11,6 +11,7 @@ class ScreenTimeViewHolder(view: View) : RecyclerView.ViewHolder(view) {
         with(binding) {
             tvAppName.text = item.appName
             tvScreenTime.text = item.formattedTime()
+            ivAppIcon.setImageDrawable(item.icon)
         }
     }
 }

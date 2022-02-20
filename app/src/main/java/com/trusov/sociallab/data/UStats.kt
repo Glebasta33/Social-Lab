@@ -4,17 +4,15 @@ import android.app.usage.UsageStats
 import android.app.usage.UsageStatsManager
 import android.content.Context
 import android.content.Context.USAGE_STATS_SERVICE
-import android.util.Log
+import android.graphics.drawable.Drawable
 import com.trusov.sociallab.domain.entity.ScreenTime
 import java.text.SimpleDateFormat
 import java.util.*
 
 object UStats {
-    private val dateFormat = SimpleDateFormat("M-d-yyyy HH:mm:ss")
     private val hourFormat = SimpleDateFormat("HH")
     private val minFormat = SimpleDateFormat("mm")
     private val secFormat = SimpleDateFormat("ss")
-    val TAG = UStats.javaClass.simpleName
 
     fun getListOfScreenTime(context: Context): List<ScreenTime> {
         val usageStatsList = getUsageStatsList(context)
@@ -25,7 +23,14 @@ object UStats {
                 val hours = s / 3600
                 val minutes = (s % 3600) / 60
                 val seconds = (s % 60)
-                val screenTime = ScreenTime(hours, minutes, seconds, u.packageName)
+                val screenTime =
+                    ScreenTime(
+                        hours,
+                        minutes,
+                        seconds,
+                        getAppLabel(u.packageName, context),
+                        getAppIcon(u.packageName, context)
+                    )
                 screenTimes.add(screenTime)
             }
         }
@@ -44,7 +49,6 @@ object UStats {
         val hours = s / 3600
         val minutes = (s % 3600) / 60
         val seconds = (s % 60)
-        Log.d("MainViewModelTag", "getTotalScreenTime: $s")
         return ScreenTime(hours, minutes, seconds, "Сегодня")
     }
 
@@ -60,9 +64,19 @@ object UStats {
         calendar.add(Calendar.SECOND, -currentSeconds)
         val startTime = calendar.timeInMillis
 
-        Log.d(TAG, "start: ${dateFormat.format(startTime)}")
-        Log.d(TAG, "now: ${dateFormat.format(currentTime)}")
-
         return usm.queryUsageStats(UsageStatsManager.INTERVAL_DAILY, startTime, currentTime)
+    }
+
+    private fun getAppLabel(pkg: String, context: Context): String {
+        val pm = context.packageManager
+        val info = pm.getApplicationInfo(pkg, 0)
+        val label = pm.getApplicationLabel(info)
+        return label.toString()
+    }
+
+    private fun getAppIcon(pkg: String, context: Context): Drawable {
+        val pm = context.packageManager
+        val info = pm.getApplicationInfo(pkg, 0)
+        return pm.getApplicationIcon(info)
     }
 }

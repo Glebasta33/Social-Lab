@@ -1,5 +1,6 @@
 package com.trusov.sociallab.presentation.fragment.statistics
 
+import android.util.Log
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
@@ -8,6 +9,7 @@ import com.trusov.sociallab.domain.entity.ScreenTime
 import com.trusov.sociallab.domain.use_case.usage_stats.CheckUsageStatsPermissionUseCase
 import com.trusov.sociallab.domain.use_case.usage_stats.GetListOfScreenTimeUseCase
 import com.trusov.sociallab.domain.use_case.usage_stats.GetTotalScreenTimeUseCase
+import kotlinx.coroutines.delay
 import kotlinx.coroutines.launch
 import javax.inject.Inject
 
@@ -26,16 +28,15 @@ class StatisticsViewModel @Inject constructor(
     val total: LiveData<String> = _total
 
     fun shopScreenTime() {
-        viewModelScope.launch {
-            val list = getListOfScreenTimeUseCase()
-            val sortedList = list.sortedWith(
-                compareBy(
-                    { it.hours },
-                    { it.minutes },
-                    { it.seconds })
-            ).reversed()
-            _list.value = sortedList
-            _total.value = getTotalScreenTimeUseCase().formattedTime()
-        }
+        val list = getListOfScreenTimeUseCase()
+        val sortedList = list.sortedWith(
+            compareBy(
+                { it.hours },
+                { it.minutes },
+                { it.seconds })
+        ).reversed()
+        _list.value = sortedList
+        _total.value = getTotalScreenTimeUseCase().formattedTime()
+        Log.d("StatisticsViewModel", getTotalScreenTimeUseCase().formattedTime())
     }
 }

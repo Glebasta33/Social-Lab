@@ -9,10 +9,13 @@ import android.view.View
 import android.view.ViewGroup
 import androidx.fragment.app.Fragment
 import androidx.lifecycle.ViewModelProvider
+import androidx.lifecycle.lifecycleScope
 import com.trusov.sociallab.SocialLabApp
 import com.trusov.sociallab.databinding.StatisticsFragmentBinding
 import com.trusov.sociallab.di.ViewModelFactory
 import com.trusov.sociallab.domain.entity.ScreenTime
+import kotlinx.coroutines.delay
+import kotlinx.coroutines.launch
 import javax.inject.Inject
 
 class StatisticsFragment : Fragment() {
@@ -56,7 +59,10 @@ class StatisticsFragment : Fragment() {
         viewModel.total.observe(viewLifecycleOwner) {
             binding.tvTotalScreenTime.text = it
         }
-        viewModel.shopScreenTime()
+        lifecycleScope.launch {
+            viewModel.shopScreenTime()
+        }
+
     }
 
     companion object {
