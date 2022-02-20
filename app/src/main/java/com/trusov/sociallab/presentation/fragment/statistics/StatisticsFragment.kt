@@ -10,6 +10,7 @@ import androidx.lifecycle.ViewModelProvider
 import com.trusov.sociallab.SocialLabApp
 import com.trusov.sociallab.databinding.StatisticsFragmentBinding
 import com.trusov.sociallab.di.ViewModelFactory
+import com.trusov.sociallab.domain.entity.ScreenTime
 import javax.inject.Inject
 
 class StatisticsFragment : Fragment() {
@@ -19,6 +20,8 @@ class StatisticsFragment : Fragment() {
     private val viewModel by lazy {
         ViewModelProvider(this, viewModelFactory)[StatisticsViewModel::class.java]
     }
+    @Inject
+    lateinit var screenTimeListAdapter: ScreenTimeListAdapter
 
     private var _binding: StatisticsFragmentBinding? = null
     private val binding: StatisticsFragmentBinding
@@ -39,6 +42,7 @@ class StatisticsFragment : Fragment() {
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
+        binding.rvScreenTime.adapter = screenTimeListAdapter
     }
 
     companion object {
