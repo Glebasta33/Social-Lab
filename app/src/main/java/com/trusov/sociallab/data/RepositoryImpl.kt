@@ -12,10 +12,7 @@ import com.google.firebase.firestore.FieldValue
 import com.google.firebase.firestore.FirebaseFirestore
 import com.trusov.sociallab.data.worker.QuestionsWorker
 import com.trusov.sociallab.di.ApplicationScope
-import com.trusov.sociallab.domain.entity.Answer
-import com.trusov.sociallab.domain.entity.AnswerExtended
-import com.trusov.sociallab.domain.entity.Research
-import com.trusov.sociallab.domain.entity.Statistics
+import com.trusov.sociallab.domain.entity.*
 import com.trusov.sociallab.domain.repository.Repository
 import kotlinx.coroutines.tasks.await
 import java.text.SimpleDateFormat
@@ -194,8 +191,16 @@ class RepositoryImpl @Inject constructor(
         return listOfAnswersExtended
     }
 
-    override fun getUserStatistics(respondentId: String): Statistics {
-        TODO("Not yet implemented")
+    override fun getListOfScreenTime(): List<ScreenTime> {
+        return UStats.getListOfScreenTime(application)
+    }
+
+    override fun getTotalScreenTime(): ScreenTime {
+        return UStats.getTotalScreenTime(application)
+    }
+
+    override fun checkUsageStatsPermission(): Boolean {
+        return UStats.getUsageStatsList(application).isEmpty()
     }
 
     companion object {

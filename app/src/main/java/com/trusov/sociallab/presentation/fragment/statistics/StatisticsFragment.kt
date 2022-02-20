@@ -1,7 +1,9 @@
 package com.trusov.sociallab.presentation.fragment.statistics
 
 import android.content.Context
+import android.content.Intent
 import android.os.Bundle
+import android.provider.Settings
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
@@ -20,6 +22,7 @@ class StatisticsFragment : Fragment() {
     private val viewModel by lazy {
         ViewModelProvider(this, viewModelFactory)[StatisticsViewModel::class.java]
     }
+
     @Inject
     lateinit var screenTimeListAdapter: ScreenTimeListAdapter
 
@@ -29,6 +32,10 @@ class StatisticsFragment : Fragment() {
 
     override fun onAttach(context: Context) {
         (activity?.application as SocialLabApp).component.inject(this)
+        if (viewModel.checkPermission()) {
+            val intent = Intent(Settings.ACTION_USAGE_ACCESS_SETTINGS)
+            activity?.startActivity(intent)
+        }
         super.onAttach(context)
     }
 
@@ -43,6 +50,13 @@ class StatisticsFragment : Fragment() {
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
         binding.rvScreenTime.adapter = screenTimeListAdapter
+        viewModel.list.observe(viewLifecycleOwner) {
+            screenTimeListAdapter.submitList(it)
+        }
+        viewModel.total.observe(viewLifecycleOwner) {
+            binding.tvTotalScreenTime.text = it
+        }
+        viewModel.shopScreenTime()
     }
 
     companion object {
