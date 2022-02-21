@@ -7,21 +7,22 @@ import androidx.work.WorkerParameters
 import com.google.firebase.firestore.FirebaseFirestore
 import com.trusov.sociallab.presentation.util.NotificationHelper
 import javax.inject.Inject
+import javax.inject.Provider
 
-class QuestionsWorkerFactory @Inject constructor(
-    private val firebase: FirebaseFirestore,
-    private val notificationHelper: NotificationHelper
+class AppWorkerFactory @Inject constructor(
+    private val workerProviders: @JvmSuppressWildcards Map<Class<out ListenableWorker>, Provider<SubWorkerFactory>>
 ) : WorkerFactory() {
     override fun createWorker(
         appContext: Context,
         workerClassName: String,
         workerParameters: WorkerParameters
     ): ListenableWorker? {
-        return QuestionsWorker(
-            appContext,
-            workerParameters,
-            firebase,
-            notificationHelper
-        )
+        return when(workerClassName) {
+            QuestionsWorker::class.qualifiedName -> {
+                val subWorkerFactory = workerProviders[QuestionsWorker::class.java]?.get()
+                return subWorkerFactory?.create(appContext, workerParameters)
+            }
+            else -> null
+        }
     }
 }
