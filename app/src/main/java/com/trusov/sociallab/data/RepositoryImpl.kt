@@ -24,7 +24,8 @@ import kotlin.collections.ArrayList
 class RepositoryImpl @Inject constructor(
     private val firebase: FirebaseFirestore,
     private val auth: FirebaseAuth,
-    private val application: Application
+    private val application: Application,
+    private val usageStats: UStats
 ) : Repository {
 
     override fun signUp(login: String, password: String) {
@@ -192,15 +193,15 @@ class RepositoryImpl @Inject constructor(
     }
 
     override fun getListOfScreenTime(): List<ScreenTime> {
-        return UStats.getListOfScreenTime(application)
+        return usageStats.getListOfScreenTime()
     }
 
     override fun getTotalScreenTime(): ScreenTime {
-        return UStats.getTotalScreenTime(application)
+        return usageStats.getTotalScreenTime()
     }
 
     override fun checkUsageStatsPermission(): Boolean {
-        return UStats.getUsageStatsList(application).isEmpty()
+        return usageStats.getUsageStatsList().isEmpty()
     }
 
     companion object {
