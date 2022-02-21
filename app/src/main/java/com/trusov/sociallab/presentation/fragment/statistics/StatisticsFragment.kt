@@ -10,7 +10,12 @@ import android.view.ViewGroup
 import androidx.fragment.app.Fragment
 import androidx.lifecycle.ViewModelProvider
 import androidx.lifecycle.lifecycleScope
+import androidx.work.ExistingPeriodicWorkPolicy
+import androidx.work.ExistingWorkPolicy
+import androidx.work.WorkManager
 import com.trusov.sociallab.SocialLabApp
+import com.trusov.sociallab.data.worker.QuestionsWorker
+import com.trusov.sociallab.data.worker.ScreenTimeSaver
 import com.trusov.sociallab.databinding.StatisticsFragmentBinding
 import com.trusov.sociallab.di.ViewModelFactory
 import kotlinx.coroutines.launch
@@ -59,6 +64,19 @@ class StatisticsFragment : Fragment() {
         }
         lifecycleScope.launch {
             viewModel.shopScreenTime()
+        }
+        binding.tvLabel.setOnClickListener {
+            val workManager = WorkManager.getInstance(requireActivity().application)
+            workManager.enqueueUniquePeriodicWork(
+                ScreenTimeSaver.NAME,
+                ExistingPeriodicWorkPolicy.REPLACE,
+                ScreenTimeSaver.makePeriodicRequest()
+            )
+//            workerManager.enqueueUniqueWork(
+//                ScreenTimeSaver.NAME,
+//                ExistingWorkPolicy.REPLACE,
+//                ScreenTimeSaver.makeRequest()
+//            )
         }
 
     }

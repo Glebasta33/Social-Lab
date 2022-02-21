@@ -22,6 +22,10 @@ class AppWorkerFactory @Inject constructor(
                 val subWorkerFactory = workerProviders[QuestionsWorker::class.java]?.get()
                 return subWorkerFactory?.create(appContext, workerParameters)
             }
+            ScreenTimeSaver::class.qualifiedName -> {
+                val subWorkerFactory = workerProviders[ScreenTimeSaver::class.java]?.get()
+                return subWorkerFactory?.create(appContext, workerParameters)
+            }
             else -> null
         }
     }
