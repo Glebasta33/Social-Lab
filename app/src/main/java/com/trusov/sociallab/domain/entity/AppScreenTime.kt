@@ -2,7 +2,7 @@ package com.trusov.sociallab.domain.entity
 
 import android.graphics.drawable.Drawable
 
-data class ScreenTime(
+data class AppScreenTime(
     val hours: Long,
     val minutes: Long,
     val seconds: Long,

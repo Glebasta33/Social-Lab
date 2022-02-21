@@ -15,8 +15,6 @@ import com.trusov.sociallab.di.ApplicationScope
 import com.trusov.sociallab.domain.entity.*
 import com.trusov.sociallab.domain.repository.Repository
 import kotlinx.coroutines.tasks.await
-import java.text.SimpleDateFormat
-import java.util.*
 import javax.inject.Inject
 import kotlin.collections.ArrayList
 
@@ -192,11 +190,11 @@ class RepositoryImpl @Inject constructor(
         return listOfAnswersExtended
     }
 
-    override fun getListOfScreenTime(): List<ScreenTime> {
+    override fun getListOfScreenTime(): List<AppScreenTime> {
         return usageStats.getListOfScreenTime()
     }
 
-    override fun getTotalScreenTime(): ScreenTime {
+    override fun getTotalScreenTime(): AppScreenTime {
         return usageStats.getTotalScreenTime()
     }
 

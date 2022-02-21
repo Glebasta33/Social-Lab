@@ -13,8 +13,6 @@ import androidx.lifecycle.lifecycleScope
 import com.trusov.sociallab.SocialLabApp
 import com.trusov.sociallab.databinding.StatisticsFragmentBinding
 import com.trusov.sociallab.di.ViewModelFactory
-import com.trusov.sociallab.domain.entity.ScreenTime
-import kotlinx.coroutines.delay
 import kotlinx.coroutines.launch
 import javax.inject.Inject
 

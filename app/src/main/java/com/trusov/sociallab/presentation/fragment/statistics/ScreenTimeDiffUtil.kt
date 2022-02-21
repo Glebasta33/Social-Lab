@@ -1,14 +1,14 @@
 package com.trusov.sociallab.presentation.fragment.statistics
 
 import androidx.recyclerview.widget.DiffUtil
-import com.trusov.sociallab.domain.entity.ScreenTime
+import com.trusov.sociallab.domain.entity.AppScreenTime
 
-class ScreenTimeDiffUtil : DiffUtil.ItemCallback<ScreenTime>() {
-    override fun areItemsTheSame(oldItem: ScreenTime, newItem: ScreenTime): Boolean {
+class ScreenTimeDiffUtil : DiffUtil.ItemCallback<AppScreenTime>() {
+    override fun areItemsTheSame(oldItem: AppScreenTime, newItem: AppScreenTime): Boolean {
         return oldItem == newItem
     }
 
-    override fun areContentsTheSame(oldItem: ScreenTime, newItem: ScreenTime): Boolean {
+    override fun areContentsTheSame(oldItem: AppScreenTime, newItem: AppScreenTime): Boolean {
         return oldItem == newItem
     }
 }

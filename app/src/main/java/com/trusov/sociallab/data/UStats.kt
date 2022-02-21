@@ -3,17 +3,24 @@ package com.trusov.sociallab.data
 import android.app.Application
 import android.app.usage.UsageStats
 import android.app.usage.UsageStatsManager
-import android.content.Context
-import android.content.Context.USAGE_STATS_SERVICE
 import android.graphics.drawable.Drawable
-import com.trusov.sociallab.domain.entity.ScreenTime
+import com.google.firebase.auth.FirebaseAuth
+import com.google.firebase.firestore.FirebaseFirestore
+import com.trusov.sociallab.domain.entity.AppScreenTime
+import com.trusov.sociallab.domain.entity.TotalScreenTime
+import kotlinx.coroutines.CoroutineScope
+import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.launch
+import kotlinx.coroutines.tasks.await
 import java.text.SimpleDateFormat
 import java.util.*
 import javax.inject.Inject
 
 class UStats @Inject constructor(
     private val application: Application,
-    private val usm: UsageStatsManager
+    private val usm: UsageStatsManager,
+    private val auth: FirebaseAuth,
+    private val firebase: FirebaseFirestore
 ) {
     private val hourFormat = SimpleDateFormat("HH")
     private val minFormat = SimpleDateFormat("mm")
@@ -32,9 +39,9 @@ class UStats @Inject constructor(
         return usm.queryUsageStats(UsageStatsManager.INTERVAL_DAILY, startTime, currentTime)
     }
 
-    fun getListOfScreenTime(): List<ScreenTime> {
+    fun getListOfScreenTime(): List<AppScreenTime> {
         val usageStatsList = getUsageStatsList()
-        val screenTimes = mutableListOf<ScreenTime>()
+        val screenTimes = mutableListOf<AppScreenTime>()
         for (u in usageStatsList) {
             if (u.totalTimeInForeground != 0L) {
                 val s = u.totalTimeInForeground / 1000
@@ -42,7 +49,7 @@ class UStats @Inject constructor(
                 val minutes = (s % 3600) / 60
                 val seconds = (s % 60)
                 val screenTime =
-                    ScreenTime(
+                    AppScreenTime(
                         hours,
                         minutes,
                         seconds,
@@ -55,7 +62,7 @@ class UStats @Inject constructor(
         return screenTimes
     }
 
-    fun getTotalScreenTime(): ScreenTime {
+    fun getTotalScreenTime(): AppScreenTime {
         var totalScreenTime = 0L
         val usageStatsList = getUsageStatsList()
         for (u in usageStatsList) {
@@ -67,7 +74,7 @@ class UStats @Inject constructor(
         val hours = s / 3600
         val minutes = (s % 3600) / 60
         val seconds = (s % 60)
-        return ScreenTime(hours, minutes, seconds, "Сегодня")
+        return AppScreenTime(hours, minutes, seconds, "Сегодня")
     }
 
     private fun getAppLabel(pkg: String): String {
@@ -81,5 +88,42 @@ class UStats @Inject constructor(
         val pm = application.packageManager
         val info = pm.getApplicationInfo(pkg, 0)
         return pm.getApplicationIcon(info)
+    }
+
+    fun saveCurrentTotalScreenTime() {
+        CoroutineScope(Dispatchers.IO).launch {
+            var currentTotalScreenTime = 0L
+            val usageStatsList = getUsageStatsList()
+            for (u in usageStatsList) {
+                if (u.totalTimeInForeground != 0L) {
+                    currentTotalScreenTime += u.totalTimeInForeground
+                }
+            }
+            val totalScreenTime = TotalScreenTime(
+                millisInDay = currentTotalScreenTime,
+                millisInLastHour = currentTotalScreenTime - getScreenTimeHourAgo(),
+                respondentId = auth.currentUser?.uid ?: "unknown uid",
+                index = getPreviousIndex() + 1
+            )
+            firebase.collection("total_screen_time").add(totalScreenTime)
+        }
+    }
+
+    private suspend fun getPreviousIndex(): Long {
+        val screenTimeCollection = firebase.collection("total_screen_time")
+            .whereEqualTo("respondentId", auth.currentUser?.uid)
+            .get()
+            .await()
+        val screenTimeDoc = screenTimeCollection.documents.maxByOrNull { it["index"].toString().toLong() }
+        return screenTimeDoc?.get("index")?.toString()?.toLong() ?: 0L
+    }
+
+    private suspend fun getScreenTimeHourAgo(): Long {
+        val screenTimeCollection = firebase.collection("total_screen_time")
+            .whereEqualTo("respondentId", auth.currentUser?.uid)
+            .get()
+            .await()
+        val screenTimeDoc = screenTimeCollection.documents.find { it["index"].toString().toLong() == getPreviousIndex() }
+        return screenTimeDoc?.get("millisInDay")?.toString()?.toLong() ?: 0L
     }
 }

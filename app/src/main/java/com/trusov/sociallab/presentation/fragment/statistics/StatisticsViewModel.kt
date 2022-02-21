@@ -4,13 +4,10 @@ import android.util.Log
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
-import androidx.lifecycle.viewModelScope
-import com.trusov.sociallab.domain.entity.ScreenTime
+import com.trusov.sociallab.domain.entity.AppScreenTime
 import com.trusov.sociallab.domain.use_case.usage_stats.CheckUsageStatsPermissionUseCase
 import com.trusov.sociallab.domain.use_case.usage_stats.GetListOfScreenTimeUseCase
 import com.trusov.sociallab.domain.use_case.usage_stats.GetTotalScreenTimeUseCase
-import kotlinx.coroutines.delay
-import kotlinx.coroutines.launch
 import javax.inject.Inject
 
 class StatisticsViewModel @Inject constructor(
@@ -21,8 +18,8 @@ class StatisticsViewModel @Inject constructor(
 
     fun checkPermission() = checkUsageStatsPermissionUseCase()
 
-    private val _list = MutableLiveData<List<ScreenTime>>()
-    val list: LiveData<List<ScreenTime>> = _list
+    private val _list = MutableLiveData<List<AppScreenTime>>()
+    val list: LiveData<List<AppScreenTime>> = _list
 
     private val _total = MutableLiveData<String>()
     val total: LiveData<String> = _total

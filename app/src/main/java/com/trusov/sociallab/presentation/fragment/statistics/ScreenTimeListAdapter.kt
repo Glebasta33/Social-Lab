@@ -4,11 +4,11 @@ import android.view.LayoutInflater
 import android.view.ViewGroup
 import androidx.recyclerview.widget.ListAdapter
 import com.trusov.sociallab.R
-import com.trusov.sociallab.domain.entity.ScreenTime
+import com.trusov.sociallab.domain.entity.AppScreenTime
 import javax.inject.Inject
 
 class ScreenTimeListAdapter @Inject constructor() :
-    ListAdapter<ScreenTime, ScreenTimeViewHolder>(ScreenTimeDiffUtil()) {
+    ListAdapter<AppScreenTime, ScreenTimeViewHolder>(ScreenTimeDiffUtil()) {
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): ScreenTimeViewHolder {
         val view = LayoutInflater.from(parent.context).inflate(
