@@ -1,6 +1,7 @@
 package com.trusov.sociallab.data.worker
 
 import android.content.Context
+import android.util.Log
 import androidx.work.*
 import com.trusov.sociallab.data.UStats
 import java.util.concurrent.TimeUnit
@@ -13,6 +14,7 @@ class ScreenTimeSaver(
 ) : CoroutineWorker(context, workerParameters) {
 
     override suspend fun doWork(): Result {
+        Log.d("ScreenTimeSaverTag", "ScreenTimeSaver: running")
         usageStats.saveCurrentTotalScreenTime()
         return Result.success()
     }
@@ -20,18 +22,22 @@ class ScreenTimeSaver(
     companion object {
         const val NAME = "ScreenTimeSaver"
 
-        fun makeRequest(): OneTimeWorkRequest {
+        fun makeUniqueWorkRequest(initialDelay: Long): OneTimeWorkRequest {
             return OneTimeWorkRequestBuilder<ScreenTimeSaver>()
+                .setInitialDelay(initialDelay, TimeUnit.MILLISECONDS)
                 .build()
         }
 
-        fun makePeriodicRequest(): PeriodicWorkRequest {
+        fun makePeriodicRequest(initialDelay: Long): PeriodicWorkRequest {
+            Log.d("ScreenTimeSaverTag", "makePeriodicRequest.initialDelay: $initialDelay")
             return PeriodicWorkRequest.Builder(
                 ScreenTimeSaver::class.java,
-                1L,
-                TimeUnit.HOURS
-            ).build()
-
+                15,
+                TimeUnit.MINUTES
+            )
+                .addTag("ScreenTimeSaver")
+                .setInitialDelay(initialDelay, TimeUnit.MILLISECONDS)
+                .build()
         }
     }
 

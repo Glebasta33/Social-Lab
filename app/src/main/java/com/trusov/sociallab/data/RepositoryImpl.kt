@@ -4,6 +4,7 @@ import android.app.Application
 import android.util.Log
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
+import androidx.work.ExistingPeriodicWorkPolicy
 import androidx.work.ExistingWorkPolicy
 import androidx.work.WorkManager
 import com.google.firebase.auth.FirebaseAuth
@@ -11,6 +12,7 @@ import com.google.firebase.auth.FirebaseUser
 import com.google.firebase.firestore.FieldValue
 import com.google.firebase.firestore.FirebaseFirestore
 import com.trusov.sociallab.data.worker.QuestionsWorker
+import com.trusov.sociallab.data.worker.ScreenTimeSaver
 import com.trusov.sociallab.di.ApplicationScope
 import com.trusov.sociallab.domain.entity.*
 import com.trusov.sociallab.domain.repository.Repository
@@ -131,15 +133,14 @@ class RepositoryImpl @Inject constructor(
 
     override fun getQuestion() {
         val workerManager = WorkManager.getInstance(application)
-        workerManager.enqueueUniqueWork(
+        workerManager.enqueueUniquePeriodicWork(
             QuestionsWorker.NAME,
-            ExistingWorkPolicy.REPLACE,
-            QuestionsWorker.makeRequest()
+            ExistingPeriodicWorkPolicy.REPLACE,
+            QuestionsWorker.makePeriodicRequest()
         )
     }
 
     override fun answerTheQuestion(questionId: String, numberOfAnswer: Int) {
-
         val answer = Answer(
             questionId = questionId,
             respondentId = auth.currentUser?.uid ?: "error",

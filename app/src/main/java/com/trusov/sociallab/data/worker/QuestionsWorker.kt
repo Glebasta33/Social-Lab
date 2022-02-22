@@ -10,7 +10,9 @@ import com.trusov.sociallab.data.RepositoryImpl
 import com.trusov.sociallab.domain.entity.Question
 import com.trusov.sociallab.presentation.util.NotificationHelper
 import kotlinx.coroutines.delay
+import java.util.concurrent.TimeUnit
 import javax.inject.Inject
+import kotlin.contracts.Returns
 
 class QuestionsWorker(
     context: Context,
@@ -22,12 +24,10 @@ class QuestionsWorker(
 
     override suspend fun doWork(): Result {
         var index = 0
-        while (true) {
             var question: Question? = null
             firebase.collection("questions").addSnapshotListener { value, error ->
                 if (value != null && value.documents.size > index) {
                     val data = value.documents[index++]
-                    Log.d("QuestionsWorker", "value: ${data.toString()}")
                     data?.let {
                         question = Question(
                             text = data["text"].toString(),
@@ -44,17 +44,18 @@ class QuestionsWorker(
             question?.let {
                 notificationHelper.showNotification(it.text, it.id)
             }
-
-        }
+        return Result.success()
     }
 
 
     companion object {
-        const val NAME = "RefreshDataWorker"
-
-        fun makeRequest(): OneTimeWorkRequest {
-            return OneTimeWorkRequestBuilder<QuestionsWorker>()
-                .build()
+        const val NAME = "QuestionsWorker"
+        fun makePeriodicRequest(): PeriodicWorkRequest {
+            return PeriodicWorkRequest.Builder(
+                QuestionsWorker::class.java,
+                15,
+                TimeUnit.MINUTES
+            ).build()
         }
     }
 
