@@ -5,7 +5,7 @@ import android.content.Context
 import android.content.Intent
 import android.util.Log
 import com.trusov.sociallab.App
-import com.trusov.sociallab.domain.use_case.survey.AnswerTheQuestionUseCase
+import com.trusov.sociallab.survey.domain.usa_case.AnswerTheQuestionUseCase
 import javax.inject.Inject
 
 class NotificationReceiver : BroadcastReceiver() {

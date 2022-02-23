@@ -2,7 +2,7 @@ package com.trusov.sociallab.di.module.view_model
 
 import androidx.lifecycle.ViewModel
 import com.trusov.sociallab.presentation.activity.MainActivityViewModel
-import com.trusov.sociallab.presentation.fragment.answers.AnswersViewModel
+import com.trusov.sociallab.survey.presentation.AnswersViewModel
 import com.trusov.sociallab.auth.presentation.LogInViewModel
 import com.trusov.sociallab.presentation.fragment.researches.ResearchesViewModel
 import com.trusov.sociallab.auth.presentation.SignUpViewModel

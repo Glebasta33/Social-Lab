@@ -1,4 +1,4 @@
-package com.trusov.sociallab.domain.entity
+package com.trusov.sociallab.survey.domain.entity
 
 data class AnswerExtended(
     val questionId: String,

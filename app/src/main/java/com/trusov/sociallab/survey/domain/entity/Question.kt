@@ -1,4 +1,4 @@
-package com.trusov.sociallab.domain.entity
+package com.trusov.sociallab.survey.domain.entity
 
 data class Question(
     val text: String,

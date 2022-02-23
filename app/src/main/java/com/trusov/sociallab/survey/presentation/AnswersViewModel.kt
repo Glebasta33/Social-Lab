@@ -1,11 +1,11 @@
-package com.trusov.sociallab.presentation.fragment.answers
+package com.trusov.sociallab.survey.presentation
 
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
-import com.trusov.sociallab.domain.entity.AnswerExtended
-import com.trusov.sociallab.domain.use_case.answers.GetListOfAnsweredQuestionsUseCase
-import com.trusov.sociallab.domain.use_case.survey.GetQuestionUseCase
+import com.trusov.sociallab.survey.domain.entity.AnswerExtended
+import com.trusov.sociallab.survey.domain.usa_case.GetListOfAnsweredQuestionsUseCase
+import com.trusov.sociallab.survey.domain.usa_case.GetQuestionUseCase
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch

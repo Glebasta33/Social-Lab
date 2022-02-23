@@ -1,4 +1,4 @@
-package com.trusov.sociallab.presentation.fragment.answers
+package com.trusov.sociallab.survey.presentation
 
 import android.view.View
 import androidx.recyclerview.widget.RecyclerView

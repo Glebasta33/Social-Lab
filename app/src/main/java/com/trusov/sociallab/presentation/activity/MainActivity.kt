@@ -13,7 +13,7 @@ import com.trusov.sociallab.R
 import com.trusov.sociallab.App
 import com.trusov.sociallab.databinding.ActivityMainBinding
 import com.trusov.sociallab.di.module.view_model.ViewModelFactory
-import com.trusov.sociallab.presentation.fragment.answers.AnswersFragment
+import com.trusov.sociallab.survey.presentation.AnswersFragment
 import com.trusov.sociallab.auth.presentation.LogInFragment
 import com.trusov.sociallab.auth.presentation.SignUpFragment
 import com.trusov.sociallab.auth.presentation.WelcomeFragment

@@ -6,7 +6,6 @@ import androidx.recyclerview.widget.ListAdapter
 import com.google.firebase.auth.FirebaseAuth
 import com.trusov.sociallab.R
 import com.trusov.sociallab.domain.entity.Research
-import com.trusov.sociallab.domain.entity.Respondent
 import javax.inject.Inject
 
 class ResearchesListAdapter @Inject constructor(

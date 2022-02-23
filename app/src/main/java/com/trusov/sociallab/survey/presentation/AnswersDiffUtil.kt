@@ -1,7 +1,7 @@
-package com.trusov.sociallab.presentation.fragment.answers
+package com.trusov.sociallab.survey.presentation
 
 import androidx.recyclerview.widget.DiffUtil
-import com.trusov.sociallab.domain.entity.AnswerExtended
+import com.trusov.sociallab.survey.domain.entity.AnswerExtended
 
 class AnswersDiffUtil : DiffUtil.ItemCallback<AnswerExtended>() {
     override fun areItemsTheSame(oldItem: AnswerExtended, newItem: AnswerExtended): Boolean {

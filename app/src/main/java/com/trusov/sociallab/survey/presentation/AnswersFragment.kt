@@ -1,4 +1,4 @@
-package com.trusov.sociallab.presentation.fragment.answers
+package com.trusov.sociallab.survey.presentation
 
 import android.content.Context
 import android.os.Bundle
@@ -10,7 +10,7 @@ import androidx.lifecycle.ViewModelProvider
 import com.trusov.sociallab.App
 import com.trusov.sociallab.databinding.AnswersFragmentBinding
 import com.trusov.sociallab.di.module.view_model.ViewModelFactory
-import com.trusov.sociallab.domain.entity.AnswerExtended
+import com.trusov.sociallab.survey.domain.entity.AnswerExtended
 import javax.inject.Inject
 
 class AnswersFragment : Fragment() {

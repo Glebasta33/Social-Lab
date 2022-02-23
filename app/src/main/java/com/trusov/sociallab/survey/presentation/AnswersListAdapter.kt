@@ -1,10 +1,10 @@
-package com.trusov.sociallab.presentation.fragment.answers
+package com.trusov.sociallab.survey.presentation
 
 import android.view.LayoutInflater
 import android.view.ViewGroup
 import androidx.recyclerview.widget.ListAdapter
 import com.trusov.sociallab.R
-import com.trusov.sociallab.domain.entity.AnswerExtended
+import com.trusov.sociallab.survey.domain.entity.AnswerExtended
 import javax.inject.Inject
 
 class AnswersListAdapter @Inject constructor() :

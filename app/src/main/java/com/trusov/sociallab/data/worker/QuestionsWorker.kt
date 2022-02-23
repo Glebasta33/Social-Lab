@@ -4,7 +4,7 @@ import android.content.Context
 import android.util.Log
 import androidx.work.*
 import com.google.firebase.firestore.FirebaseFirestore
-import com.trusov.sociallab.domain.entity.Question
+import com.trusov.sociallab.survey.domain.entity.Question
 import com.trusov.sociallab.utils.NotificationHelper
 import kotlinx.coroutines.delay
 import java.util.concurrent.TimeUnit
