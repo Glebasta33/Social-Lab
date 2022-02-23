@@ -67,38 +67,14 @@ class StatisticsFragment : Fragment() {
             viewModel.shopScreenTime()
         }
         val workManager = WorkManager.getInstance(requireActivity().application)
-        var delay = 0L
         binding.tvLabel.setOnClickListener {
-            delay = getDelayToStart()
             workManager.enqueueUniquePeriodicWork(
                 ScreenTimeSaver.NAME,
                 ExistingPeriodicWorkPolicy.REPLACE,
-                ScreenTimeSaver.makePeriodicRequest(delay)
+                ScreenTimeSaver.makePeriodicRequest()
             )
             Log.d("ScreenTimeSaverTag", "StatisticsFragment: clicked")
         }
-        workManager.getWorkInfosByTagLiveData("ScreenTimeSaver")
-            .observe(viewLifecycleOwner) {
-                if(it.isNotEmpty()) {
-                    binding.tvLabel.text = "${it[0]?.state.toString()} \n $delay"
-                }
-            }
-    }
-
-    private fun getDelayToStart(): Long {
-        val minFormat = SimpleDateFormat("mm")
-        val secFormat = SimpleDateFormat("ss")
-        val calendar = Calendar.getInstance()
-        val currentTime = calendar.timeInMillis
-        val currentMinutes = minFormat.format(currentTime).toString().toInt()
-        val currentSeconds = secFormat.format(currentTime).toString().toInt()
-        calendar.add(Calendar.HOUR_OF_DAY, +1)
-        calendar.add(Calendar.MINUTE, -currentMinutes)
-        calendar.add(Calendar.SECOND, -currentSeconds)
-
-        val specificTimeToTrigger = calendar.timeInMillis
-
-        return specificTimeToTrigger - currentTime
     }
 
     companion object {

@@ -22,21 +22,13 @@ class ScreenTimeSaver(
     companion object {
         const val NAME = "ScreenTimeSaver"
 
-        fun makeUniqueWorkRequest(initialDelay: Long): OneTimeWorkRequest {
-            return OneTimeWorkRequestBuilder<ScreenTimeSaver>()
-                .setInitialDelay(initialDelay, TimeUnit.MILLISECONDS)
-                .build()
-        }
-
-        fun makePeriodicRequest(initialDelay: Long): PeriodicWorkRequest {
-            Log.d("ScreenTimeSaverTag", "makePeriodicRequest.initialDelay: $initialDelay")
+        fun makePeriodicRequest(): PeriodicWorkRequest {
             return PeriodicWorkRequest.Builder(
                 ScreenTimeSaver::class.java,
                 15,
-                TimeUnit.MINUTES
+                TimeUnit.SECONDS
             )
                 .addTag("ScreenTimeSaver")
-                .setInitialDelay(initialDelay, TimeUnit.MILLISECONDS)
                 .build()
         }
     }

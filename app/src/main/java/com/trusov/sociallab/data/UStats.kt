@@ -101,8 +101,6 @@ class UStats @Inject constructor(
                 }
             }
             val millisInLastHour = currentTotalScreenTime - getScreenTimeHourAgo()
-            Log.d("ScreenTimeSaverTag", "UStats.currentTotalScreenTime: $currentTotalScreenTime")
-            Log.d("ScreenTimeSaverTag", "UStats.getScreenTimeHourAgo: ${getScreenTimeHourAgo()}")
             Log.d("ScreenTimeSaverTag", "UStats.millisInLastHour: $millisInLastHour")
             val totalScreenTime = TotalScreenTime(
                 millisInDay = currentTotalScreenTime,
