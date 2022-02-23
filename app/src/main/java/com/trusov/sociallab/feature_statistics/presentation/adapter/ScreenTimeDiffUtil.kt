@@ -1,4 +1,4 @@
-package com.trusov.sociallab.feature_statistics.presentation
+package com.trusov.sociallab.feature_statistics.presentation.adapter
 
 import androidx.recyclerview.widget.DiffUtil
 import com.trusov.sociallab.feature_statistics.domain.entity.AppScreenTime

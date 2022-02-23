@@ -1,4 +1,4 @@
-package com.trusov.sociallab.feature_auth.presentation
+package com.trusov.sociallab.feature_auth.presentation.fragment
 
 import android.content.Context
 import android.os.Bundle
@@ -13,6 +13,7 @@ import com.trusov.sociallab.databinding.SingUpFragmentBinding
 import com.trusov.sociallab.di.module.view_model.ViewModelFactory
 import com.trusov.sociallab.core.presentation.NavigationController
 import com.trusov.sociallab.core.presentation.OnInputErrorListener
+import com.trusov.sociallab.feature_auth.presentation.view_model.SignUpViewModel
 import kotlinx.coroutines.*
 import javax.inject.Inject
 

@@ -1,4 +1,4 @@
-package com.trusov.sociallab.feature_auth.presentation
+package com.trusov.sociallab.feature_auth.presentation.view_model
 
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData

@@ -2,13 +2,13 @@ package com.trusov.sociallab.di.module.view_model
 
 import androidx.lifecycle.ViewModel
 import com.trusov.sociallab.core.presentation.MainActivityViewModel
-import com.trusov.sociallab.feature_survey.presentation.AnswersViewModel
-import com.trusov.sociallab.feature_auth.presentation.LogInViewModel
-import com.trusov.sociallab.feature_researches.presentation.ResearchesViewModel
-import com.trusov.sociallab.feature_auth.presentation.SignUpViewModel
+import com.trusov.sociallab.feature_survey.presentation.view_model.AnswersViewModel
+import com.trusov.sociallab.feature_auth.presentation.view_model.LogInViewModel
+import com.trusov.sociallab.feature_researches.presentation.view_model.ResearchesViewModel
+import com.trusov.sociallab.feature_auth.presentation.view_model.SignUpViewModel
 import com.trusov.sociallab.di.key.ViewModelKey
-import com.trusov.sociallab.feature_researches.presentation.ResearchInfoViewModel
-import com.trusov.sociallab.feature_statistics.presentation.StatisticsViewModel
+import com.trusov.sociallab.feature_researches.presentation.view_model.ResearchInfoViewModel
+import com.trusov.sociallab.feature_statistics.presentation.view_model.StatisticsViewModel
 import dagger.Binds
 import dagger.Module
 import dagger.multibindings.IntoMap

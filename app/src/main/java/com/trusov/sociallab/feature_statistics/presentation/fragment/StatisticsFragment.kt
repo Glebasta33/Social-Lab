@@ -1,4 +1,4 @@
-package com.trusov.sociallab.feature_statistics.presentation
+package com.trusov.sociallab.feature_statistics.presentation.fragment
 
 import android.content.Context
 import android.content.Intent
@@ -17,6 +17,8 @@ import com.trusov.sociallab.App
 import com.trusov.sociallab.feature_statistics.data.worker.ScreenTimeSaver
 import com.trusov.sociallab.databinding.StatisticsFragmentBinding
 import com.trusov.sociallab.di.module.view_model.ViewModelFactory
+import com.trusov.sociallab.feature_statistics.presentation.view_model.StatisticsViewModel
+import com.trusov.sociallab.feature_statistics.presentation.adapter.ScreenTimeListAdapter
 import kotlinx.coroutines.launch
 import javax.inject.Inject
 

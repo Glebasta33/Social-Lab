@@ -1,4 +1,4 @@
-package com.trusov.sociallab.feature_statistics.presentation
+package com.trusov.sociallab.feature_statistics.presentation.view_model
 
 import android.util.Log
 import androidx.lifecycle.LiveData

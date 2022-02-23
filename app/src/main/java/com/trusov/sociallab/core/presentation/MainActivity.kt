@@ -13,12 +13,12 @@ import com.trusov.sociallab.R
 import com.trusov.sociallab.App
 import com.trusov.sociallab.databinding.ActivityMainBinding
 import com.trusov.sociallab.di.module.view_model.ViewModelFactory
-import com.trusov.sociallab.feature_survey.presentation.AnswersFragment
-import com.trusov.sociallab.feature_auth.presentation.LogInFragment
-import com.trusov.sociallab.feature_auth.presentation.SignUpFragment
-import com.trusov.sociallab.feature_auth.presentation.WelcomeFragment
-import com.trusov.sociallab.feature_researches.presentation.ResearchesFragment
-import com.trusov.sociallab.feature_statistics.presentation.StatisticsFragment
+import com.trusov.sociallab.feature_survey.presentation.fragment.AnswersFragment
+import com.trusov.sociallab.feature_auth.presentation.fragment.LogInFragment
+import com.trusov.sociallab.feature_auth.presentation.fragment.SignUpFragment
+import com.trusov.sociallab.feature_auth.presentation.fragment.WelcomeFragment
+import com.trusov.sociallab.feature_researches.presentation.fragment.ResearchesFragment
+import com.trusov.sociallab.feature_statistics.presentation.fragment.StatisticsFragment
 import kotlinx.coroutines.*
 import javax.inject.Inject
 

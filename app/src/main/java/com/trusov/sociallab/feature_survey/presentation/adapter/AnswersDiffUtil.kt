@@ -1,4 +1,4 @@
-package com.trusov.sociallab.feature_survey.presentation
+package com.trusov.sociallab.feature_survey.presentation.adapter
 
 import androidx.recyclerview.widget.DiffUtil
 import com.trusov.sociallab.feature_survey.domain.entity.AnswerExtended

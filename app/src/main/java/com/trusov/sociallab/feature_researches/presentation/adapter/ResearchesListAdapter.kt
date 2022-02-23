@@ -1,4 +1,4 @@
-package com.trusov.sociallab.feature_researches.presentation
+package com.trusov.sociallab.feature_researches.presentation.adapter
 
 import android.view.LayoutInflater
 import android.view.ViewGroup

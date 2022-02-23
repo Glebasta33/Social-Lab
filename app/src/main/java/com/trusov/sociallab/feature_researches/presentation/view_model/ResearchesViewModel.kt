@@ -1,4 +1,4 @@
-package com.trusov.sociallab.feature_researches.presentation
+package com.trusov.sociallab.feature_researches.presentation.view_model
 
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.ViewModel

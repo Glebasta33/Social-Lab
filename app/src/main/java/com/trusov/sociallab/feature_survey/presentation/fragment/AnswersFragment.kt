@@ -1,4 +1,4 @@
-package com.trusov.sociallab.feature_survey.presentation
+package com.trusov.sociallab.feature_survey.presentation.fragment
 
 import android.content.Context
 import android.os.Bundle
@@ -11,6 +11,8 @@ import com.trusov.sociallab.App
 import com.trusov.sociallab.databinding.AnswersFragmentBinding
 import com.trusov.sociallab.di.module.view_model.ViewModelFactory
 import com.trusov.sociallab.feature_survey.domain.entity.AnswerExtended
+import com.trusov.sociallab.feature_survey.presentation.view_model.AnswersViewModel
+import com.trusov.sociallab.feature_survey.presentation.adapter.AnswersListAdapter
 import javax.inject.Inject
 
 class AnswersFragment : Fragment() {

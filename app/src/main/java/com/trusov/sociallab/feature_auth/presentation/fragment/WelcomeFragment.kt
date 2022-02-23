@@ -1,4 +1,4 @@
-package com.trusov.sociallab.feature_auth.presentation
+package com.trusov.sociallab.feature_auth.presentation.fragment
 
 import android.content.res.ColorStateList
 import android.graphics.Color
