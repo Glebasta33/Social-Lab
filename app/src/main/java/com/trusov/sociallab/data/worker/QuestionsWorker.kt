@@ -2,17 +2,13 @@ package com.trusov.sociallab.data.worker
 
 import android.content.Context
 import android.util.Log
-import androidx.lifecycle.MutableLiveData
 import androidx.work.*
 import com.google.firebase.firestore.FirebaseFirestore
-import com.trusov.sociallab.SocialLabApp
-import com.trusov.sociallab.data.RepositoryImpl
 import com.trusov.sociallab.domain.entity.Question
-import com.trusov.sociallab.presentation.util.NotificationHelper
+import com.trusov.sociallab.utils.NotificationHelper
 import kotlinx.coroutines.delay
 import java.util.concurrent.TimeUnit
 import javax.inject.Inject
-import kotlin.contracts.Returns
 
 class QuestionsWorker(
     context: Context,

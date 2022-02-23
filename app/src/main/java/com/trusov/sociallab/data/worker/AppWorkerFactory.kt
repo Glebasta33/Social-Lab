@@ -4,8 +4,6 @@ import android.content.Context
 import androidx.work.ListenableWorker
 import androidx.work.WorkerFactory
 import androidx.work.WorkerParameters
-import com.google.firebase.firestore.FirebaseFirestore
-import com.trusov.sociallab.presentation.util.NotificationHelper
 import javax.inject.Inject
 import javax.inject.Provider
 

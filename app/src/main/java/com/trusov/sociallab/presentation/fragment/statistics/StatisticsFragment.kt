@@ -13,13 +13,11 @@ import androidx.lifecycle.ViewModelProvider
 import androidx.lifecycle.lifecycleScope
 import androidx.work.ExistingPeriodicWorkPolicy
 import androidx.work.WorkManager
-import com.trusov.sociallab.SocialLabApp
+import com.trusov.sociallab.App
 import com.trusov.sociallab.data.worker.ScreenTimeSaver
 import com.trusov.sociallab.databinding.StatisticsFragmentBinding
-import com.trusov.sociallab.di.ViewModelFactory
+import com.trusov.sociallab.di.module.view_model.ViewModelFactory
 import kotlinx.coroutines.launch
-import java.text.SimpleDateFormat
-import java.util.*
 import javax.inject.Inject
 
 class StatisticsFragment : Fragment() {
@@ -38,7 +36,7 @@ class StatisticsFragment : Fragment() {
         get() = _binding ?: throw RuntimeException("StatisticsFragmentBinding == null")
 
     override fun onAttach(context: Context) {
-        (activity?.application as SocialLabApp).component.inject(this)
+        (activity?.application as App).component.inject(this)
         if (viewModel.checkPermission()) {
             val intent = Intent(Settings.ACTION_USAGE_ACCESS_SETTINGS)
             activity?.startActivity(intent)

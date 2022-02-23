@@ -5,15 +5,13 @@ import android.util.Log
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.work.ExistingPeriodicWorkPolicy
-import androidx.work.ExistingWorkPolicy
 import androidx.work.WorkManager
 import com.google.firebase.auth.FirebaseAuth
 import com.google.firebase.auth.FirebaseUser
 import com.google.firebase.firestore.FieldValue
 import com.google.firebase.firestore.FirebaseFirestore
 import com.trusov.sociallab.data.worker.QuestionsWorker
-import com.trusov.sociallab.data.worker.ScreenTimeSaver
-import com.trusov.sociallab.di.ApplicationScope
+import com.trusov.sociallab.di.scope.ApplicationScope
 import com.trusov.sociallab.domain.entity.*
 import com.trusov.sociallab.domain.repository.Repository
 import kotlinx.coroutines.tasks.await
@@ -27,41 +25,6 @@ class RepositoryImpl @Inject constructor(
     private val application: Application,
     private val usageStats: UStats
 ) : Repository {
-
-    override fun signUp(login: String, password: String) {
-        auth.createUserWithEmailAndPassword(login, password)
-            .addOnCompleteListener { task ->
-                if (task.isSuccessful) {
-                    val respondent = auth.currentUser
-                    Log.d(TAG, "task.isSuccessful $this: $respondent")
-                } else {
-                    Log.d(TAG, "!task.isSuccessful $this: ${task.exception}")
-                }
-            }
-    }
-
-    override fun logIn(login: String, password: String) {
-        auth.signInWithEmailAndPassword(login, password)
-            .addOnCompleteListener { task ->
-                if (task.isSuccessful) {
-                    val respondent = auth.currentUser
-                    Log.d(TAG, "$this: $respondent")
-                } else {
-                    Log.d(TAG, "$this: ${task.exception}")
-                }
-            }
-    }
-
-    override suspend fun getCurrentUser(): FirebaseUser? {
-        auth.currentUser?.let {
-            return it
-        }
-        return null
-    }
-
-    override fun signOut() {
-        auth.signOut()
-    }
 
     override fun getListOfResearches(): LiveData<List<Research>> {
         val listOfResearches = ArrayList<Research>()

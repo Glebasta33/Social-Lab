@@ -7,11 +7,6 @@ import com.trusov.sociallab.domain.entity.Research
 import com.trusov.sociallab.domain.entity.AppScreenTime
 
 interface Repository {
-    // enter
-    fun signUp(login: String, password: String)
-    fun logIn(login: String, password: String)
-    suspend fun getCurrentUser(): FirebaseUser?
-    fun signOut()
 
     // researches info
     fun getListOfResearches(): LiveData<List<Research>>

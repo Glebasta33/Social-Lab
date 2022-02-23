@@ -10,18 +10,18 @@ import androidx.core.view.isGone
 import androidx.fragment.app.Fragment
 import androidx.lifecycle.ViewModelProvider
 import com.trusov.sociallab.R
-import com.trusov.sociallab.SocialLabApp
+import com.trusov.sociallab.App
 import com.trusov.sociallab.databinding.ActivityMainBinding
-import com.trusov.sociallab.di.ViewModelFactory
+import com.trusov.sociallab.di.module.view_model.ViewModelFactory
 import com.trusov.sociallab.presentation.fragment.answers.AnswersFragment
-import com.trusov.sociallab.presentation.fragment.auth.log_in.LogInFragment
-import com.trusov.sociallab.presentation.fragment.auth.sing_up.SignUpFragment
-import com.trusov.sociallab.presentation.fragment.auth.welcome.WelcomeFragment
+import com.trusov.sociallab.auth.presentation.LogInFragment
+import com.trusov.sociallab.auth.presentation.SignUpFragment
+import com.trusov.sociallab.auth.presentation.WelcomeFragment
 import com.trusov.sociallab.presentation.fragment.my_researches.MyResearchesFragment
 import com.trusov.sociallab.presentation.fragment.researches.ResearchesFragment
 import com.trusov.sociallab.presentation.fragment.statistics.StatisticsFragment
-import com.trusov.sociallab.presentation.util.NavigationController
-import com.trusov.sociallab.presentation.util.OnInputErrorListener
+import com.trusov.sociallab.utils.NavigationController
+import com.trusov.sociallab.utils.OnInputErrorListener
 import kotlinx.coroutines.*
 import javax.inject.Inject
 
@@ -42,7 +42,7 @@ class MainActivity : AppCompatActivity(), OnInputErrorListener, NavigationContro
         setContentView(binding.root)
         setActionBar()
         launchWelcomeFragment()
-        (application as SocialLabApp).component.inject(this)
+        (application as App).component.inject(this)
         CoroutineScope(Dispatchers.IO).launch {
             val isAuthenticated = viewModel.getCurrentUser() != null
             withContext(Dispatchers.Main) {

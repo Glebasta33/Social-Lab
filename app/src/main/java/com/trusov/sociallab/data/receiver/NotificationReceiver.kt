@@ -4,10 +4,8 @@ import android.content.BroadcastReceiver
 import android.content.Context
 import android.content.Intent
 import android.util.Log
-import com.trusov.sociallab.SocialLabApp
+import com.trusov.sociallab.App
 import com.trusov.sociallab.domain.use_case.survey.AnswerTheQuestionUseCase
-import java.text.SimpleDateFormat
-import java.util.*
 import javax.inject.Inject
 
 class NotificationReceiver : BroadcastReceiver() {
@@ -17,7 +15,7 @@ class NotificationReceiver : BroadcastReceiver() {
 
     override fun onReceive(context: Context, intent: Intent) {
 
-        (context.applicationContext as SocialLabApp).component.inject(this)
+        (context.applicationContext as App).component.inject(this)
 
         Log.d("NotificationReceiverTag", "${intent.getIntExtra(NUMBER_OF_ANSWER, UNKNOWN_NUMBER_OF_ANSWER)} ${intent.getStringExtra(QUESTION_ID)}")
 

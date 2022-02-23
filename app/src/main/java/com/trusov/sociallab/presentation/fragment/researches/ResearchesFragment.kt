@@ -8,11 +8,11 @@ import android.view.ViewGroup
 import androidx.fragment.app.Fragment
 import androidx.lifecycle.ViewModelProvider
 import com.trusov.sociallab.R
-import com.trusov.sociallab.SocialLabApp
+import com.trusov.sociallab.App
 import com.trusov.sociallab.databinding.ResearchesFragmentBinding
-import com.trusov.sociallab.di.ViewModelFactory
+import com.trusov.sociallab.di.module.view_model.ViewModelFactory
 import com.trusov.sociallab.presentation.fragment.research_info.ResearchInfoFragment
-import com.trusov.sociallab.presentation.util.NavigationController
+import com.trusov.sociallab.utils.NavigationController
 import javax.inject.Inject
 
 
@@ -34,7 +34,7 @@ class ResearchesFragment : Fragment() {
 
     override fun onAttach(context: Context) {
         super.onAttach(context)
-        (activity?.application as SocialLabApp).component.inject(this)
+        (activity?.application as App).component.inject(this)
         if (context is NavigationController) {
             navigationController = context
         }

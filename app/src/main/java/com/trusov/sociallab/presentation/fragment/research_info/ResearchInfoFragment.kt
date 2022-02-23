@@ -6,11 +6,10 @@ import android.view.View
 import android.view.ViewGroup
 import androidx.fragment.app.Fragment
 import androidx.lifecycle.ViewModelProvider
-import com.google.firebase.auth.FirebaseAuth
 import com.trusov.sociallab.R
-import com.trusov.sociallab.SocialLabApp
+import com.trusov.sociallab.App
 import com.trusov.sociallab.databinding.ResearchInfoFragmentBinding
-import com.trusov.sociallab.di.ViewModelFactory
+import com.trusov.sociallab.di.module.view_model.ViewModelFactory
 import com.trusov.sociallab.domain.entity.Research
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
@@ -33,7 +32,7 @@ class ResearchInfoFragment : Fragment() {
     private lateinit var research: Research
 
     override fun onCreate(savedInstanceState: Bundle?) {
-        (activity?.application as SocialLabApp).component.inject(this)
+        (activity?.application as App).component.inject(this)
         super.onCreate(savedInstanceState)
         arguments?.let {
             research = it.getParcelable(RESEARCH_KEY) ?: throw RuntimeException("research == null")

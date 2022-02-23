@@ -7,9 +7,9 @@ import android.view.View
 import android.view.ViewGroup
 import androidx.fragment.app.Fragment
 import androidx.lifecycle.ViewModelProvider
-import com.trusov.sociallab.SocialLabApp
+import com.trusov.sociallab.App
 import com.trusov.sociallab.databinding.MyResearchesFragmentBinding
-import com.trusov.sociallab.di.ViewModelFactory
+import com.trusov.sociallab.di.module.view_model.ViewModelFactory
 import javax.inject.Inject
 
 class MyResearchesFragment : Fragment() {
@@ -25,7 +25,7 @@ class MyResearchesFragment : Fragment() {
         get() = _binding ?: throw RuntimeException("MyResearchesFragmentBinding == null")
 
     override fun onAttach(context: Context) {
-        (activity?.application as SocialLabApp).component.inject(this)
+        (activity?.application as App).component.inject(this)
         super.onAttach(context)
     }
 
