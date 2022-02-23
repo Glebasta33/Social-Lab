@@ -4,11 +4,10 @@ import androidx.lifecycle.ViewModel
 import com.trusov.sociallab.presentation.activity.MainActivityViewModel
 import com.trusov.sociallab.survey.presentation.AnswersViewModel
 import com.trusov.sociallab.auth.presentation.LogInViewModel
-import com.trusov.sociallab.presentation.fragment.researches.ResearchesViewModel
+import com.trusov.sociallab.researches.presentation.ResearchesViewModel
 import com.trusov.sociallab.auth.presentation.SignUpViewModel
 import com.trusov.sociallab.di.key.ViewModelKey
-import com.trusov.sociallab.presentation.fragment.my_researches.MyResearchesViewModel
-import com.trusov.sociallab.presentation.fragment.research_info.ResearchInfoViewModel
+import com.trusov.sociallab.researches.presentation.ResearchInfoViewModel
 import com.trusov.sociallab.presentation.fragment.statistics.StatisticsViewModel
 import dagger.Binds
 import dagger.Module
@@ -35,11 +34,6 @@ interface ViewModelModule {
     @ViewModelKey(ResearchesViewModel::class)
     @Binds
     fun bindResearchesViewModel(viewModel: ResearchesViewModel): ViewModel
-
-    @IntoMap
-    @ViewModelKey(MyResearchesViewModel::class)
-    @Binds
-    fun bindMyResearchesViewModel(viewModel: MyResearchesViewModel): ViewModel
 
     @IntoMap
     @ViewModelKey(AnswersViewModel::class)

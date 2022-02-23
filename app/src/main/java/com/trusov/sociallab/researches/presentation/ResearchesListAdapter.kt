@@ -1,11 +1,11 @@
-package com.trusov.sociallab.presentation.fragment.researches
+package com.trusov.sociallab.researches.presentation
 
 import android.view.LayoutInflater
 import android.view.ViewGroup
 import androidx.recyclerview.widget.ListAdapter
 import com.google.firebase.auth.FirebaseAuth
 import com.trusov.sociallab.R
-import com.trusov.sociallab.domain.entity.Research
+import com.trusov.sociallab.researches.domain.entity.Research
 import javax.inject.Inject
 
 class ResearchesListAdapter @Inject constructor(

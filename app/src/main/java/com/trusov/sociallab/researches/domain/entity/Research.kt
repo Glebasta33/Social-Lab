@@ -1,4 +1,4 @@
-package com.trusov.sociallab.domain.entity
+package com.trusov.sociallab.researches.domain.entity
 
 import android.os.Parcelable
 import kotlinx.parcelize.Parcelize

@@ -1,9 +1,9 @@
-package com.trusov.sociallab.presentation.fragment.researches
+package com.trusov.sociallab.researches.presentation
 
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.ViewModel
-import com.trusov.sociallab.domain.entity.Research
-import com.trusov.sociallab.domain.use_case.researches.GetListOfResearchesUseCase
+import com.trusov.sociallab.researches.domain.entity.Research
+import com.trusov.sociallab.researches.domain.usa_case.GetListOfResearchesUseCase
 import javax.inject.Inject
 
 class ResearchesViewModel @Inject constructor(

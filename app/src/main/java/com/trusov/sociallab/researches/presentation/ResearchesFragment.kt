@@ -1,4 +1,4 @@
-package com.trusov.sociallab.presentation.fragment.researches
+package com.trusov.sociallab.researches.presentation
 
 import android.content.Context
 import android.os.Bundle
@@ -11,7 +11,6 @@ import com.trusov.sociallab.R
 import com.trusov.sociallab.App
 import com.trusov.sociallab.databinding.ResearchesFragmentBinding
 import com.trusov.sociallab.di.module.view_model.ViewModelFactory
-import com.trusov.sociallab.presentation.fragment.research_info.ResearchInfoFragment
 import com.trusov.sociallab.utils.NavigationController
 import javax.inject.Inject
 

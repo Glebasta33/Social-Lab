@@ -1,4 +1,4 @@
-package com.trusov.sociallab.presentation.fragment.research_info
+package com.trusov.sociallab.researches.presentation
 
 import android.os.Bundle
 import android.view.LayoutInflater
@@ -10,7 +10,7 @@ import com.trusov.sociallab.R
 import com.trusov.sociallab.App
 import com.trusov.sociallab.databinding.ResearchInfoFragmentBinding
 import com.trusov.sociallab.di.module.view_model.ViewModelFactory
-import com.trusov.sociallab.domain.entity.Research
+import com.trusov.sociallab.researches.domain.entity.Research
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch

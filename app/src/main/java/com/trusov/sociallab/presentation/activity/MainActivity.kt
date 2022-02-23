@@ -17,8 +17,7 @@ import com.trusov.sociallab.survey.presentation.AnswersFragment
 import com.trusov.sociallab.auth.presentation.LogInFragment
 import com.trusov.sociallab.auth.presentation.SignUpFragment
 import com.trusov.sociallab.auth.presentation.WelcomeFragment
-import com.trusov.sociallab.presentation.fragment.my_researches.MyResearchesFragment
-import com.trusov.sociallab.presentation.fragment.researches.ResearchesFragment
+import com.trusov.sociallab.researches.presentation.ResearchesFragment
 import com.trusov.sociallab.presentation.fragment.statistics.StatisticsFragment
 import com.trusov.sociallab.utils.NavigationController
 import com.trusov.sociallab.utils.OnInputErrorListener
@@ -70,7 +69,6 @@ class MainActivity : AppCompatActivity(), OnInputErrorListener, NavigationContro
     override fun onOptionsItemSelected(item: MenuItem): Boolean {
         when (item.itemId) {
             R.id.action_all_researches -> launchResearchesFragment()
-            R.id.action_my_researches -> launchMyResearchesFragment()
             R.id.action_answers -> launchAnswersFragment()
             R.id.action_statistics -> launchStatisticsFragment()
             R.id.action_sing_out -> {
@@ -97,11 +95,6 @@ class MainActivity : AppCompatActivity(), OnInputErrorListener, NavigationContro
         replaceMainContainer(ResearchesFragment.newInstance())
         changeToolbarContent(R.string.researches, R.drawable.ic_researches)
         binding.toolbar.isGone = false
-    }
-
-    override fun launchMyResearchesFragment() {
-        replaceMainContainer(MyResearchesFragment.newInstance())
-        changeToolbarContent(R.string.my_researches, R.drawable.ic_my_researches)
     }
 
     override fun launchAnswersFragment() {

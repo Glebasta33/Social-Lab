@@ -1,4 +1,4 @@
-package com.trusov.sociallab.presentation.fragment.researches
+package com.trusov.sociallab.researches.presentation
 
 import android.view.View
 import androidx.recyclerview.widget.RecyclerView

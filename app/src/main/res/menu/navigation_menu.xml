@@ -7,10 +7,6 @@
         android:title="@string/researches"
         app:showAsAction="collapseActionView" />
     <item
-        android:id="@+id/action_my_researches"
-        android:title="@string/my_researches"
-        app:showAsAction="collapseActionView" />
-    <item
         android:id="@+id/action_answers"
         android:title="@string/my_answers"
         app:showAsAction="collapseActionView" />
