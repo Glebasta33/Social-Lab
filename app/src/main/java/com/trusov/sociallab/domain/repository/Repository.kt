@@ -4,7 +4,7 @@ import androidx.lifecycle.LiveData
 import com.google.firebase.auth.FirebaseUser
 import com.trusov.sociallab.domain.entity.AnswerExtended
 import com.trusov.sociallab.domain.entity.Research
-import com.trusov.sociallab.domain.entity.Statistics
+import com.trusov.sociallab.domain.entity.AppScreenTime
 
 interface Repository {
     // enter
@@ -26,5 +26,7 @@ interface Repository {
 
     // respondent info
     suspend fun getListOfAnsweredQuestions(): List<AnswerExtended>
-    fun getUserStatistics(respondentId: String): Statistics
+    fun getListOfScreenTime(): List<AppScreenTime>
+    fun getTotalScreenTime(): AppScreenTime
+    fun checkUsageStatsPermission(): Boolean
 }

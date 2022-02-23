@@ -4,6 +4,7 @@ import android.app.Application
 import android.util.Log
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
+import androidx.work.ExistingPeriodicWorkPolicy
 import androidx.work.ExistingWorkPolicy
 import androidx.work.WorkManager
 import com.google.firebase.auth.FirebaseAuth
@@ -11,15 +12,11 @@ import com.google.firebase.auth.FirebaseUser
 import com.google.firebase.firestore.FieldValue
 import com.google.firebase.firestore.FirebaseFirestore
 import com.trusov.sociallab.data.worker.QuestionsWorker
+import com.trusov.sociallab.data.worker.ScreenTimeSaver
 import com.trusov.sociallab.di.ApplicationScope
-import com.trusov.sociallab.domain.entity.Answer
-import com.trusov.sociallab.domain.entity.AnswerExtended
-import com.trusov.sociallab.domain.entity.Research
-import com.trusov.sociallab.domain.entity.Statistics
+import com.trusov.sociallab.domain.entity.*
 import com.trusov.sociallab.domain.repository.Repository
 import kotlinx.coroutines.tasks.await
-import java.text.SimpleDateFormat
-import java.util.*
 import javax.inject.Inject
 import kotlin.collections.ArrayList
 
@@ -27,7 +24,8 @@ import kotlin.collections.ArrayList
 class RepositoryImpl @Inject constructor(
     private val firebase: FirebaseFirestore,
     private val auth: FirebaseAuth,
-    private val application: Application
+    private val application: Application,
+    private val usageStats: UStats
 ) : Repository {
 
     override fun signUp(login: String, password: String) {
@@ -135,15 +133,14 @@ class RepositoryImpl @Inject constructor(
 
     override fun getQuestion() {
         val workerManager = WorkManager.getInstance(application)
-        workerManager.enqueueUniqueWork(
+        workerManager.enqueueUniquePeriodicWork(
             QuestionsWorker.NAME,
-            ExistingWorkPolicy.REPLACE,
-            QuestionsWorker.makeRequest()
+            ExistingPeriodicWorkPolicy.REPLACE,
+            QuestionsWorker.makePeriodicRequest()
         )
     }
 
     override fun answerTheQuestion(questionId: String, numberOfAnswer: Int) {
-
         val answer = Answer(
             questionId = questionId,
             respondentId = auth.currentUser?.uid ?: "error",
@@ -194,8 +191,16 @@ class RepositoryImpl @Inject constructor(
         return listOfAnswersExtended
     }
 
-    override fun getUserStatistics(respondentId: String): Statistics {
-        TODO("Not yet implemented")
+    override fun getListOfScreenTime(): List<AppScreenTime> {
+        return usageStats.getListOfScreenTime()
+    }
+
+    override fun getTotalScreenTime(): AppScreenTime {
+        return usageStats.getTotalScreenTime()
+    }
+
+    override fun checkUsageStatsPermission(): Boolean {
+        return usageStats.getUsageStatsList().isEmpty()
     }
 
     companion object {

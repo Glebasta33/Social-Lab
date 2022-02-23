@@ -1,6 +1,8 @@
 package com.trusov.sociallab.di
 
 import android.app.Application
+import android.app.usage.UsageStatsManager
+import android.content.Context
 import com.google.firebase.auth.FirebaseAuth
 import com.google.firebase.auth.ktx.auth
 import com.google.firebase.firestore.FirebaseFirestore
@@ -13,6 +15,7 @@ import com.trusov.sociallab.domain.repository.Repository
 import dagger.Binds
 import dagger.Module
 import dagger.Provides
+import java.util.*
 
 @Module
 interface DataModule {
@@ -36,5 +39,11 @@ interface DataModule {
         fun provideFirebaseAuth(): FirebaseAuth {
             return Firebase.auth
         }
+
+        @Provides
+        fun provideUsageStatsManager(application: Application): UsageStatsManager {
+            return application.getSystemService(Context.USAGE_STATS_SERVICE) as UsageStatsManager
+        }
+
     }
 }
