@@ -8,9 +8,9 @@ import com.google.firebase.auth.ktx.auth
 import com.google.firebase.firestore.FirebaseFirestore
 import com.google.firebase.firestore.ktx.firestore
 import com.google.firebase.ktx.Firebase
-import com.trusov.sociallab.data.RepositoryImpl
+import com.trusov.sociallab.feature_statistics.data.repository.StatisticsRepositoryImpl
 import com.trusov.sociallab.di.scope.ApplicationScope
-import com.trusov.sociallab.domain.repository.Repository
+import com.trusov.sociallab.feature_statistics.domain.repository.StatisticsRepository
 import dagger.Binds
 import dagger.Module
 import dagger.Provides
@@ -18,7 +18,7 @@ import dagger.Provides
 @Module
 interface DataModule {
     @Binds
-    fun bindRepository(impl: RepositoryImpl): Repository
+    fun bindRepository(impl: StatisticsRepositoryImpl): StatisticsRepository
 
     companion object {
 

@@ -23,12 +23,12 @@
         android:supportsRtl="true"
         android:theme="@style/Theme.SocialLab">
         <receiver
-            android:name=".data.receiver.NotificationReceiver"
+            android:name=".feature_survey.data.receiver.NotificationReceiver"
             android:enabled="true"
             android:exported="true" />
 
         <activity
-            android:name=".presentation.activity.MainActivity"
+            android:name=".core.presentation.MainActivity"
             android:exported="true">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />

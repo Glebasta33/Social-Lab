@@ -1,8 +1,8 @@
 package com.trusov.sociallab.di.module
 
-import com.trusov.sociallab.data.worker.QuestionsWorker
-import com.trusov.sociallab.data.worker.ScreenTimeSaver
-import com.trusov.sociallab.data.worker.SubWorkerFactory
+import com.trusov.sociallab.feature_survey.data.worker.QuestionsWorker
+import com.trusov.sociallab.feature_statistics.data.worker.ScreenTimeSaver
+import com.trusov.sociallab.core.data.worker.SubWorkerFactory
 import com.trusov.sociallab.di.key.WorkerKey
 import dagger.Binds
 import dagger.Module

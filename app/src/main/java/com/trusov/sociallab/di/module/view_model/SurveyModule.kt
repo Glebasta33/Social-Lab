@@ -1,7 +1,7 @@
 package com.trusov.sociallab.di.module.view_model
 
-import com.trusov.sociallab.survey.data.repository.SurveyRepositoryImpl
-import com.trusov.sociallab.survey.domain.repository.SurveyRepository
+import com.trusov.sociallab.feature_survey.data.repository.SurveyRepositoryImpl
+import com.trusov.sociallab.feature_survey.domain.repository.SurveyRepository
 import dagger.Binds
 import dagger.Module
 
