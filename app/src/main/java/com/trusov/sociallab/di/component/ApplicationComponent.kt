@@ -3,7 +3,7 @@ package com.trusov.sociallab.di.component
 import android.app.Application
 import com.trusov.sociallab.App
 import com.trusov.sociallab.feature_survey.data.receiver.NotificationReceiver
-import com.trusov.sociallab.core.presentation.MainActivity
+import com.trusov.sociallab.presentation.MainActivity
 import com.trusov.sociallab.feature_survey.presentation.fragment.AnswersFragment
 import com.trusov.sociallab.feature_auth.presentation.fragment.LogInFragment
 import com.trusov.sociallab.feature_researches.presentation.fragment.ResearchesFragment

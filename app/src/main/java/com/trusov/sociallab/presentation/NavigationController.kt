@@ -1,4 +1,4 @@
-package com.trusov.sociallab.core.presentation
+package com.trusov.sociallab.presentation
 
 interface NavigationController {
     fun launchWelcomeFragment()

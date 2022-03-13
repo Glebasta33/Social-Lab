@@ -3,7 +3,7 @@ package com.trusov.sociallab.feature_statistics.data.worker
 import android.content.Context
 import android.util.Log
 import androidx.work.*
-import com.trusov.sociallab.core.data.worker.SubWorkerFactory
+import com.trusov.sociallab.worker.SubWorkerFactory
 import com.trusov.sociallab.feature_statistics.data.source.UStats
 import java.util.concurrent.TimeUnit
 import javax.inject.Inject

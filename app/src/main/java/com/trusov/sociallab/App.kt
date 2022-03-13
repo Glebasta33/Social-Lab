@@ -2,7 +2,7 @@ package com.trusov.sociallab
 
 import android.app.Application
 import androidx.work.Configuration
-import com.trusov.sociallab.core.data.worker.AppWorkerFactory
+import com.trusov.sociallab.worker.AppWorkerFactory
 import com.trusov.sociallab.di.component.DaggerApplicationComponent
 import javax.inject.Inject
 

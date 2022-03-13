@@ -1,4 +1,4 @@
-package com.trusov.sociallab.core.presentation
+package com.trusov.sociallab.presentation
 
 import androidx.lifecycle.ViewModel
 import com.google.firebase.auth.FirebaseUser

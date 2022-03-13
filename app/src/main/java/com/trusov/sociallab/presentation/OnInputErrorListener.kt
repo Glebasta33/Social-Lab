@@ -1,4 +1,4 @@
-package com.trusov.sociallab.core.presentation
+package com.trusov.sociallab.presentation
 
 interface OnInputErrorListener {
     fun onErrorInput(message: String)

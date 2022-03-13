@@ -1,4 +1,4 @@
-package com.trusov.sociallab.core.data.worker
+package com.trusov.sociallab.worker
 
 import android.content.Context
 import androidx.work.ListenableWorker

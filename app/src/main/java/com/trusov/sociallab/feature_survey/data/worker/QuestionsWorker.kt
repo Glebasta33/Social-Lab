@@ -4,7 +4,7 @@ import android.content.Context
 import android.util.Log
 import androidx.work.*
 import com.google.firebase.firestore.FirebaseFirestore
-import com.trusov.sociallab.core.data.worker.SubWorkerFactory
+import com.trusov.sociallab.worker.SubWorkerFactory
 import com.trusov.sociallab.feature_survey.domain.entity.Question
 import com.trusov.sociallab.feature_survey.data.receiver.NotificationHelper
 import kotlinx.coroutines.delay
