@@ -8,6 +8,7 @@ import com.trusov.sociallab.worker.SubWorkerFactory
 import com.trusov.sociallab.feature_survey.domain.entity.Question
 import com.trusov.sociallab.feature_survey.data.receiver.NotificationHelper
 import kotlinx.coroutines.delay
+import kotlinx.coroutines.tasks.await
 import java.util.concurrent.TimeUnit
 import javax.inject.Inject
 
@@ -18,32 +19,24 @@ class QuestionsWorker(
     private val notificationHelper: NotificationHelper
 ) : CoroutineWorker(context, workerParameters) {
 
-
     override suspend fun doWork(): Result {
-        var index = 0
-            var question: Question? = null
-            firebase.collection("questions").addSnapshotListener { value, error ->
-                if (value != null && value.documents.size > index) {
-                    val data = value.documents[index++]
-                    data?.let {
-                        question = Question(
-                            text = data["text"].toString(),
-                            researchId = data["researchId"].toString(),
-                            id = data.id
-                        )
-                    }
-                }
-                if (error != null) {
-                    Log.d("QuestionsWorker", "error: ${error.message}")
-                }
+        var question: Question? = null
+        val questions = firebase.collection("questions").get().await()
+        for (data in questions) {
+            data?.let {
+                question = Question(
+                    text = data["text"].toString(),
+                    researchId = data["researchId"].toString(),
+                    id = data.id
+                )
             }
-            delay(10_000)
             question?.let {
                 notificationHelper.showNotification(it.text, it.id)
             }
+            delay(5000L)
+        }
         return Result.success()
     }
-
 
     companion object {
         const val NAME = "QuestionsWorker"
