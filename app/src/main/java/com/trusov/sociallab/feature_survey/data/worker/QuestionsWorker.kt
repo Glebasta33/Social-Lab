@@ -4,10 +4,11 @@ import android.content.Context
 import android.util.Log
 import androidx.work.*
 import com.google.firebase.firestore.FirebaseFirestore
+import com.google.firebase.firestore.QuerySnapshot
 import com.trusov.sociallab.worker.SubWorkerFactory
 import com.trusov.sociallab.feature_survey.domain.entity.Question
 import com.trusov.sociallab.feature_survey.data.receiver.NotificationHelper
-import kotlinx.coroutines.delay
+import com.trusov.sociallab.feature_survey.domain.entity.QuestionType
 import kotlinx.coroutines.tasks.await
 import java.util.concurrent.TimeUnit
 import javax.inject.Inject
@@ -19,23 +20,65 @@ class QuestionsWorker(
     private val notificationHelper: NotificationHelper
 ) : CoroutineWorker(context, workerParameters) {
 
+    private val questions = ArrayList<Question>()
+
     override suspend fun doWork(): Result {
-        var question: Question? = null
-        val questions = firebase.collection("questions").get().await()
-        for (data in questions) {
-            data?.let {
-                question = Question(
-                    text = data["text"].toString(),
-                    researchId = data["researchId"].toString(),
-                    id = data.id
-                )
-            }
-            question?.let {
-                notificationHelper.showNotification(it.text, it.id)
-            }
-            delay(5000L)
+        val collection = firebase.collection("questions").get().await()
+        if (collection.size() != questions.size) {
+            updateQuestions(collection)
+            showQuestion()
+            Log.d("QuestionsWorker", "updateQuestions")
+        } else {
+            showQuestion()
+            Log.d("QuestionsWorker", "showQuestion")
         }
         return Result.success()
+    }
+
+    private fun showQuestion() {
+        for (question in questions) {
+            when(question.type) {
+                QuestionType.PERIODIC_DAILY -> {
+                    Log.d("QuestionsWorker", "${question.text} ${question.type}")
+                }
+                QuestionType.PERIODIC_BY_MINUTES -> {
+                    Log.d("QuestionsWorker", "${question.text} ${question.type}")
+                }
+                QuestionType.ONE_TIME -> {
+                    Log.d("QuestionsWorker", "${question.text} ${question.type}")
+                }
+                QuestionType.CONDITIONAL -> {
+                    Log.d("QuestionsWorker", "${question.text} ${question.type}")
+                }
+//            question?.let {
+//                notificationHelper.showNotification(it.text, it.id)
+//            }
+            }
+        }
+    }
+
+    private fun updateQuestions(collection: QuerySnapshot) {
+        fun castStringToQuestionType(type: String): QuestionType {
+            return when(type) {
+                "PERIODIC_DAILY" -> QuestionType.PERIODIC_DAILY
+                "PERIODIC_BY_MINUTES" -> QuestionType.PERIODIC_BY_MINUTES
+                "ONE_TIME" -> QuestionType.ONE_TIME
+                "CONDITIONAL" -> QuestionType.CONDITIONAL
+                else -> throw RuntimeException("Cast to QuestionType exception")
+            }
+        }
+        questions.clear()
+        for (data in collection) {
+            data?.let {
+                val question = Question(
+                    text = data["text"].toString(),
+                    researchId = data["researchId"].toString(),
+                    id = data.id,
+                    type = castStringToQuestionType(data["type"].toString())
+                )
+                questions.add(question)
+            }
+        }
     }
 
     companion object {
@@ -64,6 +107,5 @@ class QuestionsWorker(
                 notificationHelper
             )
         }
-
     }
 }
