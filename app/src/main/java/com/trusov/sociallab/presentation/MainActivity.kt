@@ -38,6 +38,7 @@ class MainActivity : AppCompatActivity(), OnInputErrorListener, NavigationContro
         super.onCreate(savedInstanceState)
         setContentView(binding.root)
         setActionBar()
+        setBottomNavigation()
         launchWelcomeFragment()
         (application as App).component.inject(this)
         CoroutineScope(Dispatchers.IO).launch {
@@ -59,17 +60,25 @@ class MainActivity : AppCompatActivity(), OnInputErrorListener, NavigationContro
         }
     }
 
+    private fun setBottomNavigation() {
+        binding.bottomNavigationView.setOnItemSelectedListener { item ->
+            when(item.itemId) {
+                R.id.mi_researches -> launchResearchesFragment()
+                R.id.mi_answers -> launchAnswersFragment()
+                R.id.mi_statistics -> launchStatisticsFragment()
+            }
+            true
+        }
+    }
+
     override fun onCreateOptionsMenu(menu: Menu?): Boolean {
-        menuInflater.inflate(R.menu.navigation_menu, menu)
+        menuInflater.inflate(R.menu.bar_menu, menu)
         return true
     }
 
     override fun onOptionsItemSelected(item: MenuItem): Boolean {
         when (item.itemId) {
-            R.id.action_all_researches -> launchResearchesFragment()
-            R.id.action_answers -> launchAnswersFragment()
-            R.id.action_statistics -> launchStatisticsFragment()
-            R.id.action_sing_out -> {
+            R.id.mi_sing_out -> {
                 signOut()
                 launchLoginFragment()
             }
@@ -97,12 +106,12 @@ class MainActivity : AppCompatActivity(), OnInputErrorListener, NavigationContro
 
     override fun launchAnswersFragment() {
         replaceMainContainer(AnswersFragment.newInstance())
-        changeToolbarContent(R.string.my_answers, R.drawable.ic_answers)
+        changeToolbarContent(R.string.answers, R.drawable.ic_answers)
     }
 
     override fun launchStatisticsFragment() {
         replaceMainContainer(StatisticsFragment.newInstance())
-        changeToolbarContent(R.string.my_statistics, R.drawable.ic_statistics)
+        changeToolbarContent(R.string.statistics, R.drawable.ic_statistics)
     }
 
     private fun changeToolbarContent(titleContent: Int, iconId: Int) {
