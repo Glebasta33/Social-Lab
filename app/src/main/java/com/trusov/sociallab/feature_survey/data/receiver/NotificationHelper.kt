@@ -30,9 +30,8 @@ class NotificationHelper @Inject constructor(
 
 
     private fun createNotificationView(textOfQuestion: String, questionId: String) {
-
         fun createIntent(number: Int): Intent {
-            return Intent(application, NotificationReceiver::class.java).apply {
+            return Intent(application, NotificationAnswerReceiver::class.java).apply {
                 putExtra(NUMBER_OF_ANSWER, number)
                 putExtra(QUESTION_ID, questionId)
             }

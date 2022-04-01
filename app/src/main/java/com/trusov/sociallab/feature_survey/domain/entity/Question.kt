@@ -4,5 +4,7 @@ data class Question(
     val text: String,
     val id: String,
     val researchId: String,
-    val type: QuestionType
+    val type: QuestionType,
+    val timeScope: Pair<String, String>?,
+    val periodInMinutes: Int?
 )

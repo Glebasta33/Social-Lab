@@ -9,6 +9,7 @@ import com.trusov.sociallab.worker.SubWorkerFactory
 import com.trusov.sociallab.feature_survey.domain.entity.Question
 import com.trusov.sociallab.feature_survey.data.receiver.NotificationHelper
 import com.trusov.sociallab.feature_survey.domain.entity.QuestionType
+import com.trusov.sociallab.feature_survey.domain.utils.PeriodicCounter
 import kotlinx.coroutines.tasks.await
 import java.util.concurrent.TimeUnit
 import javax.inject.Inject
@@ -39,16 +40,17 @@ class QuestionsWorker(
         for (question in questions) {
             when(question.type) {
                 QuestionType.PERIODIC_DAILY -> {
-                    Log.d("QuestionsWorker", "${question.text} ${question.type}")
+                    Log.d("QuestionsWorker", question.toString())
                 }
                 QuestionType.PERIODIC_BY_MINUTES -> {
-                    Log.d("QuestionsWorker", "${question.text} ${question.type}")
+                    PeriodicCounter(applicationContext).runAlarm(question)
+                    Log.d("QuestionsWorker", question.toString())
                 }
                 QuestionType.ONE_TIME -> {
-                    Log.d("QuestionsWorker", "${question.text} ${question.type}")
+                    Log.d("QuestionsWorker", question.toString())
                 }
                 QuestionType.CONDITIONAL -> {
-                    Log.d("QuestionsWorker", "${question.text} ${question.type}")
+                    Log.d("QuestionsWorker", question.toString())
                 }
 //            question?.let {
 //                notificationHelper.showNotification(it.text, it.id)
@@ -70,11 +72,18 @@ class QuestionsWorker(
         questions.clear()
         for (data in collection) {
             data?.let {
+                var timeScopeResult: Pair<String, String>? = null
+                if (data["timeScope"] != null && data["timeScope"] is ArrayList<*>) {
+                    val array = data["timeScope"] as ArrayList<String>
+                    timeScopeResult = array[0] to array[1]
+                }
                 val question = Question(
                     text = data["text"].toString(),
                     researchId = data["researchId"].toString(),
                     id = data.id,
-                    type = castStringToQuestionType(data["type"].toString())
+                    type = castStringToQuestionType(data["type"].toString()),
+                    timeScope = timeScopeResult,
+                    periodInMinutes = data["periodInMinutes"]?.toString()?.toInt()
                 )
                 questions.add(question)
             }
