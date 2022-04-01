@@ -19,6 +19,7 @@ class SurveyRepositoryImpl @Inject constructor(
     private val auth: FirebaseAuth,
     private val application: Application
 ) : SurveyRepository {
+
     override fun getQuestion() {
         val workerManager = WorkManager.getInstance(application)
         workerManager.enqueueUniquePeriodicWork(

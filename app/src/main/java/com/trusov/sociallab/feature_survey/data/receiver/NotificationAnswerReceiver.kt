@@ -8,7 +8,7 @@ import com.trusov.sociallab.App
 import com.trusov.sociallab.feature_survey.domain.usa_case.AnswerTheQuestionUseCase
 import javax.inject.Inject
 
-class NotificationReceiver : BroadcastReceiver() {
+class NotificationAnswerReceiver : BroadcastReceiver() {
 
     @Inject
     lateinit var answerTheQuestionUseCase: AnswerTheQuestionUseCase
@@ -16,10 +16,6 @@ class NotificationReceiver : BroadcastReceiver() {
     override fun onReceive(context: Context, intent: Intent) {
 
         (context.applicationContext as App).component.inject(this)
-
-        Log.d("NotificationReceiverTag", "${intent.getIntExtra(NUMBER_OF_ANSWER, UNKNOWN_NUMBER_OF_ANSWER)} ${intent.getStringExtra(
-            QUESTION_ID
-        )}")
 
         val questionId = intent.getStringExtra(QUESTION_ID) ?: "error"
         val numberOfAnswer = intent.getIntExtra(NUMBER_OF_ANSWER, UNKNOWN_NUMBER_OF_ANSWER)
