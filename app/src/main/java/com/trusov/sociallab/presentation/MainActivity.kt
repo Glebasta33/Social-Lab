@@ -102,6 +102,7 @@ class MainActivity : AppCompatActivity(), OnInputErrorListener, NavigationContro
         replaceMainContainer(ResearchesFragment.newInstance())
         changeToolbarContent(R.string.researches, R.drawable.ic_researches)
         binding.toolbar.isGone = false
+        binding.bottomNavigationView.isGone = false
     }
 
     override fun launchAnswersFragment() {
@@ -123,6 +124,7 @@ class MainActivity : AppCompatActivity(), OnInputErrorListener, NavigationContro
 
     override fun signOut() {
         binding.toolbar.isGone = true
+        binding.bottomNavigationView.isGone = true
         viewModel.signOut()
     }
 
