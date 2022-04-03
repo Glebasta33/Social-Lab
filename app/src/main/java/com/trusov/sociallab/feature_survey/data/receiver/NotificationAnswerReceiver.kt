@@ -3,13 +3,11 @@ package com.trusov.sociallab.feature_survey.data.receiver
 import android.content.BroadcastReceiver
 import android.content.Context
 import android.content.Intent
-import android.util.Log
 import com.trusov.sociallab.App
 import com.trusov.sociallab.feature_survey.domain.usa_case.AnswerTheQuestionUseCase
 import javax.inject.Inject
 
 class NotificationAnswerReceiver : BroadcastReceiver() {
-
     @Inject
     lateinit var answerTheQuestionUseCase: AnswerTheQuestionUseCase
 

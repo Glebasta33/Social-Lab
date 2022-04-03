@@ -1,5 +1,6 @@
 package com.trusov.sociallab.feature_survey.data.worker
 
+import android.app.Application
 import android.content.Context
 import android.util.Log
 import androidx.work.*
@@ -9,8 +10,9 @@ import com.trusov.sociallab.worker.SubWorkerFactory
 import com.trusov.sociallab.feature_survey.domain.entity.Question
 import com.trusov.sociallab.feature_survey.data.receiver.NotificationHelper
 import com.trusov.sociallab.feature_survey.domain.entity.QuestionType
-import com.trusov.sociallab.feature_survey.domain.utils.PeriodicCounter
+import com.trusov.sociallab.feature_survey.domain.utils.QuestionTimingCalculator
 import kotlinx.coroutines.tasks.await
+import java.text.SimpleDateFormat
 import java.util.concurrent.TimeUnit
 import javax.inject.Inject
 
@@ -27,24 +29,31 @@ class QuestionsWorker(
         val collection = firebase.collection("questions").get().await()
         if (collection.size() != questions.size) {
             updateQuestions(collection)
-            showQuestion()
-            Log.d("QuestionsWorker", "updateQuestions")
+            runSpecificWorker()
         } else {
-            showQuestion()
-            Log.d("QuestionsWorker", "showQuestion")
+            runSpecificWorker()
         }
         return Result.success()
     }
 
-    private fun showQuestion() {
+    private fun runSpecificWorker() {
+        val workerManager = WorkManager.getInstance(applicationContext)
+        val timingCalculator = QuestionTimingCalculator(applicationContext)
         for (question in questions) {
-            when(question.type) {
+            when (question.type) {
                 QuestionType.PERIODIC_DAILY -> {
                     Log.d("QuestionsWorker", question.toString())
                 }
                 QuestionType.PERIODIC_BY_MINUTES -> {
-                    PeriodicCounter(applicationContext).runAlarm(question)
-                    Log.d("QuestionsWorker", question.toString())
+                    workerManager.enqueueUniquePeriodicWork(
+                        question.id,
+                        ExistingPeriodicWorkPolicy.REPLACE,
+                        PeriodicQuestionWorker.schedulePeriodicRequest(
+                            timingCalculator.calculateInterval(question),
+                            timingCalculator.calculateInitialDelay(question),
+                            question
+                        )
+                    )
                 }
                 QuestionType.ONE_TIME -> {
                     Log.d("QuestionsWorker", question.toString())
@@ -52,23 +61,11 @@ class QuestionsWorker(
                 QuestionType.CONDITIONAL -> {
                     Log.d("QuestionsWorker", question.toString())
                 }
-//            question?.let {
-//                notificationHelper.showNotification(it.text, it.id)
-//            }
             }
         }
     }
 
     private fun updateQuestions(collection: QuerySnapshot) {
-        fun castStringToQuestionType(type: String): QuestionType {
-            return when(type) {
-                "PERIODIC_DAILY" -> QuestionType.PERIODIC_DAILY
-                "PERIODIC_BY_MINUTES" -> QuestionType.PERIODIC_BY_MINUTES
-                "ONE_TIME" -> QuestionType.ONE_TIME
-                "CONDITIONAL" -> QuestionType.CONDITIONAL
-                else -> throw RuntimeException("Cast to QuestionType exception")
-            }
-        }
         questions.clear()
         for (data in collection) {
             data?.let {
@@ -87,6 +84,16 @@ class QuestionsWorker(
                 )
                 questions.add(question)
             }
+        }
+    }
+
+    private fun castStringToQuestionType(type: String): QuestionType {
+        return when (type) {
+            "PERIODIC_DAILY" -> QuestionType.PERIODIC_DAILY
+            "PERIODIC_BY_MINUTES" -> QuestionType.PERIODIC_BY_MINUTES
+            "ONE_TIME" -> QuestionType.ONE_TIME
+            "CONDITIONAL" -> QuestionType.CONDITIONAL
+            else -> throw RuntimeException("Cast to QuestionType exception")
         }
     }
 
