@@ -1,4 +1,4 @@
-package com.trusov.sociallab.feature_survey.domain.usa_case
+package com.trusov.sociallab.feature_survey.domain.use_case
 
 import com.trusov.sociallab.feature_survey.domain.entity.AnswerExtended
 import com.trusov.sociallab.feature_survey.domain.repository.SurveyRepository

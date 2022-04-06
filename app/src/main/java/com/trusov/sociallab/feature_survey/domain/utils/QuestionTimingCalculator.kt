@@ -31,8 +31,8 @@ class QuestionTimingCalculator (
     private fun calculateTime(question: Question): Long {
         val startTimeAsString = question.timeScope?.first
         val endTimeAsString = question.timeScope?.second
-        val startTime = startOfToday + parseMillis(startTimeAsString)
-        val endTime = startOfToday + parseMillis(endTimeAsString)
+        val startTime = startOfToday + parseMillisFromString(startTimeAsString)
+        val endTime = startOfToday + parseMillisFromString(endTimeAsString)
         val period = TimeUnit.MINUTES.toMillis(question.periodInMinutes!!.toLong())
         val timestapms = mutableListOf<Long>()
         if (currentTime in startTime..endTime) {
@@ -46,7 +46,7 @@ class QuestionTimingCalculator (
             Log.d("PeriodicCounter", "Current time is out of scope of survey")
         }
         val targetTime = timestapms.filter{ it >= currentTime }.find { abs(it - currentTime) <= period }
-        Log.d("PeriodicCounter", "targetTime $targetTime -> ${SimpleDateFormat("dd.MM.yyyy HH:mm:ss").format(targetTime)}")
+//        Log.d("PeriodicCounter", "targetTime $targetTime -> ${SimpleDateFormat("dd.MM.yyyy HH:mm:ss").format(targetTime)}")
         return targetTime ?: 0L
     }
 
@@ -62,7 +62,7 @@ class QuestionTimingCalculator (
         return initialDelay
     }
 
-    private fun parseMillis(timeAsString: String?): Long {
+    fun parseMillisFromString(timeAsString: String?): Long {
         val array = timeAsString?.split(":")
         val numbers = mutableListOf<Int>()
         array?.let {
