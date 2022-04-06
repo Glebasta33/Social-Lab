@@ -16,7 +16,6 @@ import com.trusov.sociallab.feature_researches.presentation.fragment.ResearchInf
 import com.trusov.sociallab.feature_researches.presentation.fragment.ResearchesFragment
 import com.trusov.sociallab.feature_statistics.presentation.fragment.StatisticsFragment
 import com.trusov.sociallab.feature_survey.data.receiver.NotificationAnswerReceiver
-import com.trusov.sociallab.feature_survey.data.worker.NotificationLaunchService
 import com.trusov.sociallab.feature_survey.presentation.fragment.AnswersFragment
 import com.trusov.sociallab.presentation.MainActivity
 import dagger.BindsInstance
@@ -45,7 +44,6 @@ interface ApplicationComponent {
     fun inject(instance: ResearchesListAdapter)
     fun inject(instance: App)
     fun inject(instance: NotificationAnswerReceiver)
-    fun inject(instance: NotificationLaunchService)
 
     @Component.Factory
     interface Factory {
