@@ -3,7 +3,6 @@ package com.trusov.sociallab.feature_survey.data.repository
 import android.app.Application
 import android.util.Log
 import androidx.work.ExistingPeriodicWorkPolicy
-import androidx.work.ExistingWorkPolicy
 import androidx.work.WorkManager
 import com.google.firebase.auth.FirebaseAuth
 import com.google.firebase.firestore.FirebaseFirestore
@@ -14,7 +13,6 @@ import com.trusov.sociallab.feature_survey.domain.entity.AnswerExtended
 import com.trusov.sociallab.feature_survey.domain.entity.Question
 import com.trusov.sociallab.feature_survey.domain.entity.QuestionType
 import com.trusov.sociallab.feature_survey.domain.repository.SurveyRepository
-import com.trusov.sociallab.feature_survey.domain.utils.QuestionTimingCalculator
 import kotlinx.coroutines.tasks.await
 import javax.inject.Inject
 import kotlin.collections.ArrayList
@@ -29,7 +27,6 @@ class SurveyRepositoryImpl @Inject constructor(
     override suspend fun getQuestion() {
         val questions = ArrayList<Question>()
         val workerManager = WorkManager.getInstance(application)
-        val calculator = QuestionTimingCalculator(application)
         val collection = firebase.collection("questions").get().await()
         for (data in collection) {
             data?.let {
@@ -57,19 +54,15 @@ class SurveyRepositoryImpl @Inject constructor(
                     Log.d("QuestionsWorker", question.toString())
                 }
                 QuestionType.PERIODIC_BY_MINUTES -> {
+                    Log.d("QuestionsWorker", question.toString())
                     workerManager.enqueueUniquePeriodicWork(
                         question.id,
                         ExistingPeriodicWorkPolicy.REPLACE,
                         QuestionsWorker.schedulePeriodicRequest(
-                            calculator.calculateInterval(question),
+                            question.periodInMinutes?.toLong()!!,
                             question
                         )
                     )
-//                    workerManager.enqueueUniqueWork(
-//                        question.id,
-//                        ExistingWorkPolicy.REPLACE,
-//                        QuestionsWorker.makeOneTimeRequest(question)
-//                    )
                 }
                 QuestionType.ONE_TIME -> {
                     Log.d("QuestionsWorker", question.toString())
