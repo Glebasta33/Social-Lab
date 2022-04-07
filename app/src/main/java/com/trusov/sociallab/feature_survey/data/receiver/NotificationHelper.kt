@@ -67,10 +67,10 @@ class NotificationHelper @Inject constructor(
             .build()
     }
 
-    fun showNotification(textOfQuestion: String, questionId: String) {
+    fun showNotification(textOfQuestion: String, questionId: String, notificationId: Int) {
         createNotificationChannel()
         createNotificationView(textOfQuestion, questionId)
-        notificationManager.notify(NOTIFICATION_ID, createNotification())
+        notificationManager.notify(notificationId, createNotification())
     }
 
     companion object {

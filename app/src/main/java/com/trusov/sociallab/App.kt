@@ -1,6 +1,7 @@
 package com.trusov.sociallab
 
 import android.app.Application
+import android.content.Context
 import androidx.work.Configuration
 import com.trusov.sociallab.worker.AppWorkerFactory
 import com.trusov.sociallab.di.component.DaggerApplicationComponent
@@ -27,5 +28,7 @@ class App : Application(), Configuration.Provider {
             .build()
     }
 
-
+    fun getAppContext(): Context {
+        return this
+    }
 }
