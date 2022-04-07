@@ -20,59 +20,54 @@ class QuestionsWorker(
     private val notificationHelper: NotificationHelper
 ) : CoroutineWorker(context, workerParameters) {
 
-    private val calendar = Calendar.getInstance()
-    private val hourFormat = SimpleDateFormat("HH")
-    private val minFormat = SimpleDateFormat("mm")
-    private val secFormat = SimpleDateFormat("ss")
-    private val currentTime = calendar.timeInMillis
-    private val currentHours = hourFormat.format(currentTime).toString().toInt()
-    private val currentMinutes = minFormat.format(currentTime).toString().toInt()
-    private val currentSeconds = secFormat.format(currentTime).toString().toInt()
-    private var midnight = 0L
-
     override suspend fun doWork(): Result {
-        Log.d("QuestionsWorkerTag", "doWork. currentTime ${SimpleDateFormat("dd.MM.yyyy HH:mm:ss").format(currentTime)}")
-            if (isInBoundariesOfDay()) {
+        if (isInBoundariesOfDay()) {
             val start = inputData.getString(QUESTION_SURVEY_START) ?: ON_NULL_TIME_PLACEHOLDER
             val end = inputData.getString(QUESTION_SURVEY_END) ?: ON_NULL_TIME_PLACEHOLDER
             if (isInScopeOfSurvey(start, end)) {
                 val text = inputData.getString(QUESTION_TEXT) ?: "ошибка"
                 val id = inputData.getString(QUESTION_ID) ?: "id"
                 notificationHelper.showNotification(
-                    "$text currentTime ${SimpleDateFormat("dd.MM.yyyy HH:mm:ss").format(currentTime)}",
-                    id
+                    "$text currentTime ${SimpleDateFormat("dd.MM.yyyy HH:mm:ss").format(System.currentTimeMillis())}",
+                    id,
+                    notificationId++
                 )
             } else {
-                notificationHelper.showNotification("Time is out of boundaries of survey", "id")
+                notificationHelper.showNotification("Time is out of boundaries of survey", "id", notificationId++)
             }
         } else {
-            notificationHelper.showNotification("Time is out of boundaries of day", "id")
+            notificationHelper.showNotification("Time is out of boundaries of day", "id", notificationId++)
         }
         return Result.success()
     }
 
     private fun isInBoundariesOfDay(): Boolean {
-        setCalendarToCurrentMidnight()
-        midnight = calendar.timeInMillis
+        val midnight = getCurrentMidnightInMillis()
         val start = midnight + HOURS_9
         val end = midnight + HOURS_22
         return System.currentTimeMillis() in start..end
     }
 
     private fun isInScopeOfSurvey(startAsString: String, endAsString: String): Boolean {
+        val midnight = getCurrentMidnightInMillis()
         val calculator = QuestionTimingCalculator(applicationContext)
         val start = midnight + calculator.parseMillisFromString(startAsString)
         val end = midnight + calculator.parseMillisFromString(endAsString)
-        Log.d("QuestionsWorkerTag", " Start: ${SimpleDateFormat("dd.MM.yyyy HH:mm:ss").format(start)}")
-        Log.d("QuestionsWorkerTag", " end: ${SimpleDateFormat("dd.MM.yyyy HH:mm:ss").format(end)}")
+        Log.d(
+            "QuestionsWorkerTag",
+            "midnight ${SimpleDateFormat("dd.MM.yyyy HH:mm:ss").format(midnight)} \n" +
+                    "start ${SimpleDateFormat("dd.MM.yyyy HH:mm:ss").format(start)} \n" +
+                    "end ${SimpleDateFormat("dd.MM.yyyy HH:mm:ss").format(end)} \n" +
+                    "notificationId $notificationId"
+        )
         return System.currentTimeMillis() in start..end
     }
 
-    private fun setCalendarToCurrentMidnight() {
-        calendar.add(Calendar.HOUR_OF_DAY, -currentHours)
-        calendar.add(Calendar.MINUTE, -currentMinutes)
-        calendar.add(Calendar.SECOND, -currentSeconds)
-        midnight = calendar.timeInMillis
+    private fun getCurrentMidnightInMillis(): Long {
+        val currentTime = System.currentTimeMillis()
+        val currentDate: String = SimpleDateFormat("dd-MM-yyyy").format(currentTime)
+        val currentMidnight = "$currentDate 00:00:00"
+        return SimpleDateFormat("dd-M-yyyy hh:mm:ss").parse(currentMidnight).time
     }
 
     companion object {
@@ -83,6 +78,7 @@ class QuestionsWorker(
         private const val ON_NULL_TIME_PLACEHOLDER = "0:0"
         private const val HOURS_9 = 32400000L
         private const val HOURS_22 = 79200000L
+        private var notificationId = 0
 
         fun schedulePeriodicRequest(interval: Long, question: Question): PeriodicWorkRequest {
             val data = Data.Builder()
@@ -136,4 +132,5 @@ class QuestionsWorker(
             )
         }
     }
+
 }

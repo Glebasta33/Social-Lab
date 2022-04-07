@@ -57,6 +57,7 @@ class SurveyRepositoryImpl @Inject constructor(
                     Log.d("QuestionsWorker", question.toString())
                 }
                 QuestionType.PERIODIC_BY_MINUTES -> {
+                    Log.d("QuestionsWorker", question.toString())
                     workerManager.enqueueUniquePeriodicWork(
                         question.id,
                         ExistingPeriodicWorkPolicy.REPLACE,
