@@ -23,28 +23,28 @@ class UStats @Inject constructor(
     private val auth: FirebaseAuth,
     private val firebase: FirebaseFirestore
 ) {
-    private val hourFormat = SimpleDateFormat("HH")
-    private val minFormat = SimpleDateFormat("mm")
-    private val secFormat = SimpleDateFormat("ss")
 
     fun getUsageStatsList(): List<UsageStats> {
-        val calendar = Calendar.getInstance()
-        val currentTime = calendar.timeInMillis
-        val currentHours = hourFormat.format(currentTime).toString().toInt()
-        val currentMinutes = minFormat.format(currentTime).toString().toInt()
-        val currentSeconds = secFormat.format(currentTime).toString().toInt()
-        calendar.add(Calendar.HOUR_OF_DAY, -currentHours)
-        calendar.add(Calendar.MINUTE, -currentMinutes)
-        calendar.add(Calendar.SECOND, -currentSeconds)
-        val startTime = calendar.timeInMillis
-        return usm.queryUsageStats(UsageStatsManager.INTERVAL_DAILY, startTime, currentTime)
+        val startTime = getCurrentMidnightInMillis()
+        return usm.queryUsageStats(UsageStatsManager.INTERVAL_DAILY, startTime, System.currentTimeMillis())
+    }
+
+    private fun getCurrentMidnightInMillis(): Long {
+        val currentTime = System.currentTimeMillis()
+        val currentDate: String = SimpleDateFormat("dd-MM-yyyy").format(currentTime)
+        val currentMidnight = "$currentDate 00:00:00"
+        return SimpleDateFormat("dd-M-yyyy hh:mm:ss").parse(currentMidnight).time
     }
 
     fun getListOfScreenTime(): List<AppScreenTime> {
         val usageStatsList = getUsageStatsList()
         val screenTimes = mutableListOf<AppScreenTime>()
-        for (u in usageStatsList) {
-            if (u.totalTimeInForeground != 0L) {
+        if (screenTimes.isNotEmpty()) {
+            screenTimes.clear()
+        }
+        val sortedUsageStatsList = usageStatsList.sortedBy { it.totalTimeInForeground }.reversed()
+        for (u in sortedUsageStatsList) {
+            if (u.totalTimeInForeground != 0L && u.lastTimeUsed >= getCurrentMidnightInMillis()) {
                 val s = u.totalTimeInForeground / 1000
                 val hours = s / 3600
                 val minutes = (s % 3600) / 60
@@ -58,16 +58,22 @@ class UStats @Inject constructor(
                         getAppIcon(u.packageName)
                     )
                 screenTimes.add(screenTime)
+                val builder = StringBuilder().apply {
+                    append(getAppLabel(u.packageName)).append(" | ")
+                    append(SimpleDateFormat("HH:mm:ss", Locale.getDefault()).format(u.totalTimeInForeground)).append(" | ")
+                    append(SimpleDateFormat("dd.MM.yyyy HH:mm:ss", Locale.getDefault()).format(u.lastTimeUsed))
+                }
+                Log.d("UStatsTag", builder.toString())
             }
         }
-        return screenTimes
+        return screenTimes.distinctBy { it.appName }
     }
 
     fun getTotalScreenTime(): AppScreenTime {
         var totalScreenTime = 0L
         val usageStatsList = getUsageStatsList()
         for (u in usageStatsList) {
-            if (u.totalTimeInForeground != 0L) {
+            if (u.totalTimeInForeground != 0L && u.lastTimeUsed >= getCurrentMidnightInMillis()) {
                 totalScreenTime += u.totalTimeInForeground
             }
         }
