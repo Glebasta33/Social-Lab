@@ -1,6 +1,5 @@
 package com.trusov.sociallab.feature_statistics.data.repository
 
-import android.app.Application
 import android.os.Environment
 import android.util.Log
 import com.trusov.sociallab.di.scope.ApplicationScope

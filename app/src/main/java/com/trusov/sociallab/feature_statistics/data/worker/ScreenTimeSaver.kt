@@ -15,7 +15,6 @@ class ScreenTimeSaver(
 ) : CoroutineWorker(context, workerParameters) {
 
     override suspend fun doWork(): Result {
-        Log.d("ScreenTimeSaverTag", "ScreenTimeSaver: running")
         usageStats.saveCurrentTotalScreenTime()
         return Result.success()
     }
@@ -27,9 +26,8 @@ class ScreenTimeSaver(
             return PeriodicWorkRequest.Builder(
                 ScreenTimeSaver::class.java,
                 15,
-                TimeUnit.SECONDS
+                TimeUnit.MINUTES
             )
-                .addTag("ScreenTimeSaver")
                 .build()
         }
     }

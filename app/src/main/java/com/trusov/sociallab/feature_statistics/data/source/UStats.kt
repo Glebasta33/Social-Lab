@@ -58,12 +58,6 @@ class UStats @Inject constructor(
                         getAppIcon(u.packageName)
                     )
                 screenTimes.add(screenTime)
-                val builder = StringBuilder().apply {
-                    append(getAppLabel(u.packageName)).append(" | ")
-                    append(SimpleDateFormat("HH:mm:ss", Locale.getDefault()).format(u.totalTimeInForeground)).append(" | ")
-                    append(SimpleDateFormat("dd.MM.yyyy HH:mm:ss", Locale.getDefault()).format(u.lastTimeUsed))
-                }
-                Log.d("UStatsTag", builder.toString())
             }
         }
         return screenTimes.distinctBy { it.appName }
@@ -107,15 +101,19 @@ class UStats @Inject constructor(
                 }
             }
             val millisInLastHour = currentTotalScreenTime - getScreenTimeHourAgo()
-            Log.d("ScreenTimeSaverTag", "UStats.millisInLastHour: $millisInLastHour")
             val totalScreenTime = TotalScreenTime(
                 millisInDay = currentTotalScreenTime,
                 millisInLastHour = millisInLastHour,
                 respondentId = auth.currentUser?.uid ?: "unknown uid",
                 index = getPreviousIndex() + 1
             )
-            firebase.collection("total_screen_time").add(totalScreenTime)
-            Log.d("ScreenTimeSaverTag", "UStats.totalScreenTime: $totalScreenTime")
+            val testScreenTime = TotalScreenTime(
+                millisInDay = 1L,
+                millisInLastHour = 1L,
+                respondentId = "id",
+                index = 1L
+            )
+            firebase.collection("total_screen_time").add(testScreenTime)
         }
     }
 
