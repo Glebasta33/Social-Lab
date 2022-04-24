@@ -26,13 +26,7 @@ class StatisticsViewModel @Inject constructor(
 
     fun shopScreenTime() {
         val list = getListOfScreenTimeUseCase()
-        val sortedList = list.sortedWith(
-            compareBy(
-                { it.hours },
-                { it.minutes },
-                { it.seconds })
-        ).reversed()
-        _list.value = sortedList
+        _list.value = list
         _total.value = getTotalScreenTimeUseCase().formattedTime()
         Log.d("StatisticsViewModel", getTotalScreenTimeUseCase().formattedTime())
     }

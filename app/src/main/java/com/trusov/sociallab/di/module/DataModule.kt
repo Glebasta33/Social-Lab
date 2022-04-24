@@ -34,10 +34,5 @@ interface DataModule {
             return Firebase.auth
         }
 
-        @Provides
-        fun provideUsageStatsManager(application: Application): UsageStatsManager {
-            return application.getSystemService(Context.USAGE_STATS_SERVICE) as UsageStatsManager
-        }
-
     }
 }

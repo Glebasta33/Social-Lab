@@ -73,7 +73,6 @@ class StatisticsFragment : Fragment() {
                 ExistingPeriodicWorkPolicy.REPLACE,
                 ScreenTimeSaver.makePeriodicRequest()
             )
-            Log.d("ScreenTimeSaverTag", "StatisticsFragment: clicked")
         }
     }
 
