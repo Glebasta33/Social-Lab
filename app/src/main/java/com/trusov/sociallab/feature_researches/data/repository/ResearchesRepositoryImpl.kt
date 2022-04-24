@@ -27,6 +27,7 @@ class ResearchesRepositoryImpl @Inject constructor(
                     val research = Research(
                         topic = data["topic"].toString(),
                         description = data["description"].toString(),
+                        appointment = data["appointment"].toString(),
                         id = data.id,
                         respondents = data["respondents"] as ArrayList<String>
                     )
@@ -51,6 +52,7 @@ class ResearchesRepositoryImpl @Inject constructor(
                     val research = Research(
                         topic = data["topic"].toString(),
                         description = data["description"].toString(),
+                        appointment = data["appointment"].toString(),
                         id = data.id,
                         respondents = data["respondents"] as ArrayList<String>
                     )

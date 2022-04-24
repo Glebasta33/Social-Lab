@@ -4,6 +4,7 @@ import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import androidx.core.view.isGone
 import androidx.fragment.app.Fragment
 import androidx.lifecycle.ViewModelProvider
 import com.trusov.sociallab.R
@@ -50,6 +51,7 @@ class ResearchInfoFragment : Fragment() {
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
+        binding.buttonRegisterToResearch.isGone = true
         viewModel.getResearchId(research.id).observe(viewLifecycleOwner) { research ->
             with(binding) {
                 setResearchViews(research)
@@ -80,10 +82,13 @@ class ResearchInfoFragment : Fragment() {
     private fun ResearchInfoFragmentBinding.setResearchViews(research: Research) {
         tvTitle.text = research.topic
         tvDescription.text = research.description
+        tvAppointment.text = research.appointment
+        tvSelection.text = research.respondents.size.toString()
     }
 
     private fun ResearchInfoFragmentBinding.setButtonView(isRegistered: Boolean) {
         buttonRegisterToResearch.apply {
+            isGone = false
             if (isRegistered) {
                 text = "Отписаться"
                 buttonRegisterToResearch.setBackgroundColor(resources.getColor(R.color.red))

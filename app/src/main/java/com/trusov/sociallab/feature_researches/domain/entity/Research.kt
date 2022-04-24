@@ -7,6 +7,7 @@ import kotlinx.parcelize.Parcelize
 data class Research(
     val topic: String,
     val description: String,
+    val appointment: String,
     val questions: List<String> = mutableListOf(),
     val respondents: List<String> = mutableListOf(),
     val id: String = UNDEFINED_ID

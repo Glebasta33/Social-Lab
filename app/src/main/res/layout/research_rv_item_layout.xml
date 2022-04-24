@@ -30,6 +30,8 @@
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_marginTop="4dp"
+            android:ellipsize="end"
+            android:maxLines="3"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toBottomOf="@id/tv_research_topic"
@@ -46,8 +48,8 @@
 
             <ImageView
                 android:id="@+id/iv_time_of_answer"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
+                android:layout_width="14dp"
+                android:layout_height="14dp"
                 android:src="@drawable/ic_baseline_calendar_today_20"
                 app:layout_constraintBottom_toBottomOf="parent"
                 app:layout_constraintStart_toStartOf="parent"
@@ -57,16 +59,17 @@
                 android:id="@+id/tv_time_of_answer"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:text=" 7.02.2022 - 20.02.2022"
-                android:textSize="12sp"
+                tools:text=" 7.02.2022 - 20.02.2022"
+                android:layout_marginStart="2dp"
+                android:textSize="11sp"
                 app:layout_constraintBottom_toBottomOf="@+id/iv_time_of_answer"
                 app:layout_constraintStart_toEndOf="@+id/iv_time_of_answer"
                 app:layout_constraintTop_toTopOf="@+id/iv_time_of_answer" />
 
             <ImageView
                 android:id="@+id/iv_selection"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
+                android:layout_width="14dp"
+                android:layout_height="14dp"
                 android:src="@drawable/ic_baseline_people_outline_24"
                 app:layout_constraintBottom_toBottomOf="parent"
                 app:layout_constraintEnd_toEndOf="parent"
@@ -76,8 +79,9 @@
                 android:id="@+id/tv_selection"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:text=" 34 / 150 "
-                android:textSize="12sp"
+                tools:text=" 34 / 150 "
+                android:textSize="11sp"
+                android:layout_marginEnd="2dp"
                 app:layout_constraintBottom_toBottomOf="@+id/iv_selection"
                 app:layout_constraintEnd_toStartOf="@+id/iv_selection"
                 app:layout_constraintTop_toTopOf="@+id/iv_selection" />
