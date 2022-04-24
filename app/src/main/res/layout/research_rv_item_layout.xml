@@ -45,7 +45,7 @@
             app:layout_constraintTop_toBottomOf="@id/tv_research_description">
 
             <ImageView
-                android:id="@+id/iv_appointment"
+                android:id="@+id/iv_time_of_answer"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:src="@drawable/ic_baseline_calendar_today_20"
@@ -54,14 +54,14 @@
                 app:layout_constraintTop_toTopOf="parent" />
 
             <TextView
-                android:id="@+id/tv_appointment"
+                android:id="@+id/tv_time_of_answer"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:text=" 7.02.2022 - 20.02.2022"
                 android:textSize="12sp"
-                app:layout_constraintBottom_toBottomOf="@+id/iv_appointment"
-                app:layout_constraintStart_toEndOf="@+id/iv_appointment"
-                app:layout_constraintTop_toTopOf="@+id/iv_appointment" />
+                app:layout_constraintBottom_toBottomOf="@+id/iv_time_of_answer"
+                app:layout_constraintStart_toEndOf="@+id/iv_time_of_answer"
+                app:layout_constraintTop_toTopOf="@+id/iv_time_of_answer" />
 
             <ImageView
                 android:id="@+id/iv_selection"

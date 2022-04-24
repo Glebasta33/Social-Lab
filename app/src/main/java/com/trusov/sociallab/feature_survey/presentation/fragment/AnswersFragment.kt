@@ -1,10 +1,13 @@
 package com.trusov.sociallab.feature_survey.presentation.fragment
 
 import android.content.Context
+import android.content.res.ColorStateList
+import android.graphics.Color
 import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import androidx.core.view.isGone
 import androidx.fragment.app.Fragment
 import androidx.lifecycle.ViewModelProvider
 import com.trusov.sociallab.App
@@ -46,8 +49,10 @@ class AnswersFragment : Fragment() {
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
+        binding.progressBar.indeterminateTintList = ColorStateList.valueOf(Color.GRAY)
         binding.rvAnswers.adapter = answersAdapter
         viewModel.answers.observe(viewLifecycleOwner) {
+            binding.progressBar.isGone = true
             answersAdapter.submitList(it?.toMutableList() ?: listOf(AnswerExtended("id", "id", 4, "Title", "Text of question")))
         }
     }
