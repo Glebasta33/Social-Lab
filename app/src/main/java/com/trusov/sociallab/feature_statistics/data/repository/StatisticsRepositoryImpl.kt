@@ -1,7 +1,10 @@
 package com.trusov.sociallab.feature_statistics.data.repository
 
+import android.app.Application
 import android.os.Environment
 import android.util.Log
+import com.google.firebase.auth.FirebaseAuth
+import com.google.firebase.firestore.FirebaseFirestore
 import com.trusov.sociallab.di.scope.ApplicationScope
 import com.trusov.sociallab.feature_statistics.data.source.UStats
 import com.trusov.sociallab.feature_statistics.domain.entity.AppScreenTime
@@ -12,21 +15,26 @@ import javax.inject.Inject
 
 @ApplicationScope
 class StatisticsRepositoryImpl @Inject constructor(
-    private val usageStats: UStats
+    private val application: Application,
+    private val auth: FirebaseAuth,
+    private val firebase: FirebaseFirestore
 ) : StatisticsRepository {
 
     override fun getListOfScreenTime(): List<AppScreenTime> {
-        val listOfScreenTime = usageStats.getListOfScreenTime()
+        val uStats = UStats(application, auth, firebase)
+        val listOfScreenTime = uStats.getListOfScreenTime()
         saveScreenTimeToCsv(listOfScreenTime)
         return listOfScreenTime
     }
 
     override fun getTotalScreenTime(): AppScreenTime {
-        return usageStats.getTotalScreenTime()
+        val uStats = UStats(application, auth, firebase)
+        return uStats.getTotalScreenTime()
     }
 
     override fun checkUsageStatsPermission(): Boolean {
-        return usageStats.getUsageStatsList().isEmpty()
+        val uStats = UStats(application, auth, firebase)
+        return uStats.getUsageStatsList().isEmpty()
     }
 
     private fun saveScreenTimeToCsv(listOfScreenTime: List<AppScreenTime>) {

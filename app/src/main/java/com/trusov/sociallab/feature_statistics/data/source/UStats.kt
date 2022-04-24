@@ -3,6 +3,7 @@ package com.trusov.sociallab.feature_statistics.data.source
 import android.app.Application
 import android.app.usage.UsageStats
 import android.app.usage.UsageStatsManager
+import android.content.Context
 import android.graphics.drawable.Drawable
 import android.util.Log
 import com.google.firebase.auth.FirebaseAuth
@@ -17,14 +18,14 @@ import java.text.SimpleDateFormat
 import java.util.*
 import javax.inject.Inject
 
-class UStats @Inject constructor(
+class UStats(
     private val application: Application,
-    private val usm: UsageStatsManager,
     private val auth: FirebaseAuth,
     private val firebase: FirebaseFirestore
 ) {
 
     fun getUsageStatsList(): List<UsageStats> {
+        val usm = application.getSystemService(Context.USAGE_STATS_SERVICE) as UsageStatsManager
         val startTime = getCurrentMidnightInMillis()
         return usm.queryUsageStats(UsageStatsManager.INTERVAL_DAILY, startTime, System.currentTimeMillis())
     }
@@ -113,7 +114,7 @@ class UStats @Inject constructor(
                 respondentId = "id",
                 index = 1L
             )
-            firebase.collection("total_screen_time").add(testScreenTime)
+            firebase.collection("total_screen_time").add(totalScreenTime)
         }
     }
 
