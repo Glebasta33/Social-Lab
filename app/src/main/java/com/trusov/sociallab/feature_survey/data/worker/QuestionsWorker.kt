@@ -24,10 +24,7 @@ class QuestionsWorker(
             if (isInScopeOfSurvey(start, end)) {
                 val text = inputData.getString(QUESTION_TEXT)!!
                 val id = inputData.getString(QUESTION_ID)!!
-                val currentTime =
-                    SimpleDateFormat("dd.MM.yyyy HH:mm:ss").format(System.currentTimeMillis())
-                val fullText = "$text | nID: $notificationId | $currentTime"
-                notificationHelper.showNotification(fullText, id, notificationId++)
+                notificationHelper.showNotification(text, id, notificationId++)
             }
         }
         return Result.success()
