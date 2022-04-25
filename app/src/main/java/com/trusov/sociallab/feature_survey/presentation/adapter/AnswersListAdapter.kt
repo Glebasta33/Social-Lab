@@ -25,7 +25,8 @@ class AnswersListAdapter @Inject constructor() :
             tvNumberOfAnswer.text = answer.numberOfAnswer.toString()
             tvResearchTitle.text = answer.researchTitle
             tvQuestion.text = answer.textOfQuestion
-            tvAppointment.text = "${answer.createdTime} - ${answer.createdDate}"
+            tvTimeOfAnswer.text = answer.createdTime
+            tvDateOfAnswer.text =  answer.createdDate
         }
     }
 }

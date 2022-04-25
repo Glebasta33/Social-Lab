@@ -38,6 +38,7 @@ class ResearchesListAdapter @Inject constructor(
             tvResearchTopic.text = research.topic
             tvResearchDescription.text = research.description
             tvSelection.text = research.respondents.size.toString()
+            tvTimeOfAnswer.text = research.appointment
             root.setOnClickListener {
                 onResearchItemClickListener?.invoke(research)
             }
