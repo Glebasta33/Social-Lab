@@ -51,9 +51,10 @@ class AnswersFragment : Fragment() {
         super.onViewCreated(view, savedInstanceState)
         binding.progressBar.indeterminateTintList = ColorStateList.valueOf(Color.GRAY)
         binding.rvAnswers.adapter = answersAdapter
-        viewModel.answers.observe(viewLifecycleOwner) {
+        viewModel.answers.observe(viewLifecycleOwner) { answers ->
             binding.progressBar.isGone = true
-            answersAdapter.submitList(it?.toMutableList() ?: listOf(AnswerExtended("id", "id", 4, "Title", "Text of question")))
+            answersAdapter.submitList(answers.toMutableList())
+            binding.tvEmptyAnswersMessage.isGone = answers.isNotEmpty()
         }
     }
 

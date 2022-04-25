@@ -19,6 +19,18 @@
         app:layoutManager="androidx.recyclerview.widget.LinearLayoutManager"
         tools:listitem="@layout/answer_rv_item_layout"/>
 
+    <TextView
+        android:id="@+id/tv_empty_answers_message"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="Вы ещё не ответили ни на один вопрос"
+        android:visibility="gone"
+        android:textSize="18sp"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent"/>
+
     <ProgressBar
         android:id="@+id/progressBar"
         style="?android:attr/progressBarStyle"
